@@ -1,0 +1,40 @@
+name: daily report + email
+on:
+  schedule:
+    - cron: "17 1 * * *"   # 每天 UTC 01:17（北京时间 09:17）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: 生成报告
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node trending.mjs daily
+
+      - name: 发送到邮箱
+        env:
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+        run: node mail.mjs
+
+      - name: 提交报告
+        run: |
+          git config user.name  "report-bot"
+          git config user.email "actions@github.com"
+          git add reports && git commit -m "report: $(date -u +%F)" && git push

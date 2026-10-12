@@ -1,0 +1,12 @@
+{
+  "name": "github-daily-report",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "daily": "node trending.mjs daily && node mail.mjs",
+    "test:mail": "node mail.mjs"
+  },
+  "dependencies": {
+    "nodemailer": "^7.0.0"
+  }
+}
