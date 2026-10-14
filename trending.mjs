@@ -80,6 +80,58 @@ function digestReadme(md) {
   return picked.join(" | ").slice(0, 1800);
 }
 
+// 不同后端对 response_format 支持不一致，靠提示词 + 抽取 + 重试兜底
+const NO_MD = "\n\n只输出一个 JSON 对象，不要任何解释文字、不要 Markdown 代码块、不要 OK/好的之类的前缀。";
+
+// 从模型回复里抠出 JSON（模型爱加 ```json 包裹、前后废话）
+function extractJSON(text) {
+  if (!text) throw new Error("空回复");
+  const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  const raw = (fence ? fence[1] : text).trim();
+  try {
+    return JSON.parse(raw);
+  } catch {
+    const s = raw.indexOf("{"), e = raw.lastIndexOf("}");
+    if (s >= 0 && e > s) return JSON.parse(raw.slice(s, e + 1));
+    throw new Error("回复里找不到 JSON");
+  }
+}
+
+async function askJSON(system, user, temperature = 0.3) {
+  let lastErr;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const res = await fetch(`${LLM.base}/chat/completions`, {
+        method: "POST",
+        headers: { "content-type": "application/json", authorization: `Bearer ${LLM.key}` },
+        body: JSON.stringify({
+          model: LLM.model,
+          temperature,
+          messages: [
+            { role: "system", content: system + NO_MD },
+            { role: "user", content: user + (attempt ? `\n\n【第 ${attempt + 1} 次尝试】上一次你的回复不是合法 JSON。必须只输出 JSON 对象本身，第一个字符是 {，最后一个字符是 }。` : "") },
+          ],
+        }),
+      }).then((r) => r.json());
+      if (res.error) throw new Error(JSON.stringify(res.error).slice(0, 200));
+      return extractJSON(res.choices?.[0]?.message?.content);
+    } catch (e) {
+      lastErr = e;
+      await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
+    }
+  }
+  throw lastErr;
+}
+
+const ANALYST = "你是开源情报分析师。读项目的 README 后用**中文**解释它，不要翻译 tagline，要讲清实际工作流程、核心技术机制、谁在用、有什么坑。\n"
+  + '输出 JSON，字段固定为：{"是什么":"3-5句，讲清打开它之后具体能干什么，具体到功能/命令/工作流层面",'
+  + '"核心机制":["4-8条，每条一个技术要点，具体到协议/架构/算法名词"],'
+  + '"使用场景":["3-5条，谁在什么情况下用"],'
+  + '"坑":["2-4条，许可/硬件/成熟度/合规风险等"],'
+  + '"一句话判断":"值不值得抄作业，一句话"}';
+
+const EMPTY = { 是什么: "", 核心机制: [], 使用场景: [], 坑: [], 一句话判断: "" };
+
 // 逐仓库深读 README，输出中文结构化分析
 async function analyze(repo) {
   const md = await readme(repo.repo);
@@ -87,55 +139,41 @@ async function analyze(repo) {
     // 降级：机器翻译。没有推理能力，但保证读者看到的是中文而不是英文。
     const [descT, headT] = await Promise.all([translate(repo.desc), translate(digestReadme(md))]);
     return {
+      ...EMPTY,
       是什么: descT || repo.desc,
       核心机制: headT ? headT.split(" | ").filter((x) => x.length > 3).slice(0, 8).map((s) => `（README 原文要点，机翻）${s}`) : [],
-      使用场景: [],
-      坑: [],
       一句话判断: descT || repo.desc,
       降级: true,
     };
   }
-  const res = await fetch(`${LLM.base}/chat/completions`, {
-    method: "POST",
-    headers: { "content-type": "application/json", authorization: `Bearer ${LLM.key}` },
-    body: JSON.stringify({
-      model: LLM.model,
-      temperature: 0.3,
-      messages: [
-        { role: "system", content:
-          "你是开源情报分析师。读项目的 README 后用**中文**解释它，不要翻译 tagline，要讲清实际工作流程、核心技术机制、谁在用、有什么坑。\n" +
-          "严格输出 JSON：{\"是什么\":\"3-5句，讲清打开它之后具体能干什么，具体到功能/命令/工作流层面\","
-          + "\"核心机制\":[\"4-8条，每条一个技术要点，具体到协议/架构/算法名词\"],"
-          + "\"使用场景\":[\"3-5条，谁在什么情况下用\"],"
-          + "\"坑\":[\"2-4条，许可/硬件/成熟度/合规风险等\"],"
-          + "\"一句话判断\":\"值不值得抄作业，一句话\"}" },
-        { role: "user", content: `仓库：${repo.repo}\n语言：${repo.lang}\n简介：${repo.desc}\n\nREADME 摘录：\n${md}` },
-      ],
-    }),
-  }).then((r) => r.json());
   try {
-    return { ...JSON.parse(res.choices[0].message.content) };
+    const j = await askJSON(ANALYST, `仓库：${repo.repo}\n语言：${repo.lang}\n简介：${repo.desc}\n\nREADME 摘录：\n${md}`);
+    return {
+      ...EMPTY,
+      是什么: j.是什么 || repo.desc,
+      核心机制: Array.isArray(j.核心机制) ? j.核心机制 : [j.核心机制].filter(Boolean),
+      使用场景: Array.isArray(j.使用场景) ? j.使用场景 : [j.使用场景].filter(Boolean),
+      坑: Array.isArray(j.坑) ? j.坑 : [j.坑].filter(Boolean),
+      一句话判断: j.一句话判断 || repo.desc,
+    };
   } catch (e) {
-    return { 是什么: `分析失败：${e.message}`, 核心机制: [], 使用场景: [], 坑: [], 一句话判断: "" };
+    return { ...EMPTY, 是什么: `分析失败（${e.message.slice(0, 80)}）`, 一句话判断: repo.desc };
   }
 }
 
 // 汇总当日趋势
 async function themes(repos, notes) {
   const list = repos.map((r, i) => `${i + 1}. ${r.repo} (+${r.today}/天) —— ${notes[i]?.是什么 ?? ""}`).join("\n");
-  const res = await fetch(`${LLM.base}/chat/completions`, {
-    method: "POST",
-    headers: { "content-type": "application/json", authorization: `Bearer ${LLM.key}` },
-    body: JSON.stringify({
-      model: LLM.model,
-      temperature: 0.5,
-      messages: [
-        { role: "system", content: "用中文总结这批 GitHub 热门项目反映出的趋势和可抄作业的机会。输出 JSON：{\"信号\":[\"3-5条，每条说明一个可利用的趋势信号\"],\"可抄作业\":[\"3-5条具体的、能动手做的小项目 idea\"]}" },
-        { role: "user", content: `今天 GitHub ${since} 榜：\n${list}` },
-      ],
-    }),
-  }).then((r) => r.json());
-  try { return JSON.parse(res.choices[0].message.content); } catch { return null; }
+  try {
+    return await askJSON(
+      "用中文总结这批 GitHub 热门项目反映出的趋势和可抄作业的机会。\n"
+      + '输出 JSON，字段固定为：{"信号":["3-5条，每条说明一个可利用的趋势信号"],"可抄作业":["3-5条具体的、能动手做的小项目 idea"]}',
+      `今天 GitHub ${since} 榜：\n${list}`,
+      0.5,
+    );
+  } catch {
+    return null;
+  }
 }
 
 const repos = await scrape();
@@ -143,6 +181,7 @@ for (const r of repos) Object.assign(r, await meta(r.repo).catch(() => ({})));
 
 const notes = [];
 if (HAS_LLM) {
+  // 串行 + 每个项目内部重试 3 次，避免撞 GitHub Models 速率限制
   for (const [i, r] of repos.entries()) {
     process.stderr.write(`分析 ${i + 1}/${repos.length} ${r.repo}\n`);
     notes.push(await analyze(r));
