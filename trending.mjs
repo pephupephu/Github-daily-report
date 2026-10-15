@@ -198,10 +198,13 @@ const total = repos.reduce((s, r) => s + num(r), 0);
 const maxed = repos.filter((r) => num(r) >= 2000);
 const fresh = repos.filter((r) => r.created && (new Date(day) - new Date(r.created)) / 864e5 < 120);
 
-// 和昨天比：哪些是新面孔
-const prevFile = readdirSync(join(ROOT, "reports")).filter((f) => f.startsWith(`${since}-`) && f.endsWith(".md") && f !== "README.md").sort().at(-2);
+// 和昨天比：哪些是新面孔。首次运行时 reports/ 还不存在，直接当空。
+const REPORTS = join(ROOT, "reports");
+const prevFile = existsSync(REPORTS)
+  ? readdirSync(REPORTS).filter((f) => f.startsWith(`${since}-`) && f.endsWith(".md") && f !== "README.md").sort().at(-2)
+  : undefined;
 const prev = prevFile
-  ? [...readFileSync(join(ROOT, "reports", prevFile), "utf8").matchAll(/github\.com\/([\w.-]+\/[\w.-]+)/g)].map((m) => m[1])
+  ? [...readFileSync(join(REPORTS, prevFile), "utf8").matchAll(/github\.com\/([\w.-]+\/[\w.-]+)/g)].map((m) => m[1])
   : [];
 const newcomers = repos.map((r) => r.repo).filter((n) => !prev.includes(n));
 
