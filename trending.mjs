@@ -56,25 +56,62 @@ async function readme(repo) {
   return res.ok ? (await res.text()).slice(0, 8000) : "(无 README)";
 }
 
-// Google 翻译公开接口，免 key 免注册
+// Google 翻译公开接口，免 key 免注册。串行 + 间隔，避免被限流。
 async function translate(text) {
-  if (!text) return "";
+  if (!text?.trim()) return "";
   try {
     const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q=${encodeURIComponent(text.slice(0, 1800))}`,
-      { headers: { "user-agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(15000) });
+      { headers: { "user-agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(20000) });
     const j = await r.json();
-    return (j[0] || []).map((s) => s[0]).join("").replace(/\s+/g, " ").trim();
+    return (j[0] || []).map((s) => s[0]).join("").replace(/[ \t]+/g, " ").trim();
   } catch {
     return "";
   }
 }
 
-// 无 key 时：从 README 抽出结构化片段再翻译（翻译整篇既慢又没信息量）
-function digestReadme(md) {
-  const heads = [...md.matchAll(/^#{1,3}\s+(.+)$/gm)].map((m) => m[1].trim());
-  const bullets = [...md.matchAll(/^[-*]\s+(.{10,160})$/gm)].map((m) => m[1].trim());
-  const picked = [...new Set([...heads.slice(0, 12), ...bullets.slice(0, 14)])];
-  return picked.join(" | ").slice(0, 1800);
+// 翻译前先清掉噪音：徽章、图片、原始 HTML、HTML 注释 —— 它们占一半篇幅且翻译不出信息
+function cleanMarkdown(md) {
+  return md
+    .replace(/<!--[\s\S]*?-->/g, "")          // HTML 注释
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")    // 图片
+    .replace(/\[!\[[^\]]*\]\([^)]*\)\]\([^)]*\)/g, "") // 徽章
+    .replace(/<[^>]+>/g, "")                 // 原始 HTML 标签
+    .replace(/^\s*\|[\s:|-]+\|\s*$/gm, "")   // 表格分隔行
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+// 按段落切块，每块不超过 limit；代码块整块跳过（翻译代码只会变噪音）
+function chunkForTranslate(md, limit = 1500) {
+  const out = [];
+  let buf = "", inFence = false;
+  for (const line of md.split("\n")) {
+    if (/^\s*(```|~~~)/.test(line)) { inFence = !inFence; buf += line + "\n"; continue; }
+    if (inFence) { buf += line + "\n"; }
+    else if (buf.length + line.length > limit) { out.push(buf.trim()); buf = ""; buf += line + "\n"; }
+    else { buf += line + "\n"; }
+    if (buf.length > limit * 2) { out.push(buf.trim()); buf = ""; }
+  }
+  if (buf.trim()) out.push(buf.trim());
+  return out.filter(Boolean);
+}
+
+// 整篇翻译 README，带进度和节流
+async function translateReadme(repo, budget = 9000) {
+  const md = cleanMarkdown(await readme(repo.repo));
+  if (!md) return { text: "", chunks: 0, truncated: false };
+  const chunks = chunkForTranslate(md);
+  const parts = [];
+  let used = 0;
+  for (const [i, c] of chunks.entries()) {
+    if (used >= budget) return { text: parts.join("\n\n"), chunks: i, truncated: true };
+    process.stderr.write(`    翻译 ${repo.repo} 块 ${i + 1}/${chunks.length}\n`);
+    const t = await translate(c);
+    parts.push(t || c);
+    used += c.length;
+    await new Promise((r) => setTimeout(r, 250)); // 别把 Google 打到限流
+  }
+  return { text: parts.join("\n\n"), chunks: chunks.length, truncated: false };
 }
 
 // 不同后端对 response_format 支持不一致，靠提示词 + 抽取 + 重试兜底
@@ -133,19 +170,20 @@ const ANALYST = "你是开源情报分析师。读项目的 README 后用**中�
   + '"坑":["2-4条，许可/硬件/成熟度/合规风险等"],'
   + '"一句话判断":"值不值得抄作业，一句话"}';
 
-const EMPTY = { 是什么: "", 核心机制: [], 使用场景: [], 坑: [], 一句话判断: "" };
+const EMPTY = { 是什么: "", 核心机制: [], 使用场景: [], 坑: [], 一句话判断: "", readmeCN: "" };
 
-// 逐仓库深读 README，输出中文结构化分析
+// 逐仓库：无 key 就翻译整篇 README，有 key 就深读分析
 async function analyze(repo) {
   const md = await readme(repo.repo);
   if (!LLM) {
-    // 降级：机器翻译。没有推理能力，但保证读者看到的是中文而不是英文。
-    const [descT, headT] = await Promise.all([translate(repo.desc), translate(digestReadme(md))]);
+    const descT = await translate(repo.desc);
+    const r = await translateReadme(repo);
     return {
       ...EMPTY,
       是什么: descT || repo.desc,
-      核心机制: headT ? headT.split(" | ").filter((x) => x.length > 3).slice(0, 8).map((s) => `（README 原文要点，机翻）${s}`) : [],
       一句话判断: descT || repo.desc,
+      readmeCN: r.text,
+      truncated: r.truncated,
       降级: true,
     };
   }
@@ -183,14 +221,11 @@ const repos = await scrape();
 for (const r of repos) Object.assign(r, await meta(r.repo).catch(() => ({})));
 
 const notes = [];
-if (HAS_LLM) {
-  // 串行 + 每个项目内部重试 3 次，避免撞 GitHub Models 速率限制
-  for (const [i, r] of repos.entries()) {
-    process.stderr.write(`分析 ${i + 1}/${repos.length} ${r.repo}\n`);
-    notes.push(await analyze(r));
-  }
-} else {
-  process.stderr.write("未配置 OPENAI_API_KEY —— 生成榜单 + 数据统计（无 AI 深读点评）\n");
+if (!HAS_LLM) process.stderr.write("未配置 OPENAI_API_KEY —— 走全文机翻模式\n");
+for (const [i, r] of repos.entries()) {
+  // 串行：LLM 模式怕撞速率限制；翻译模式怕被 Google 限流
+  process.stderr.write(`处理 ${i + 1}/${repos.length} ${r.repo}\n`);
+  notes.push(await analyze(r));
 }
 const sum = HAS_LLM ? await themes(repos, notes).catch(() => null) : null;
 
@@ -229,7 +264,7 @@ const lines = [
   `# GitHub ${since} 热点 · ${day}`,
   "",
   ...(degraded
-    ? [`> ⚠️ 本次走**机器翻译降级模式**（无大模型可用）。描述和 README 要点是机翻的，只保证中文可读，没有深度分析。`, ""]
+    ? [`> 📖 本次走**全文机翻模式**（未配置大模型 key）。下面是各项目 README 的机器翻译版，非人工分析、非模型总结。代码示例、安装步骤建议回原仓库核对。`, ""]
     : [`> 分析后端：**${LLM.how}**（model: \`${LLM.model}\`）`, ""]),
   "## 一览",
   "",
@@ -245,21 +280,28 @@ const lines = [
 for (const [i, r] of repos.entries()) {
   const n = notes[i] || {};
   const head = `**${(r.stars ?? 0).toLocaleString()}⭐ · 今日 +${r.today} · ${r.lang}**${r.created ? ` · 创建于 ${r.created}` : ""} · [仓库](https://github.com/${r.repo})`;
-  lines.push(
-    `## ${i + 1}. ${r.repo}`,
-    "",
-    head,
-    "",
-    `**它到底是什么**：${n.是什么 || r.desc}`,
-    "",
-    ...(degraded
-      ? (n.核心机制?.length ? ["**README 要点（机翻，非分析）**：", L(n.核心机制), ""] : [])
-      : [`**核心机制**：`, L(n.核心机制), "", `**使用场景**：`, L(n.使用场景), "", `**需要注意的坑**：`, L(n.坑), ""]),
-  );
+  lines.push(`## ${i + 1}. ${r.repo}`, "", head, "");
+  if (degraded) {
+    lines.push(`**简介**：${n.是什么 || r.desc}`, "");
+    if (n.readmeCN) {
+      lines.push("### README（机器翻译）", "", n.readmeCN, "");
+      if (n.truncated) lines.push("*（README 较长，以上为前 9000 字符的翻译，点击仓库看全文）*", "");
+    } else {
+      lines.push("*README 翻译失败或为空，点击仓库链接看原文。*", "");
+    }
+  } else {
+    lines.push(
+      `**它到底是什么**：${n.是什么 || r.desc}`,
+      "",
+      `**核心机制**：`, L(n.核心机制), "",
+      `**使用场景**：`, L(n.使用场景), "",
+      `**需要注意的坑**：`, L(n.坑), "",
+    );
+  }
 }
 if (sum) lines.push("## 今日趋势信号", "", L(sum.信号), "", "## 可抄作业的 idea", "", L(sum.可抄作业), "");
 if (degraded) {
-  lines.push("---", "", "想要真正的深度分析（而非机翻）？在仓库 Secrets 加一个 `OPENAI_API_KEY`。国内推荐 DeepSeek（约 2 元/月够用几千次）：key 填 `OPENAI_API_KEY`，再把 `OPENAI_BASE_URL` 设为 `https://api.deepseek.com/v1`。代码无需改动。", "");
+  lines.push("---", "", "想要真正的深度分析（读 README 后输出「它到底是什么/核心机制/使用场景/坑」）而非机翻？加一个 `OPENAI_API_KEY`。DeepSeek 注册送额度，够用很久：key 填 `OPENAI_API_KEY`，`OPENAI_BASE_URL` 填 `https://api.deepseek.com/v1`。代码无需改动。", "");
 }
 lines.push("---", `生成于 ${new Date().toISOString()} · [历史报告](https://github.com/${process.env.GITHUB_REPOSITORY || "pephupephu/Github-daily-report"}/tree/main/reports)`);
 
