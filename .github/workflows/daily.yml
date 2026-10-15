@@ -6,7 +6,6 @@ on:
 
 permissions:
   contents: write
-  models: read        # 用 GitHub Models 免费跑分析（无 OPENAI_API_KEY 时）
 
 jobs:
   report:

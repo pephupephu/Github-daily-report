@@ -10,13 +10,10 @@ import { fileURLToPath } from "node:url";
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const since = process.argv[2] || "daily";
 
-// ---- 分析后端分级：自带 key > GitHub Models(免费) > Google 翻译(永远可用) ----
-const GH_MODELS = "https://models.github.ai/inference";
+// 分析后端：自备 key（唯一可靠的 LLM 路径）。没 key 就降级到机器翻译。
 const LLM = process.env.OPENAI_API_KEY
   ? { key: process.env.OPENAI_API_KEY, base: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1", model: process.env.OPENAI_MODEL || "gpt-4o-mini", how: "自备 key" }
-  : process.env.GITHUB_TOKEN
-    ? { key: process.env.GITHUB_TOKEN, base: GH_MODELS, model: process.env.OPENAI_MODEL || "openai/gpt-4o-mini", how: "GitHub Models（免费）" }
-    : null;
+  : null;
 const HAS_LLM = !!LLM;
 const UA = { "user-agent": "gh-trending-daily", "accept-language": "en-US,en" };
 const strip = (s) => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
@@ -112,9 +109,15 @@ async function askJSON(system, user, temperature = 0.3) {
             { role: "user", content: user + (attempt ? `\n\n【第 ${attempt + 1} 次尝试】上一次你的回复不是合法 JSON。必须只输出 JSON 对象本身，第一个字符是 {，最后一个字符是 }。` : "") },
           ],
         }),
-      }).then((r) => r.json());
-      if (res.error) throw new Error(JSON.stringify(res.error).slice(0, 200));
-      return extractJSON(res.choices?.[0]?.message?.content);
+      });
+      // 后端返回的不是 JSON（比如被网关拦截返回 "OK"）—— 明确报错，别让 JSON.parse 崩掉
+      const text = await res.text();
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${text.slice(0, 150)}`);
+      try {
+        return extractJSON(JSON.parse(text).choices?.[0]?.message?.content);
+      } catch (e) {
+        throw new Error(`后端未返回预期 JSON（content-type: ${res.headers.get("content-type")}, 开头: ${JSON.stringify(text.slice(0, 40))}）`);
+      }
     } catch (e) {
       lastErr = e;
       await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
@@ -256,7 +259,7 @@ for (const [i, r] of repos.entries()) {
 }
 if (sum) lines.push("## 今日趋势信号", "", L(sum.信号), "", "## 可抄作业的 idea", "", L(sum.可抄作业), "");
 if (degraded) {
-  lines.push("---", "", "想要真正的深度分析（而非机翻）？在仓库 Secrets 加 `OPENAI_API_KEY`，或在 workflow 里加一行 `GITHUB_TOKEN`（GitHub Models 免费可用）。代码无需改动。", "");
+  lines.push("---", "", "想要真正的深度分析（而非机翻）？在仓库 Secrets 加一个 `OPENAI_API_KEY`。国内推荐 DeepSeek（约 2 元/月够用几千次）：key 填 `OPENAI_API_KEY`，再把 `OPENAI_BASE_URL` 设为 `https://api.deepseek.com/v1`。代码无需改动。", "");
 }
 lines.push("---", `生成于 ${new Date().toISOString()} · [历史报告](https://github.com/${process.env.GITHUB_REPOSITORY || "pephupephu/Github-daily-report"}/tree/main/reports)`);
 
