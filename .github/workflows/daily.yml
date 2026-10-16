@@ -37,4 +37,14 @@ jobs:
         run: |
           git config user.name  "report-bot"
           git config user.email "actions@github.com"
-          git add reports && git commit -m "report: $(date -u +%F)" && git push
+          git add reports
+          # 内容和上次一样就跳过，别让空提交把整个 job 变成失败
+          if git diff --staged --quiet; then echo "报告无变化，跳过提交"; exit 0; fi
+          git commit -q -m "report: $(date -u +%F)"
+          # 定时任务和本地推送会撞车，必须 rebase 后再推，否则 non-fast-forward
+          for i in 1 2 3; do
+            if git push; then exit 0; fi
+            echo "推送失败，重试 $i/3"; sleep 5; git pull --rebase --autostash origin main
+          done
+          # 邮件已经发成功了，仓库归档是次要的；失败只警告，不让整个 job 变红
+          echo "::warning::报告已生成并发信成功，但归档到仓库失败，需手动处理"
