@@ -56,17 +56,38 @@ async function readme(repo) {
   return res.ok ? (await res.text()).slice(0, 8000) : "(无 README)";
 }
 
-// Google 翻译公开接口，免 key 免注册。串行 + 间隔，避免被限流。
+// 翻译源：按顺序试，记住第一个能用的（sticky），后面不再重试坏源。
+// googleapis 的 gtx 端点是未公开接口，会被数据中心 IP 屏蔽，所以必须有备胎。
+const TRANSLATORS = [
+  { name: "googleapis", build: (t) => `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q=${encodeURIComponent(t)}`,
+    parse: (j) => (j?.[0] || []).map((s) => s[0]).join("") },
+  { name: "mymemory", build: (t) => `https://api.mymemory.translated.net/get?q=${encodeURIComponent(t)}&langpair=en|zh-CN`,
+    parse: (j) => j?.responseData?.translatedText || "" },
+  { name: "simplytranslate", build: (t) => `https://simplytranslate.org/api/translate/?engine=google&from=en&to=zh-CN&text=${encodeURIComponent(t)}`,
+    parse: (j) => j?.translation?.translated || "" },
+];
+let activeTranslator = TRANSLATORS[0];
+const translatorStats = {};
+
 async function translate(text) {
   if (!text?.trim()) return "";
-  try {
-    const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q=${encodeURIComponent(text.slice(0, 1800))}`,
-      { headers: { "user-agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(20000) });
-    const j = await r.json();
-    return (j[0] || []).map((s) => s[0]).join("").replace(/[ \t]+/g, " ").trim();
-  } catch {
-    return "";
+  const t = text.slice(0, 1800);
+  for (const api of [activeTranslator, ...TRANSLATORS.filter((x) => x !== activeTranslator)]) {
+    try {
+      const r = await fetch(api.build(t), { headers: { "user-agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(20000) });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const out = api.parse(await r.json());
+      if (out && /[一-龥]/.test(out)) {          // 确认真的翻出中文了
+        activeTranslator = api;                  // 粘住好用的源
+        translatorStats[api.name] = (translatorStats[api.name] || 0) + 1;
+        return out.replace(/[ \t]+/g, " ").trim();
+      }
+      throw new Error("返回结果里没有中文");
+    } catch {
+      translatorStats[`${api.name}:失败`] = (translatorStats[`${api.name}:失败`] || 0) + 1;
+    }
   }
+  return "";
 }
 
 // 翻译前先清掉噪音：徽章、图片、原始 HTML、HTML 注释 —— 它们占一半篇幅且翻译不出信息
@@ -96,8 +117,9 @@ function chunkForTranslate(md, limit = 1500) {
   return out.filter(Boolean);
 }
 
-// 整篇翻译 README，带进度和节流
-async function translateReadme(repo, budget = 9000) {
+// 整篇翻译 README，带进度和节流。预算 3500 字符/项目 —— MyMemory 匿名额度是全站
+// 每天 5 万字符，12 个项目 × 3500 才 4.2 万，留点余量。
+async function translateReadme(repo, budget = 3500) {
   const md = cleanMarkdown(await readme(repo.repo));
   if (!md) return { text: "", chunks: 0, truncated: false };
   const chunks = chunkForTranslate(md);
@@ -264,7 +286,7 @@ const lines = [
   `# GitHub ${since} 热点 · ${day}`,
   "",
   ...(degraded
-    ? [`> 📖 本次走**全文机翻模式**（未配置大模型 key）。下面是各项目 README 的机器翻译版，非人工分析、非模型总结。代码示例、安装步骤建议回原仓库核对。`, ""]
+    ? [`> 📖 本次走**全文机翻模式**（未配置大模型 key）。下面是各项目 README 的机器翻译版，非人工分析、非模型总结。翻译源：**${activeTranslator.name}**（${Object.entries(translatorStats).map(([k, v]) => `${k} ${v}`).join(" · ") || "无成功记录"}）。代码示例、安装步骤建议回原仓库核对。`, ""]
     : [`> 分析后端：**${LLM.how}**（model: \`${LLM.model}\`）`, ""]),
   "## 一览",
   "",
@@ -285,7 +307,7 @@ for (const [i, r] of repos.entries()) {
     lines.push(`**简介**：${n.是什么 || r.desc}`, "");
     if (n.readmeCN) {
       lines.push("### README（机器翻译）", "", n.readmeCN, "");
-      if (n.truncated) lines.push("*（README 较长，以上为前 9000 字符的翻译，点击仓库看全文）*", "");
+      if (n.truncated) lines.push("*（README 较长，以上为开头部分的翻译，点击仓库看全文）*", "");
     } else {
       lines.push("*README 翻译失败或为空，点击仓库链接看原文。*", "");
     }
