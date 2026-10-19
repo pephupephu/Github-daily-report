@@ -17,6 +17,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: 装 Playwright 浏览器（抓中文入口 + 截图）
+        run: npx playwright install --with-deps chromium
 
       - name: 生成报告
         env:
