@@ -26,6 +26,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node trending.mjs daily
 
+      - name: 生成文章初稿
+        env:
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+        run: node article.mjs
+
       - name: 发送到邮箱
         env:
           MAIL_USER: ${{ secrets.MAIL_USER }}
@@ -37,7 +44,7 @@ jobs:
         run: |
           git config user.name  "report-bot"
           git config user.email "actions@github.com"
-          git add reports
+          git add reports out
           # 内容和上次一样就跳过，别让空提交把整个 job 变成失败
           if git diff --staged --quiet; then echo "报告无变化，跳过提交"; exit 0; fi
           git commit -q -m "report: $(date -u +%F)"

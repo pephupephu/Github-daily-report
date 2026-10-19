@@ -48,7 +48,15 @@ async function meta(repo) {
   const h = { ...UA, accept: "application/vnd.github+json" };
   if (process.env.GITHUB_TOKEN) h.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   const j = await (await fetch(`https://api.github.com/repos/${repo}`, { headers: h })).json();
-  return { stars: j.stargazers_count ?? 0, forks: j.forks_count ?? 0, created: (j.created_at || "").slice(0, 10) };
+  return {
+    stars: j.stargazers_count ?? 0,
+    forks: j.forks_count ?? 0,
+    created: (j.created_at || "").slice(0, 10),
+    license: j.license?.spdx_id || "",
+    topics: (j.topics || []).slice(0, 8),
+    homepage: j.homepage || "",
+    description: j.description || "",
+  };
 }
 
 async function readme(repo) {
@@ -329,6 +337,21 @@ lines.push("---", `生成于 ${new Date().toISOString()} · [历史报告](https
 
 mkdirSync(join(ROOT, "reports"), { recursive: true });
 writeFileSync(join(ROOT, "reports", `${since}-${day}.md`), lines.join("\n"));
+
+// 结构化数据给 article.mjs 用（抓演示链接、生成公众号文章）
+writeFileSync(join(ROOT, "reports", "latest.json"), JSON.stringify({
+  day,
+  since,
+  mode: degraded ? "translate" : LLM.how,
+  repos: repos.map((r, i) => ({
+    repo: r.repo, lang: r.lang, desc: r.desc,
+    stars: r.stars ?? 0, today: r.today, forks: r.forks ?? 0,
+    created: r.created, license: r.license, topics: r.topics, homepage: r.homepage,
+    url: `https://github.com/${r.repo}`,
+    summary: notes[i]?.是什么 || "",
+    readmeCN: notes[i]?.readmeCN || "",
+  })),
+}, null, 2));
 
 const idx = join(ROOT, "reports", "README.md");
 const row = `- [${since}-${day}](./${since}-${day}.md) — 榜首 ${repos[0]?.repo} (+${repos[0]?.today})\n`;
