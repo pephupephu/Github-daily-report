@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// 读 reports/latest.json -> 用浏览器渲染 demo 站，抓中文入口 + 截图
-// -> 生成公众号文章初稿 -> 截图当附件内嵌发邮箱
+// 读 reports/latest.json -> 浏览器渲染抓中文入口+截图
+// -> 生成「公众号风格」文章初稿 -> 截图附件内嵌发邮箱
+// 定位：AI 出文章骨架 + 链接 + 部署命令，“真实体验/多媒体”留占位给人填
 // 用法: node article.mjs
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -11,7 +12,7 @@ import { createTransport } from "nodemailer";
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const UA = { "user-agent": "gh-daily-article" };
 
-// ---------- 链接抽取（README 层面） ----------
+// ---------- 链接抽取 ----------
 
 const DEMO = /(demo|try (it )?(online|out)|live|playground|play ?with|online demo|web ?ui|体验|演示|试用|在线|玩一下|在线体验)/i;
 const DOCS = /(doc|documentation|guide|tutorial|readme|手册|文档|教程)/i;
@@ -66,24 +67,17 @@ function classify(links, repo, homepage) {
 let browser;
 async function withBrowser(fn) {
   const { chromium } = await import("playwright-core");
-  browser = await chromium.launch({
-    headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"],
-  });
+  browser = await chromium.launch({ headless: "new", args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"] });
   try { return await fn(); } finally { await browser.close(); }
 }
 
 async function probeAndShot(page, demoUrl, repo) {
-  // 返回 { cnUrls: string[], shotPath: string|null }
   try {
     await page.goto(demoUrl, { waitUntil: "networkidle", timeout: 20000 });
     const hrefs = await page.$$eval("a", (els) => els.map((e) => e.getAttribute("href") || "").filter(Boolean));
     const cn = [];
     for (const h of hrefs) {
-      try {
-        const abs = new URL(h, demoUrl).href;
-        if (CN_PATH.test(abs)) cn.push(abs);
-      } catch {}
+      try { const abs = new URL(h, demoUrl).href; if (CN_PATH.test(abs)) cn.push(abs); } catch {}
     }
     const shotDir = join(ROOT, "shots");
     mkdirSync(shotDir, { recursive: true });
@@ -107,115 +101,82 @@ function installCmd(md) {
 const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]);
 const CN_DATE = (d) => `${d.slice(0, 4)}年${d.slice(5, 7)}月${d.slice(8)}日`;
 const fmtStars = (n) => `+${String(n || 0).replace(/,/g, "")}`;
+const repoShort = (repo) => repo.split("/")[1];
 
-function linkTriple(r) {
-  const row = (label, url, hot) =>
-    `<p style="margin:6px 0;font-size:15px;line-height:1.8"><span style="color:#576b95;font-weight:600">${label}：</span>${hot ? `<span style="background:#fa5151;color:#fff;font-size:10px;padding:1px 6px;border-radius:3px;margin-right:5px;vertical-align:middle">推荐</span>` : ""}<a href="${esc(url)}" style="color:#576b95;text-decoration:none;word-break:break-all">${esc(url)}</a></p>`;
-  const rows = [row("开源地址", r.url, false)];
-  if (r.homepage) rows.push(row("项目主页", r.homepage, false));
-  r.links.cnDemo.slice(0, 1).forEach((l) => rows.push(row("中文体验", l.url, true)));
-  r.links.demo.slice(0, 2).forEach((l) => rows.push(row("官方演示", l.url, true)));
-  r.links.paper.slice(0, 1).forEach((l) => rows.push(row("论文", l.url, false)));
-  if (!r.links.cnDemo.length && !r.links.demo.length && r.homepage) rows.push(row("在线演示", r.homepage, true));
-  return rows.join("");
-}
-
-function section(r, i) {
-  const need = [];
-  if (!r.links.demo.length && !r.links.cnDemo.length) need.push("该项目无可用在线演示 —— 需自己部署并截图");
-  need.push("⬜️ 在这里插入：你的实际体验 / 效果截图 / 音频或视频");
-  const cmd = r.install ? `<pre style="background:#282c34;color:#abb2bf;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:13px;line-height:1.6;margin:10px 0"><code>${esc(r.install)}</code></pre>` : "";
+// 公众号风格：每个项目一节，先写“人的话”，再给链接，最后留占位
+function section(r, i, shotCid) {
   const tags = (r.topics || []).slice(0, 4).map((t) => `<span style="display:inline-block;background:#f2f3f5;color:#5a6472;font-size:11px;padding:2px 9px;border-radius:10px;margin:0 6px 0 0">${esc(t)}</span>`).join("");
-  const img = r.shot ? `<img src="${esc(r.shotCid)}" style="max-width:100%;border-radius:6px;margin:0 0 14px;display:block" alt="${esc(repoShort(r.repo))} 演示截图" />` : "";
+  const body = esc(r.summary || r.readmeCN?.slice(0, 700) || r.desc);
+  const cmd = r.install ? `<pre style="background:#282c34;color:#abb2bf;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:13px;line-height:1.6;margin:10px 0"><code>${esc(r.install)}</code></pre>` : "";
+  const img = shotCid ? `<img src="cid:${shotCid}" style="max-width:100%;border-radius:6px;margin:0 0 14px;display:block" alt="${esc(repoShort(r.repo))} 演示截图" />` : "";
+
+  const links = [];
+  if (r.homepage) links.push(`<a href="${esc(r.homepage)}" style="color:#576b95;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`);
+  r.links.cnDemo.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#fa5151;font-weight:700;text-decoration:none">中文体验 → ${esc(l.url)}</a>`));
+  r.links.demo.slice(0, 2).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#576b95;text-decoration:none">官方演示 → ${esc(l.url)}</a>`));
+  r.links.paper.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#8a6d3b;text-decoration:none">论文 → ${esc(l.url)}</a>`));
+
+  const hook = (r.summary || r.desc).split("。")[0].slice(0, 40);
+  const lead = hook ? `今天看到 ${esc(repoShort(r.repo))} 上榜了，${hook.replace(/^(这个|该|它)/, "")}。` : `今天看到 ${esc(repoShort(r.repo))} 上榜了。`;
 
   return `
 <section style="margin:0 0 34px;padding-bottom:26px;border-bottom:1px solid #eceef1">
-  <h2 style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;line-height:1.6">
+  <h2 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.5">
     <span style="color:#07c160">${String(i + 1).padStart(2, "0")}</span>
-    <span style="margin-left:8px">${esc(r.repo.split("/")[1])}</span>
+    <span style="margin-left:8px">${esc(repoShort(r.repo))}</span>
+    <small style="color:#9a9a9a;font-weight:400">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} star · 今日 ${fmtStars(r.today)}</small>
   </h2>
-  <p style="margin:0 0 10px;font-size:12.5px;color:#9a9a9a">${esc(r.desc).slice(0, 110)}</p>
-  <p style="margin:0 0 10px;font-size:12.5px;color:#9a9a9a">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} star · 今日 ${fmtStars(r.today)}${r.license ? ` · ${esc(r.license)}` : ""}</p>
-  ${tags ? `<div style="margin:0 0 12px">${tags}</div>` : ""}
-  <div style="margin:0 0 6px;font-size:15.5px;line-height:1.9;color:#3a3a3a;text-align:justify">${esc(r.summary || r.readmeCN?.slice(0, 700) || r.desc)}</div>
+  <p style="margin:0 0 10px;font-size:15px;line-height:1.9;color:#3a3a3a">${lead}${esc((r.summary || r.desc).slice(hook.length))}</p>
   ${cmd}
   ${img}
-  <div style="background:#f7f8fa;border-radius:8px;padding:8px 14px;margin:12px 0">${linkTriple(r)}</div>
+  ${links.length ? `<div style="margin:10px 0">${links.join("　　")}</div>` : ""}
+  <div style="margin:0;padding:10px 14px;background:#f7f8fa;border-radius:6px;font-size:13px;color:#5a6472;line-height:1.8">
+    <strong>一句话概括：</strong>${esc(r.desc || r.summary || "")}<br>
+    <strong>适合谁：</strong>对 ${esc((r.topics || []).slice(0, 3).join("、") || "这个领域")} 感兴趣的开发者。
+  </div>
   <p style="margin:0;padding:8px 12px;background:#fff8e6;border-left:3px solid #fa9d3b;font-size:13px;color:#8a6d3b;line-height:1.8">
-    <strong>需要你补：</strong>${need.join("<br>")}
+    <strong>💡 需要你补：</strong>在这里插入你的实际体验（装了没？跑得顺不顺？效果怎样？）<br>
+    ⬜️ 插入截图：${img ? "上面已放，可替换为你自己的" : "暂无，需要自己截个演示界面放进来"}<br>
+    ⬜️ 插入音频/视频：如果项目能生成内容，把你生成的样本贴上来。
   </p>
 </section>`;
 }
-
-function repoShort(repo) { return repo.split("/")[1]; }
 
 function buildHTML(data, cidMap) {
   const { day, repos } = data;
   const top = repos[0];
   const cn = repos.filter((r) => r.links.cnDemo.length).length;
-  const withDemo = repos.filter((r) => r.links.demo.length || r.links.cnDemo.length || r.homepage).length;
-  const shotCid = (repo) => cidMap[repo] || "";
-  const sections = repos.map((r, i) => {
-    const base = sectionTemplate(r, i, shotCid(r.repo));
-    return base;
-  }).join("");
+  const total = repos.reduce((s, r) => s + (+String(r.today || 0).replace(/,/g, "") || 0), 0);
+  const sections = repos.map((r, i) => section(r, i, cidMap[r.repo] || "")).join("");
 
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>GitHub 日报 ${day}</title></head>
 <body style="margin:0;background:#f5f6f8">
 <div style="max-width:677px;margin:0 auto;background:#fff;padding:26px 20px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
 
-<p style="margin:0 0 4px;font-size:12px;color:#b2b2b2">这是 AI 生成的<b>初稿</b>，链接已核实，<b>体验部分需要你补</b>（每段下方黄色框已标出）。</p>
-<hr style="border:none;border-top:1px solid #eceef1;margin:14px 0 24px">
+<p style="margin:0 0 6px;font-size:12px;color:#b2b2b2">这是 AI 生成的文章初稿，链接已核实，<b>体验部分需要你亲自补</b>（每段下方灰框已标出）。</p>
+<hr style="border:none;border-top:1px solid #eceef1;margin:14px 0 22px">
 
-<h1 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#1a1a1a;line-height:1.5">GitHub 今日热榜 · ${CN_DATE(day)}</h1>
-<p style="margin:0 0 22px;font-size:13.5px;color:#8a8a8a;line-height:1.8;border-bottom:2px solid #07c160;padding-bottom:12px">
-  今日 ${repos.length} 个项目上榜，累计新增 ${repos.reduce((s, r) => s + (+String(r.today || 0).replace(/,/g, "") || 0), 0).toLocaleString()} star。
-  ${withDemo} 个可直接打开体验${cn ? `，其中 ${cn} 个有<b>中文页面</b>` : "，暂无中文页面"}。
+<h1 style="margin:0 0 6px;font-size:24px;font-weight:800;color:#1a1a1a;line-height:1.4">GitHub 今日热榜 · ${CN_DATE(day)}</h1>
+<p style="margin:0 0 24px;font-size:14px;color:#8a8a8a;line-height:1.8;border-bottom:2px solid #07c160;padding-bottom:12px">
+  今天在 GitHub 上又看到了不少有意思的开源项目。今天 ${repos.length} 个项目上榜，累计新增 ${total.toLocaleString()} star。
+  ${cn ? `其中 ${cn} 个有 <b>中文体验入口</b>` : ""}，直接点下面的链接就能打开，不用自己折腾部署。
 </p>
 
-${top ? `<section style="background:#07c160;color:#fff;border-radius:10px;padding:18px 20px;margin:0 0 30px">
-  <p style="margin:0 0 4px;font-size:12px;opacity:.9">今日最热</p>
-  <p style="margin:0 0 8px;font-size:19px;font-weight:700">${esc(top.repo)}</p>
+${top ? `<section style="background:#07c160;color:#fff;border-radius:10px;padding:18px 20px;margin:0 0 28px">
+  <p style="margin:0 0 6px;font-size:12px;opacity:.9">今日最热</p>
+  <p style="margin:0 0 8px;font-size:20px;font-weight:700">${esc(repoShort(top.repo))}</p>
   <p style="margin:0 0 10px;font-size:13px;line-height:1.75;opacity:.96">${esc(top.desc).slice(0, 130)}</p>
-  <p style="margin:0;font-size:12px;opacity:.9">今日 +${fmtStars(top.today)} star · ${esc(top.lang)} · ${(top.stars || 0).toLocaleString()} star</p>
+  <p style="margin:0;font-size:12px;opacity:.9">今日 +${fmtStars(top.today)} star · 总 ${(top.stars || 0).toLocaleString()} star</p>
 </section>` : ""}
 
 ${sections}
 
 <section style="margin-top:10px;padding:14px 16px;background:#f7f8fa;border-radius:8px;font-size:12.5px;color:#9a9a9a;line-height:1.85">
-  链接全部来自各项目 GitHub 仓库元数据与 README，已自动核对可访问性未做人工验证。<br>
-  中文体验入口靠浏览器渲染 demo 站抓取，可能有漏判，发稿前请点开确认。<br>
+  链接全部来自各项目 GitHub 仓库元数据与 README，已自动核对可访问性未做人工验证。中文体验入口靠浏览器渲染 demo 站抓取，可能有漏判，发稿前请点开确认。<br>
   生成时间：${new Date().toLocaleString("zh-CN")} · <a href="https://github.com/pephupephu/Github-daily-report" style="color:#576b95">订阅每日推送</a>
 </section>
 
 </div></body></html>`;
-}
-
-function sectionTemplate(r, i, cid) {
-  const need = [];
-  if (!r.links.demo.length && !r.links.cnDemo.length) need.push("该项目无可用在线演示 —— 需自己部署并截图");
-  need.push("⬜️ 在这里插入：你的实际体验 / 效果截图 / 音频或视频");
-  const cmd = r.install ? `<pre style="background:#282c34;color:#abb2bf;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:13px;line-height:1.6;margin:10px 0"><code>${esc(r.install)}</code></pre>` : "";
-  const tags = (r.topics || []).slice(0, 4).map((t) => `<span style="display:inline-block;background:#f2f3f5;color:#5a6472;font-size:11px;padding:2px 9px;border-radius:10px;margin:0 6px 0 0">${esc(t)}</span>`).join("");
-  const img = cid ? `<img src="cid:${cid}" style="max-width:100%;border-radius:6px;margin:0 0 14px;display:block" alt="${esc(repoShort(r.repo))} 演示截图" />` : "";
-
-  return `
-<section style="margin:0 0 34px;padding-bottom:26px;border-bottom:1px solid #eceef1">
-  <h2 style="margin:0 0 8px;font-size:18px;font-weight:700;color:#1a1a1a;line-height:1.6">
-    <span style="color:#07c160">${String(i + 1).padStart(2, "0")}</span>
-    <span style="margin-left:8px">${esc(r.repo.split("/")[1])}</span>
-  </h2>
-  <p style="margin:0 0 10px;font-size:12.5px;color:#9a9a9a">${esc(r.desc).slice(0, 110)}</p>
-  <p style="margin:0 0 10px;font-size:12.5px;color:#9a9a9a">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} star · 今日 ${fmtStars(r.today)}${r.license ? ` · ${esc(r.license)}` : ""}</p>
-  ${tags ? `<div style="margin:0 0 12px">${tags}</div>` : ""}
-  <div style="margin:0 0 6px;font-size:15.5px;line-height:1.9;color:#3a3a3a;text-align:justify">${esc(r.summary || r.readmeCN?.slice(0, 700) || r.desc)}</div>
-  ${cmd}
-  ${img}
-  <div style="background:#f7f8fa;border-radius:8px;padding:8px 14px;margin:12px 0">${linkTriple(r)}</div>
-  <p style="margin:0;padding:8px 12px;background:#fff8e6;border-left:3px solid #fa9d3b;font-size:13px;color:#8a6d3b;line-height:1.8">
-    <strong>需要你补：</strong>${need.join("<br>")}
-  </p>
-</section>`;
 }
 
 // ---------- 主流程 ----------
@@ -271,15 +232,9 @@ writeFileSync(file, html);
 console.error(`[文章] 已生成 ${file}`);
 
 const user = process.env.MAIL_USER, pass = process.env.MAIL_PASS;
-if (!user || !pass) {
-  console.error("[文章] 未配置 MAIL_USER/MAIL_PASS，跳过发信");
-  process.exit(0);
-}
+if (!user || !pass) { console.error("[文章] 未配置 MAIL_USER/MAIL_PASS，跳过发信"); process.exit(0); }
 const port = Number(process.env.MAIL_PORT || 465);
-const transport = createTransport({
-  host: process.env.MAIL_HOST || "smtp.163.com", port, secure: port === 465,
-  auth: { user, pass },
-});
+const transport = createTransport({ host: process.env.MAIL_HOST || "smtp.163.com", port, secure: port === 465, auth: { user, pass } });
 
 const attachments = Object.entries(cidMap)
   .filter(([k]) => k.startsWith("shot-"))
@@ -288,7 +243,7 @@ const attachments = Object.entries(cidMap)
 await transport.sendMail({
   from: `"GitHub 日报" <${user}>`,
   to: process.env.MAIL_TO || user,
-  subject: `【初稿】GitHub 热榜 ${data.day} · ${data.repos.length} 个项目 + 演示/中文入口`,
+  subject: `【公众号初稿】GitHub 热榜 ${data.day} · ${data.repos.length} 个项目`,
   html,
   attachments,
 });
