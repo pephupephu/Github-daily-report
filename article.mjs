@@ -20,6 +20,7 @@ const PAPER = /(arxiv|paper|技术报告|论文)/i;
 const SOCIAL = /(discord|telegram|微信|wechat|slack|twitter|community|社区|交流)/i;
 const CN_PATH = /(\/zh(-cn|-tw|-hans)?\/|\/cn\/|\bzh\b|\bchinese\b|lang=(zh|cn))/i;
 const JUNK = /(^|\.)(github\.com|gitee\.com|arxiv\.org|doi\.org|githubusercontent\.com|shields\.io|badge\.|discord\.gg|twitter\.com|x\.com|patreon\.com|opencollective\.com|ko-fi\.com|buymeacoffee\.com|huggingface\.co\/[^/]+\/[^/]+\/blob)/i;
+const VID_FILE = /\.(mp4|webm|mov|avi|gif)(\?|#|$)/i;
 
 async function readme(repo) {
   const r = await fetch(`https://api.github.com/repos/${repo}/readme`, { headers: { ...UA, accept: "application/vnd.github.raw" } });
@@ -60,6 +61,116 @@ function classify(links, repo, homepage) {
   const rank = (a, b) => (a.text ? 0 : 1) - (b.text ? 0 : 1);
   res.cnDemo.sort(rank); res.demo.sort(rank);
   return res;
+}
+
+// ---------- 视频提取 ----------
+
+function extractVideos(md, repoUrl) {
+  const videos = [];
+  const seen = new Set();
+  const base = new URL(repoUrl);
+
+  // YouTube: watch?v= / youtu.be/ / embed/
+  for (const m of md.matchAll(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/gi)) {
+    const id = m[1];
+    if (!seen.has(`yt:${id}`)) {
+      seen.add(`yt:${id}`);
+      videos.push({ type: 'youtube', id, url: `https://www.youtube.com/watch?v=${id}`, thumb: `https://img.youtube.com/vi/${id}/mqdefault.jpg` });
+    }
+  }
+
+  // Bilibili: BV number
+  for (const m of md.matchAll(/(?:bilibili\.com\/video\/(BV[0-9A-Za-z]+)|b23\.tv\/([0-9A-Za-z]+))/gi)) {
+    const id = m[1] || m[2];
+    if (!seen.has(`bili:${id}`)) {
+      seen.add(`bili:${id}`);
+      videos.push({ type: 'bilibili', id, url: `https://www.bilibili.com/video/${id}` });
+    }
+  }
+
+  // Vimeo
+  for (const m of md.matchAll(/vimeo\.com\/(\d+)/gi)) {
+    const id = m[1];
+    if (!seen.has(`vim:${id}`)) {
+      seen.add(`vim:${id}`);
+      videos.push({ type: 'vimeo', id, url: `https://vimeo.com/${id}` });
+    }
+  }
+
+  // 直接视频文件 / GIF
+  for (const m of md.matchAll(/(?:(?:src|href)=["'])([^"']*\.(?:mp4|webm|mov|avi|gif)(?:[?#][^"']*)?)["']/gi)) {
+    let url;
+    try { url = new URL(m[1], repoUrl).href; } catch { continue; }
+    if (!seen.has(`file:${url}`)) {
+      seen.add(`file:${url}`);
+      videos.push({ type: 'file', id: url, url, thumb: url.endsWith('.gif') ? url : undefined });
+    }
+  }
+
+  // Markdown 图片形式的 gif/视频 ![](xxx.mp4)
+  for (const m of md.matchAll(/!\[[^\]]*\]\(([^)]*\.(?:mp4|webm|mov|avi|gif)(?:[?#][^)]*)?)\)/gi)) {
+    let url;
+    try { url = new URL(m[1], repoUrl).href; } catch { continue; }
+    if (!seen.has(`md:${url}`)) {
+      seen.add(`md:${url}`);
+      videos.push({ type: 'file', id: url, url, thumb: url.endsWith('.gif') ? url : undefined });
+    }
+  }
+
+  return videos.slice(0, 4);
+}
+
+// ---------- 视频卡片 ----------
+
+function videoBlock(videos) {
+  if (!videos.length) return '';
+  const cards = videos.map(v => {
+    if (v.type === 'youtube') {
+      return `
+      <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
+        <a href="${esc(v.url)}" style="text-decoration:none;display:block">
+          <div style="position:relative;width:100%;max-width:560px;padding-bottom:56.25%;overflow:hidden;border-radius:6px;margin-bottom:8px">
+            <img src="${esc(v.thumb)}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover" onerror="this.src='https://img.youtube.com/vi/${esc(v.id)}/default.jpg'">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40px;color:#fff;opacity:0.85;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))">▶</div>
+          </div>
+          <div style="font-size:13px;color:#1a1a1a">${esc(`YouTube 演示 · ${v.id}`)}</div>
+        </a>
+      </div>`;
+    }
+    if (v.type === 'bilibili') {
+      return `
+      <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
+        <a href="${esc(v.url)}" style="text-decoration:none;display:block">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:48px;height:36px;background:#191919;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">B</div>
+            <div style="font-size:13px;color:#1a1a1a">Bilibili 演示 · ${esc(v.id)}</div>
+          </div>
+        </a>
+      </div>`;
+    }
+    if (v.type === 'vimeo') {
+      return `
+      <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
+        <a href="${esc(v.url)}" style="text-decoration:none;display:block">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:48px;height:36px;background:#1ab7ea;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">V</div>
+            <div style="font-size:13px;color:#1a1a1a">Vimeo 演示 · ${esc(v.id)}</div>
+          </div>
+        </a>
+      </div>`;
+    }
+    // 直接文件
+    return `
+    <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
+      <a href="${esc(v.url)}" style="text-decoration:none;display:block">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:48px;height:36px;background:#282c34;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">▶</div>
+          <div style="font-size:13px;color:#1a1a1a">${esc(v.thumb ? '演示动图' : '演示视频')} · ${esc(new URL(v.url).pathname.split('/').pop() || v.url)}</div>
+        </div>
+      </a>
+    </div>`;
+  }).join('');
+  return `<div style="margin:12px 0">${cards}</div>`;
 }
 
 // ---------- 浏览器层面：抓 SPA 中文入口 + 截图 ----------
@@ -109,6 +220,7 @@ function section(r, i, shotCid) {
   const body = esc(r.summary || r.readmeCN?.slice(0, 700) || r.desc);
   const cmd = r.install ? `<pre style="background:#282c34;color:#abb2bf;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:13px;line-height:1.6;margin:10px 0"><code>${esc(r.install)}</code></pre>` : "";
   const img = shotCid ? `<img src="cid:${shotCid}" style="max-width:100%;border-radius:6px;margin:0 0 14px;display:block" alt="${esc(repoShort(r.repo))} 演示截图" />` : "";
+  const vids = r.videos?.length ? videoBlock(r.videos) : "";
 
   const links = [];
   if (r.homepage) links.push(`<a href="${esc(r.homepage)}" style="color:#576b95;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`);
@@ -129,6 +241,7 @@ function section(r, i, shotCid) {
   <p style="margin:0 0 10px;font-size:15px;line-height:1.9;color:#3a3a3a">${lead}${esc((r.summary || r.desc).slice(hook.length))}</p>
   ${cmd}
   ${img}
+  ${vids}
   ${links.length ? `<div style="margin:10px 0">${links.join("　　")}</div>` : ""}
   <div style="margin:0;padding:10px 14px;background:#f7f8fa;border-radius:6px;font-size:13px;color:#5a6472;line-height:1.8">
     <strong>一句话概括：</strong>${esc(r.desc || r.summary || "")}<br>
@@ -191,9 +304,10 @@ await withBrowser(async () => {
   const page = await browser.newPage();
   page.setViewportSize({ width: 1280, height: 800 });
   for (const [i, r] of data.repos.entries()) {
-    const md = await readme(r.repo);
-    r.links = classify(parseLinks(md), r.repo, r.homepage);
-    r.install = installCmd(md);
+  const md = await readme(r.repo);
+  r.links = classify(parseLinks(md), r.repo, r.homepage);
+  r.install = installCmd(md);
+  r.videos = extractVideos(md, r.url);
     if (!r.links.cnDemo.length) {
       const targets = [...r.links.demo.slice(0, 1).map((l) => l.url), r.homepage].filter(Boolean);
       for (const cand of targets) {
