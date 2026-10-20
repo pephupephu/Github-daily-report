@@ -6,3 +6,4 @@
 - [daily-2026-10-18](./daily-2026-10-18.md) — 榜首 anthropics/claude-plugins-official (+1397)
 - [daily-2026-10-19](./daily-2026-10-19.md) — 榜首 MadsLorentzen/ai-job-search (+2232)
 - [daily-2026-10-19](./daily-2026-10-19.md) — 榜首 MadsLorentzen/ai-job-search (+3860)
+- [daily-2026-10-20](./daily-2026-10-20.md) — 榜首 MadsLorentzen/ai-job-search (+3890)
