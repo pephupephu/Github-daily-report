@@ -178,7 +178,7 @@ function videoBlock(videos) {
 let browser;
 async function withBrowser(fn) {
   const { chromium } = await import("playwright-core");
-  browser = await chromium.launch({ headless: "new", args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"] });
+  browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"] });
   try { return await fn(); } finally { await browser.close(); }
 }
 
