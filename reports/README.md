@@ -11,3 +11,4 @@
 - [daily-2026-10-21](./daily-2026-10-21.md) — 榜首 MadsLorentzen/ai-job-search (+3131)
 - [daily-2026-10-21](./daily-2026-10-21.md) — 榜首 MadsLorentzen/ai-job-search (+3131)
 - [daily-2026-10-21](./daily-2026-10-21.md) — 榜首 MadsLorentzen/ai-job-search (+3131)
+- [daily-2026-10-21](./daily-2026-10-21.md) — 榜首 MadsLorentzen/ai-job-search (+3131)
