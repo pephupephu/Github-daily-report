@@ -7,9 +7,9 @@
       "repo": "MadsLorentzen/ai-job-search",
       "lang": "Python",
       "desc": "The job search that runs on your machine. AI job application framework built on Claude Code: evaluate postings, tailor CVs, write cover letters, prep interviews. Fork it and own it.",
-      "stars": 62353,
+      "stars": 62468,
       "today": "3131",
-      "forks": 19266,
+      "forks": 19296,
       "created": "2026-03-18",
       "license": "MIT",
       "topics": [
@@ -25,30 +25,30 @@
       "homepage": "",
       "url": "https://github.com/MadsLorentzen/ai-job-search",
       "summary": "在您的计算机上运行的职位搜索。基于 Claude Code 构建的人工智能职位申请框架：评估职位、定制简历、撰写求职信、准备面试。分叉并拥有它。",
-      "readmeCN": "# 人工智能求职\n\n*在您的计算机上运行的职位搜索。*\n\n \n\n[](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml)\n\n基于 [Claude Code](https://claude.com/claude-code) 构建的人工智能驱动的职位申请框架。叉开它，填写您的个​​人资料，然后让克劳德评估职位发布，定制您的简历，撰写求职信，并为您准备面试。\n\n> 注意：这是一个独立的开源项目，不隶属于 Anthropic、不受其认可、赞助或维护。引用 Anthropic 和 Claude Code 仅用于描述此工作流程使用的工具链。\n>\n> 该项目**没有附属的加密货币、代币或付费赞助计划**。任何其他声称都是未经授权的，应被视为骗局。支持该项目的唯一方法是下面的 Ko-fi 链接并在 GitHub 上做出贡献。\n\n## 它真的有效吗？\n\n我是一名受过训练的地球物理学家。当我的职位在 2025 年底被裁掉时，我构建了这个框架来运行我自己的求职 - 与此存储库中相同的“/scrape”、“/apply”和“/interview”工作流程，在我自己的职业生涯中每周使用。我对每一位与我交谈过的雇主都坦率地表达了这一点，这通常会引发真正的技术对话，而不是对我不利。\n\n69 份量身定制的申请，20 次第一次面试，最后签订了一份合同，我于 2026 年 6 月开始担任人工智能工程师。人们一直在问这是否真的有效。它让我被录用了。现在它是你的了。\n\n*较长的版本，包括完整的申请渠道，位于 [LinkedIn](https://www.linkedin.com/in/mads-lorentzen/)。*\n\n 这是否为您节省了周日写求职信的时间？考虑一杯咖啡。\n 它让你找到了工作吗？也许是两个。 ☕\n\n \n \n \n\n## 这是什么\n\n结构化工作流程，将 Claude Code 转变为全栈职位申请助手。核心工作流程（自我分析、适合性评估和起草者-审阅者申请流程）**与语言和国家/地区无关**。职位门户搜索技能是为丹麦市场构建的（Jobindex、Jobnet、Akademikernes Jobbank 等），但该模式旨在替换为您当地的职位委员会。\n\n````\n/设置/刮擦/应用 \n\n 维维维\n填写 搜索职位 评估适合度\n您的个人资料门户评分和推荐\n\n 维维维\n个人资料当前匹配简历草案+求职信\n已准备好适合等级的文件（LaTeX，定制）\n\n 伏\n 选择匹配 审稿人评论\n -> /应用 -> 修改 -> 最终输出\n````\n\n该框架编码了职业指导最佳实践，包括结构化评估标准、前瞻性求职信框架和可选的薪资基准。\n\n## 先决条件\n\n- [克劳德代码](https://claude.com/claude-code) (CLI)。 Claude Code 没有免费套餐：您需要 Claude Pro/Max/Team 订阅或 Anthropic API 积分（按令牌付费，偶尔使用通常更便宜）。使用不同的代理工具（Codex、Antigravity、Gemini CLI）？从 [`AGENTS.md`](AGENTS.md) 开始 - 门户搜索技能开箱即用，并且 [社区分支](https://github.com/MadsLorentzen/ai-job-search/discussions/78) 适应完整的工作流程。\n-Python 3.10+\n- [Bun](https://bun.sh)（用于求职 CLI 工具）\n- 使用 `lualatex` 和 `xelatex` 的 LaTeX 发行版：[TeX Live](https://tug.org/texlive/)、[MacTeX](https://tug.org/mactex/)、[TinyTeX](https://yihui.org/tinytex/) 或 [MiKTeX](https://miktex.org/)。 CV 使用“lualatex”进行编译（pdflatex 在现代 MiKTeX 安装上经常失败，并出现“fontawesome5”字体扩展错误）；求职信使用“xelatex”进行编译，因为“cover.cls”需要“fontspec”。如果使用最小 TeX 安装（例如 TinyTeX 或 BasicTeX），请安装 [SETUP.md](SETUP.md#minimal-tex-install-tinytexbasictex) 中列出的额外软件包。\n- 可选：“pip install pypdf”用于“/apply”的 ATS 可解析性检查（BSD；不需要 Poppler）。 Poppler `pdftotext` 仍然是后备方案（macOS：`brew install poppler`，Debian/Ubuntu：`apt install poppler-utils`，Windows：`choco install poppler`）。如果两者都缺失，检查将降级为视觉关键字审查。\n\n## 快速开始"
+      "readmeCN": "# 人工智能求职\n\n*在您的计算机上运行的职位搜索。*\n\n \n\n[](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml)\n\n基于 [Claude Code](https://claude.com/claude-code) 构建的人工智能驱动的职位申请框架。叉开它，填写您的个​​人资料，然后让克劳德评估职位发布，定制您的简历，撰写求职信，并为您准备面试。\n\n> 注意：这是一个独立的开源项目，不隶属于 Anthropic、不受其认可、赞助或维护。引用 Anthropic 和 Claude Code 仅用于描述此工作流程使用的工具链。\n>\n> 该项目**没有附属的加密货币、代币或付费赞助计划**。任何其他声称都是未经授权的，应被视为骗局。支持该项目的唯一方法是下面的 Ko-fi 链接并在 GitHub 上做出贡献。\n\n## 它真的有效吗？\n\n我是一名受过训练的地球物理学家。当我的职位在 2025 年底被裁掉时，我构建了这个框架来运行我自己的求职 - 与此存储库中相同的“/scrape”、“/apply”和“/interview”工作流程，在我自己的职业生涯中每周使用。我对每一位与我交谈过的雇主都坦率地表达了这一点，这通常会引发真正的技术对话，而不是对我不利。\n\n69 份量身定制的申请，20 次第一次面试，最后签订了一份合同，我于 2026 年 6 月开始担任人工智能工程师。人们一直在问这是否真的有效。它让我被录用了。现在它是你的了。\n\n*较长的版本，包括完整的申请渠道，位于 [LinkedIn](https://www.linkedin.com/in/mads-lorentzen/)。*\n\n 这是否为您节省了周日写求职信的时间？考虑一杯咖啡。\n 它让你找到了工作吗？也许是两个。 ☕\n\n \n \n \n\n## 这是什么\n\n结构化工作流程，将 Claude Code 转变为全栈职位申请助手。核心工作流程（自我分析、适合性评估和起草者-审阅者申请流程）**与语言和国家/地区无关**。职位门户搜索技能是为丹麦市场构建的（Jobindex、Jobnet、Akademikernes Jobbank 等），但该模式旨在替换为您当地的职位委员会。\n\n````\n/设置/刮擦/应用 \n\n 维维维\n填写 搜索职位 评估适合度\n您的个人资料门户评分和推荐\n\n 维维维\n个人资料当前匹配简历草案+求职信\n准备好适合度等级的文件（LaTeX，定制）\n\n 伏\n 选择匹配 审稿人评论\n -> /应用 -> 修改 -> 最终输出\n````\n\n该框架编码了职业指导最佳实践，包括结构化评估标准、前瞻性求职信框架和可选的薪资基准。\n\n## 先决条件\n\n- [克劳德代码](https://claude.com/claude-code) (CLI)。 Claude Code 没有免费套餐：您需要 Claude Pro/Max/Team 订阅或 Anthropic API 积分（按令牌付费，偶尔使用通常更便宜）。使用不同的代理工具（Codex、Antigravity、Gemini CLI）？从 [`AGENTS.md`](AGENTS.md) 开始 - 门户搜索技能开箱即用，并且 [社区分支](https://github.com/MadsLorentzen/ai-job-search/discussions/78) 适应完整的工作流程。\n-Python 3.10+\n- [Bun](https://bun.sh)（用于求职 CLI 工具）\n- 使用 `lualatex` 和 `xelatex` 的 LaTeX 发行版：[TeX Live](https://tug.org/texlive/)、[MacTeX](https://tug.org/mactex/)、[TinyTeX](https://yihui.org/tinytex/) 或 [MiKTeX](https://miktex.org/)。 CV 使用“lualatex”进行编译（pdflatex 在现代 MiKTeX 安装上经常失败，并出现“fontawesome5”字体扩展错误）；求职信使用“xelatex”进行编译，因为“cover.cls”需要“fontspec”。如果使用最小 TeX 安装（例如 TinyTeX 或 BasicTeX），请安装 [SETUP.md](SETUP.md#minimal-tex-install-tinytexbasictex) 中列出的额外软件包。\n- 可选：“pip install pypdf”用于“/apply”的 ATS 可解析性检查（BSD；不需要 Poppler）。 Poppler `pdftotext` 仍然是后备方案（macOS：`brew install poppler`，Debian/Ubuntu：`apt install poppler-utils`，Windows：`choco install poppler`）。如果两者都缺失，检查将降级为视觉关键字审核。\n\n## 快速开始"
     },
     {
       "repo": "cloudflare/security-audit-skill",
       "lang": "JavaScript",
       "desc": "A coding-agent skill for multi-phase security audits with independently verified, machine-readable findings",
-      "stars": 35213,
+      "stars": 35287,
       "today": "1997",
-      "forks": 2215,
+      "forks": 2220,
       "created": "2026-06-18",
       "license": "MIT",
       "topics": [],
       "homepage": "",
       "url": "https://github.com/cloudflare/security-audit-skill",
-      "summary": "用于多阶段安全审计的编码代理技能，具有独立验证的机器可读结果",
-      "readmeCN": "# 安全审计\n\n一种编码代理技能，可将您的代理变成安全审核员。它通过侦察、覆盖主导的搜寻、候选人验证、结构化输出、独立记录验证和目标中立报告来协调孤立的代理。\n\n这是为 Cloudflare 的漏洞发现工具奠定了基础的技能，如[构建您自己的漏洞工具](https://blog.cloudflare.com/build-your-own-vulnerability-harness)中所述。该安全带发展成为一个多级、覆盖整个车队的系统；这个技能是它演变而来的single-repo起点。\n\n## 它的作用\n\n该技能分六个阶段进行结构化审核：\n\n1. **侦察**——在“architecture.md”和“coverage-ledger.json”中映射架构、信任边界、输入表面、先验证据和确定性覆盖。\n2. **覆盖范围主导的狩猎**——从账本单元中分配孤立的猎人，记录他们的检查，并使用覆盖范围批评家来寻找差距。\n3. **候选验证**——将每个独特的候选提供给试图反驳它的新验证者。\n4. **结构化输出** -- 将 `confirmed`、`needs_validation` 和 `rejected` 记录写入 `findings.json` 并根据 `report-schema.json` 验证它们。\n5. **独立记录验证**——新代理验证最终来源声明。材料替换品将接受另一位独立验证者。\n\n6. **目标中立报告** -- 从已验证的记录和覆盖分类账中派生出“REPORT.md”、“FINDINGS-DETAIL.md”和“NEEDS-VALIDATION.md”。\n\n父级在创建分类帐后以及每次更新分类帐后运行“validate-coverage-ledger.cjs”。它在第 4 阶段运行“validate-findings.cjs”，并在每次第 5 阶段替换后再次运行。\n\n判决是不同的：“已确认”具有完整的源跟踪和有限的观察结果，“需要验证”具有确切的未解决事实且没有严重性，而“已拒绝”记录了被反驳的候选人。\n\n针对同一存储库的多次运行是累加的。该技能使用先前的分类账和发现来定位差距，重新验证更改的源，并继续当前源证据，而不将陈旧或未解决的工作视为所涵盖的。\n\n## 文件\n\n|文件|目的|\n\n| `技能.md` |设置、核心原则、平台术语、工作流程概述和审核反模式 |\n| `侦察.md` |第一阶段侦察提示与合成说明|\n| `狩猎.md` |第 2 阶段编排、搜寻方法和验证规则 |\n| `攻击类别.md` |核心、通配符和明显事物攻击提示 |\n| `内存安全和二进制.md` |用于本机目标的内存安全、二进制和内核狩猎类\n| `AI-AND-LLM.md` |针对 LLM 支持的目标的提示注入、代理/工具和输出处理狩猎类 |\n\n| `WEB-协议和-AUTH.md` |用于 HTTP 协议和身份验证目标的 HTTP 请求帧、缓存和身份验证协议搜索类 |\n| `客户端.md` |针对客户端/浏览器目标的 DOM 注入、消息传递信任、UI 纠正和原型污染狩猎类 |\n| `供应链和发布.md` |依赖项、CI、发布、签名、更新、插件和扩展搜索类 |\n| `云和部署.md` | IAM、基础设施即代码、容器、无服务器、入口和运行时配置搜寻类 |\n| `协议-RPC-和-消息.md` | RPC、序列化、队列、代理、Webhook 和流协议搜索类 |\n| `资源耗尽和可用性.md` |共享资源、配额、队列、工作人员和操作员支出狩猎类 |\n| `数据隔离和生命周期.md` |租户隔离、缓存、搜索、导出、备份、迁移、删除和恢复搜寻类 |\n| `桌面-移动-和本地-IPC.md` |本机应用程序、深层链接、Web 视图、导出组件、帮助程序、守护进程和本地 IPC 狩猎类 |\n| `验证和报告.md` |第 3-6 阶段候选人验证、结构化输出、记录验证和报告 |\n| `report-schema.json` |所有三个“findings.json”判决的 JSON 架构 |\n| `验证结果.cjs` |第 4 阶段和第 5 阶段中“findings.json”的零依赖验证器 |\n| `validate-findings.test.cjs` |调查结果验证器测试和生产商兼容的夹具检查|"
+      "summary": "用于多阶段安全审计的编码代理技能，具有独立验证、机器可读的结果",
+      "readmeCN": "# 安全审计\n\n一种编码代理技能，可将您的代理变成安全审核员。它通过侦察、覆盖主导的搜寻、候选人验证、结构化输出、独立记录验证和目标中立报告来协调孤立的代理。\n\n这是为 Cloudflare 的漏洞发现工具奠定了基础的技能，如[构建您自己的漏洞工具](https://blog.cloudflare.com/build-your-own-vulnerability-harness)中所述。该安全带发展成为一个多级、覆盖整个车队的系统；该技能是其演变而来的单一存储库起点。\n\n## 它的作用\n\n该技能分六个阶段进行结构化审核：\n\n1. **侦察**——在“architecture.md”和“coverage-ledger.json”中映射架构、信任边界、输入表面、先验证据和确定性覆盖。\n2. **覆盖范围主导的狩猎**——从账本单元中分配孤立的猎人，记录他们的检查，并使用覆盖范围批评家来寻找差距。\n3. **候选验证**——将每个独特的候选提供给试图反驳它的新验证者。\n4. **结构化输出** -- 将 `confirmed`、`needs_validation` 和 `rejected` 记录写入 `findings.json` 并根据 `report-schema.json` 验证它们。\n5. **独立记录验证**——新代理验证最终来源声明。材料替换品将接受另一位独立验证者。\n\n6. **目标中立报告** -- 从已验证的记录和覆盖分类账中派生出“REPORT.md”、“FINDINGS-DETAIL.md”和“NEEDS-VALIDATION.md”。\n\n父级在创建分类帐后以及每次更新分类帐后运行“validate-coverage-ledger.cjs”。它在第 4 阶段运行“validate-findings.cjs”，并在每次第 5 阶段替换后再次运行。\n\n判决是不同的：“已确认”具有完整的源跟踪和有限的观察结果，“需要验证”具有确切的未解决事实且没有严重性，而“已拒绝”记录了被反驳的候选人。\n\n针对同一存储库的多次运行是累加的。该技能使用先前的分类账和发现来定位差距，重新验证更改的源，并继续当前源证据，而不将陈旧或未解决的工作视为所涵盖的。\n\n## 文件\n\n|文件 |目的|\n\n| `技能.md` |设置、核心原则、平台术语、工作流程概述和审核反模式 |\n| `侦察.md` |第一阶段侦察提示与合成说明|\n| `狩猎.md` |第 2 阶段编排、搜寻方法和验证规则 |\n| `攻击类别.md` |核心、通配符和明显事物攻击提示 |\n| `内存安全和二进制.md` |用于本机目标的内存安全、二进制和内核狩猎类\n| `AI-AND-LLM.md` |针对 LLM 支持的目标的提示注入、代理/工具和输出处理狩猎类 |\n\n| `WEB-协议和-AUTH.md` |用于 HTTP 协议和身份验证目标的 HTTP 请求帧、缓存和身份验证协议搜索类 |\n| `客户端.md` |针对客户端/浏览器目标的 DOM 注入、消息传递信任、UI 纠正和原型污染狩猎类 |\n| `供应链和发布.md` |依赖项、CI、发布、签名、更新、插件和扩展搜索类 |\n| `云和部署.md` | IAM、基础设施即代码、容器、无服务器、入口和运行时配置搜寻类 |\n| `协议-RPC-和-消息.md` | RPC、序列化、队列、代理、Webhook 和流协议搜索类 |\n| `资源耗尽和可用性.md` |共享资源、配额、队列、工作人员和操作员支出狩猎类 |\n| `数据隔离和生命周期.md` |租户隔离、缓存、搜索、导出、备份、迁移、删除和恢复搜寻类 |\n| `桌面-移动-和本地-IPC.md` |本机应用程序、深层链接、Web 视图、导出组件、帮助程序、守护进程和本地 IPC 狩猎类 |\n| `验证和报告.md` |第 3-6 阶段候选人验证、结构化输出、记录验证和报告 |\n| `report-schema.json` |所有三个“findings.json”判决的 JSON 架构 |\n| `验证结果.cjs` |第 4 阶段和第 5 阶段中“findings.json”的零依赖验证器 |\n| `validate-findings.test.cjs` |调查结果验证器测试和生产商兼容的夹具检查|"
     },
     {
       "repo": "vllm-project/vllm",
       "lang": "Python",
       "desc": "A high-throughput and memory-efficient inference and serving engine for LLMs",
-      "stars": 94704,
+      "stars": 94725,
       "today": "439",
-      "forks": 23717,
+      "forks": 23721,
       "created": "2023-02-09",
       "license": "Apache-2.0",
       "topics": [
@@ -70,9 +70,9 @@
       "repo": "stablyai/orca",
       "lang": "TypeScript",
       "desc": "Orca is the place for working with a fleet of agents (e.g. Grok Bot, Claude Code). Run any coding agent with your own subscription. Available on desktop, mobile and remote runtime.",
-      "stars": 100643,
+      "stars": 100717,
       "today": "1543",
-      "forks": 6361,
+      "forks": 6367,
       "created": "2026-03-17",
       "license": "MIT",
       "topics": [
@@ -88,15 +88,15 @@
       "homepage": "https://orca.dev",
       "url": "https://github.com/stablyai/orca",
       "summary": "Orca 是与代理团队（例如 Grok Bot、Claude Code）合作的地方。使用您自己的订阅运行任何编码代理。可在桌面、移动和远程运行时使用。",
-      "readmeCN": "虎鲸\n\n \n \n \n \n \n \n\n 中文 · 日本语 · 한국어 · 西班牙语 · 法语 · 葡萄牙语\n\n 适用于 100x 构建者的 AI Orchestrator。\n 并行运行 Codex、ClaudeCode、OpenCode 或 Pi — 每个都在自己的工作树中，在一个位置进行跟踪。\n\n下载逆戟鲸\n\n \n\n## 特点\n\n### 移动伴侣\n\n通过手机监控和指导您的客服人员 - 当客服人员完成时收到通知并从任何地方发送后续信息。\n\n[iOS 应用商店](https://apps.apple.com/us/app/orca-ide/id6766130217) · [Android APK](https://www.onorca.dev/download/android) · [文档 →](https://www.onorca.dev/docs/mobile)\n\n \n\n### 并行工作树\n\n将一个提示分散到五个代理中，每个代理都在自己独立的 git 工作树中 - 比较结果并合并获胜者。\n\n[文档 →](https://www.onorca.dev/docs/model/worktrees)\n\n \n\n### 终端分裂\n\n幽灵级终端，具有 WebGL 渲染、无限分割和重新启动后仍可回滚的功能。\n\n[文档 →](https://www.onorca.dev/docs/terminal)\n\n \n\n### 设计模式\n\n单击真实 Chromium 窗口中的任何 UI 元素，将其 HTML、CSS 和裁剪后的屏幕截图直接发送到代理的提示中。\n\n[文档 →](https://www.onorca.dev/docs/browser/design-mode)\n\n \n\n### GitHub 和 Linear、本机\n\n在应用程序内浏览 PR、问题和项目板 - 从任何任务中打开工作树并进行审查，无需上下文切换。\n\n[文档 →](https://www.onorca.dev/docs/review/linear)\n\n \n\n### SSH 工作树\n\n在强大的远程机器上运行代理，具有完整的文件编辑、git 和终端 - 包括自动重新连接和端口转发。\n\n[文档 →](https://www.onorca.dev/docs/ssh)\n\n \n\n### 注释 AI 差异\n\n在任何 diff 行上留下评论并将其发送回代理 - 无需离开 Orca 即可进行审查、编辑和提交。\n\n[文档 →](https://www.onorca.dev/docs/review/annotate-ai-diff)\n\n \n\n### 将文件拖至代理\n\nVS Code 的编辑器随处可自动保存 — 将文件或图像直接拖到代理提示符中。\n\n[文档 →](https://www.onorca.dev/docs/editing/file-explorer)\n\n \n\n### Orca CLI\n\n代理也驱动 Orca — 使用“orca worktree create”、“snapshot”、“click”和“fill”编写每个工作流程的脚本。\n\n[文档 →](https://www.onorca.dev/docs/cli/overview)\n\n \n\n**盒子里还有：**\n\n- **[快速打开](https://www.onorca.dev/docs/model/quick-open)** — 跨工作树、文件、代理、命令和存储库上下文进行搜索，无需离开流程。\n- **[帐户切换器和使用情况跟踪](https://www.onorca.dev/docs/agents/usage-tracking)** — 请参阅 Claude 和 Codex 使用情况和速率限制重置，以及无需重新登录即可热插拔帐户。\n- **[丰富的存储库预览](https://www.onorca.dev/docs/editing/markdown)** — 在工作区中预览 Markdown、图像、PDF 和存储库文档。\n- **[计算机使用](https://www.onorca.dev/docs/cli/computer-use)** — 当工作流程需要真正的交互时，让客服人员操作桌面应用程序和可见的 UI。\n\n- **[通知和未读状态](https://www.onorca.dev/docs/notifications)** — 了解代理何时完成或需要关注，然后将线程标记为未读以便稍后返回。\n- **还有很多很多** - 我们每天发货，所以这个列表永远落后。 [变更日志](https://github.com/stouslyai/orca/releases) 是真正的功能列表。\n\n---\n\n## 支持的代理\n\n可与**任何 CLI 代理**配合使用 - 如果它在终端中运行，则它在 Orca 中运行。\n\n <a href=\"https://docs.ant"
+      "readmeCN": "虎鲸\n\n \n \n \n \n \n \n\n 中文 · 日本语 · 한국어 · 西班牙语 · 法语 · 葡萄牙语\n\n 适用于 100x 构建者的 AI Orchestrator。\n 并行运行 Codex、ClaudeCode、OpenCode 或 Pi — 每个都在自己的工作树中，在一个位置进行跟踪。\n\n下载逆戟鲸\n\n \n\n## 特点\n\n### 移动伴侣\n\n通过手机监控和指导您的客服人员 - 当客服人员完成时收到通知并从任何地方发送后续信息。\n\n[iOS 应用商店](https://apps.apple.com/us/app/orca-ide/id6766130217) · [Android APK](https://www.onorca.dev/download/android) · [文档 →](https://www.onorca.dev/docs/mobile)\n\n \n\n### 并行工作树\n\n将一个提示分散到五个代理中，每个代理都在自己独立的 git 工作树中 - 比较结果并合并获胜者。\n\n[文档 →](https://www.onorca.dev/docs/model/worktrees)\n\n \n\n### 终端分裂\n\n幽灵级终端，具有 WebGL 渲染、无限分割和重新启动后仍可回滚的功能。\n\n[文档 →](https://www.onorca.dev/docs/terminal)\n\n \n\n### 设计模式\n\n单击真实 Chromium 窗口中的任何 UI 元素，将其 HTML、CSS 和裁剪后的屏幕截图直接发送到代理的提示中。\n\n[文档 →](https://www.onorca.dev/docs/browser/design-mode)\n\n \n\n### GitHub 和 Linear、本机\n\n在应用程序内浏览 PR、问题和项目板 - 从任何任务中打开工作树并进行审查，无需上下文切换。\n\n[文档 →](https://www.onorca.dev/docs/review/linear)\n\n \n\n### SSH 工作树\n\n在强大的远程机器上运行代理，具有完整的文件编辑、git 和终端 - 包括自动重新连接和端口转发。\n\n[文档 →](https://www.onorca.dev/docs/ssh)\n\n \n\n### 注释 AI 差异\n\n在任何 diff 行上留下评论并将其发送回代理 - 无需离开 Orca 即可进行审查、编辑和提交。\n\n[文档 →](https://www.onorca.dev/docs/review/annotate-ai-diff)\n\n \n\n### 将文件拖至代理\n\nVS Code 的编辑器随处都具有自动保存功能 - 将文件或图像直接拖到代理提示符中。\n\n[文档 →](https://www.onorca.dev/docs/editing/file-explorer)\n\n \n\n### Orca CLI\n\n代理也驱动 Orca — 使用“orca worktree create”、“snapshot”、“click”和“fill”编写每个工作流程的脚本。\n\n[文档 →](https://www.onorca.dev/docs/cli/overview)\n\n \n\n**盒子里还有：**\n\n- **[快速打开](https://www.onorca.dev/docs/model/quick-open)** — 跨工作树、文件、代理、命令和存储库上下文进行搜索，无需离开流程。\n- **[帐户切换器和使用情况跟踪](https://www.onorca.dev/docs/agents/usage-tracking)** — 请参阅 Claude 和 Codex 使用情况和速率限制重置，以及无需重新登录即可热插拔帐户。\n- **[丰富的存储库预览](https://www.onorca.dev/docs/editing/markdown)** — 在工作区中预览 Markdown、图像、PDF 和存储库文档。\n- **[计算机使用](https://www.onorca.dev/docs/cli/computer-use)** — 当工作流程需要真正的交互时，让客服人员操作桌面应用程序和可见的 UI。\n\n- **[通知和未读状态](https://www.onorca.dev/docs/notifications)** — 了解代理何时完成或需要关注，然后将线程标记为未读以便稍后返回。\n- **还有很多很多** - 我们每天发货，所以这个列表永远落后。 [变更日志](https://github.com/stouslyai/orca/releases) 是真正的功能列表。\n\n---\n\n## 支持的代理\n\n可与**任何 CLI 代理**配合使用 - 如果它在终端中运行，则它在 Orca 中运行。\n\n <a href=\"https://docs.ant"
     },
     {
       "repo": "headroomlabs-ai/headroom",
       "lang": "Python",
       "desc": "Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 20% fewer tokens for coding agents, 60-95% fewer tokens for JSON, same answers. Library, proxy, MCP server.",
-      "stars": 77029,
+      "stars": 77058,
       "today": "477",
-      "forks": 5977,
+      "forks": 5981,
       "created": "2026-01-07",
       "license": "Apache-2.0",
       "topics": [
@@ -112,15 +112,15 @@
       "homepage": "https://docs.headroomlabs.ai/docs",
       "url": "https://github.com/headroomlabs-ai/headroom",
       "summary": "在工具输出、日志、文件和 RAG 块到达 LLM 之前对其进行压缩。编码代理的标记减少了 20%，JSON 的标记减少了 60-95%，答案相同。库、代理、MCP 服务器。",
-      "readmeCN": "快速入门·\n 团队的发展空间·\n 安装·\n 证明·\n 代理商·\n 文件·\n 不和·\n llms.txt\n\nAI 代理/法学硕士：在此处读取 /llms.txt，或获取\n直播索引·\n完整的文档 blob。\n\nHeadroom 压缩 AI 代理读取的所有内容 - 工具输出、日志、RAG\n块、文件和对话历史记录——在到达法学硕士之前。一样\n答案，令牌的分数。压缩在您的机器上运行；没有提示或\n文件内容被发送到任何地方进行压缩。\n\n \n\n \n 10,144 → 1,260 代币。发现同样的致命错误。\n\n## 它的作用\n\n- **库** — Python 或 TypeScript 中的“压缩（消息）”，内联在任何应用程序中。\n- **代理** — `headroom proxy --port 8787`，零代码更改，任何语言。\n- **代理包裹** — 一个命令中的“headroom 包裹 claude|codex|grok|copilot|cursor|aider|opencode|cline|continue|goose|openhands|openclaw|vibe|omp|zcode”；使用“headroom unwrap”撤消。\n- **MCP 服务器** — 适用于任何 MCP 客户端的“headroom_compress”、“headroom_retrieve”、“headroom_stats”。\n- **跨代理内存** — Claude、Codex、Gemini 和 Grok 之间的一个共享存储，具有自动重复数据删除功能。\n- **`headroom learn`** — 挖掘失败的会话并将更正写入`CLAUDE.local.md`（默认，gitignored）、`CLAUDE.md`、`AGENTS.md`、`GEMINI.md` 或`GROK.md`。\n- **输出令牌减少** - 修剪模型*写回*的内容，而不仅仅是您发送的内容。请参阅[下文](#output-token-reduction)。\n- **可逆 (CCR)** — 原件在本地缓存并按需检索。\n\n## 它是如何工作的\n\n````\n 您的代理/应用程序\n （Claude Code、Cursor、Codex、LangChain、Agno、Strands、您自己的代码……）\n │ 提示 · 工具输出 · 日志 · RAG 结果 · 文件\n ▼\n ┌────────────────────────────────────────────────────┐\n │ 净空（在本地运行 - 您的数据留在这里） │\n │ ────────────────────────────────\n\n- **ContentRouter** 检测内容类型并为其选择压缩器。\n- **SmartCrusher / CodeCompressor / Kompress-v2-base** 分别处理 JSON、源代码和散文。\n- **CacheAligner** 标记会破坏提供者 KV 缓存前缀的易失性内容。它从不重写提示。\n- **CCR** 在本地存储原始文本，以便模型在需要全文时可以调用 `headroom_retrieve`。\n\n→ [架构](https://docs.headroomlabs.ai/docs/architecture) ·\n[CCR](https://docs.headroomlabs.ai/docs/ccr)·\n[Kompress-v2-base 模型卡](https://huggingface.co/chopratejas/kompress-v2-base)\n\n## 开始（60 秒）\n\n````bash\n# 1 — 安装\nuv tool install --python 3.13 \"headroom-ai[all]\" # 独立环境中的 CLI\npip install \"headroom-ai[all]\" # Python — 附带 `headroom` CLI\nnpm install headroom-ai # 仅 TypeScript SDK — 无 CLI\n\n# 2 — 选择一种模式\nheadroom 部署 # 交钥匙本地部署 + 代理配置\nheadroom wrap claude # 包装编码代理\nheadroom proxy --port 8787 # 直接代理，零代码更改\n# 或: from headroom import compress # 内联库\n\n# 3 — 检查并观察节省情况\nheadroom doctor # 健康检查 — 确认路由有效\n净空性能\n净空仪表板#实时节省（代理必须正在运行）\n````\n\n内联，Python 中：\n\n````蟒蛇\n从净空导入压缩\n从 openai 导入 OpenAI\n\nmessages = [{\"role\": \"user\", \"content\": \"分析这些结果\"}]\n结果=压缩（消息，模型=“gpt-4o”）\n\n客户端 = OpenAI()\n响应 = client.chat.completions.create(model=\"gpt-4o\", messages=result.messages)\nprint(f\"已保存的 {result.tokens_saved} 令牌 ({result.compression_ratio:.0%})\")\n````"
+      "readmeCN": "快速入门 ·\n 团队的发展空间·\n 安装·\n 证明·\n 代理商·\n 文件·\n 不和·\n llms.txt\n\nAI 代理/法学硕士：在此处读取 /llms.txt，或获取\n直播索引 ·\n完整的文档 blob。\n\nHeadroom 压缩 AI 代理读取的所有内容 - 工具输出、日志、RAG\n块、文件和对话历史记录——在到达法学硕士之前。一样\n答案，令牌的分数。压缩在您的机器上运行；没有提示或\n文件内容被发送到任何地方进行压缩。\n\n \n\n \n 10,144 → 1,260 代币。发现同样的致命错误。\n\n## 它的作用\n\n- **库** — Python 或 TypeScript 中的“压缩（消息）”，内联在任何应用程序中。\n- **代理** — `headroom proxy --port 8787`，零代码更改，任何语言。\n- **代理包裹** — 一个命令中的“headroom 包裹 claude|codex|grok|copilot|cursor|aider|opencode|cline|continue|goose|openhands|openclaw|vibe|omp|zcode”；使用“headroom unwrap”撤消。\n- **MCP 服务器** — 适用于任何 MCP 客户端的“headroom_compress”、“headroom_retrieve”、“headroom_stats”。\n- **跨代理内存** — Claude、Codex、Gemini 和 Grok 之间的一个共享存储，具有自动重复数据删除功能。\n- **`headroom learn`** — 挖掘失败的会话并将更正写入`CLAUDE.local.md`（默认，gitignored）、`CLAUDE.md`、`AGENTS.md`、`GEMINI.md` 或`GROK.md`。\n- **输出令牌减少** - 修剪模型*写回*的内容，而不仅仅是您发送的内容。请参阅[下文](#output-token-reduction)。\n- **可逆 (CCR)** — 原件在本地缓存并按需检索。\n\n## 它是如何工作的\n\n````\n 您的代理/应用程序\n （Claude Code、Cursor、Codex、LangChain、Agno、Strands、您自己的代码……）\n │ 提示 · 工具输出 · 日志 · RAG 结果 · 文件\n ▼\n ┌────────────────────────────────────────────────────┐\n │ 净空（在本地运行 - 您的数据留在这里） │\n │ ────────────────────────────────\n\n- **ContentRouter** 检测内容类型并为其选择压缩器。\n- **SmartCrusher / CodeCompressor / Kompress-v2-base** 分别处理 JSON、源代码和散文。\n- **CacheAligner** 标记会破坏提供者 KV 缓存前缀的易失性内容。它从不重写提示。\n- **CCR** 在本地存储原始文本，以便模型在需要全文时可以调用 `headroom_retrieve`。\n\n→ [架构](https://docs.headroomlabs.ai/docs/architecture) ·\n[CCR](https://docs.headroomlabs.ai/docs/ccr)·\n[Kompress-v2-base 模型卡](https://huggingface.co/chopratejas/kompress-v2-base)\n\n## 开始（60 秒）\n\n````bash\n# 1 — 安装\nuv tool install --python 3.13 \"headroom-ai[all]\" # 独立环境中的 CLI\npip install \"headroom-ai[all]\" # Python — 附带 `headroom` CLI\nnpm install headroom-ai # 仅 TypeScript SDK — 无 CLI\n\n# 2 — 选择一种模式\nheadroom 部署 # 交钥匙本地部署 + 代理配置\nheadroom wrap claude # 包装编码代理\nheadroom proxy --port 8787 # 直接代理，零代码更改\n# 或: from headroom import compress # 内联库\n\n# 3 — 检查并观察节省情况\nheadroom doctor # 健康检查 — 确认路由有效\n净空性能\n净空仪表板#实时节省（代理必须正在运行）\n````\n\n内联，Python 中：\n\n````蟒蛇\n从净空导入压缩\n从 openai 导入 OpenAI\n\nmessages = [{\"role\": \"user\", \"content\": \"分析这些结果\"}]\n结果=压缩（消息，模型=“gpt-4o”）\n\n客户端 = OpenAI()\n响应 = client.chat.completions.create(model=\"gpt-4o\", messages=result.messages)\nprint(f\"已保存的 {result.tokens_saved} 令牌 ({result.compression_ratio:.0%})\")\n````"
     },
     {
       "repo": "DietrichGebert/ponytail",
       "lang": "JavaScript",
       "desc": "Makes your AI agent think like the laziest senior dev in the room. The best code is the code you never wrote.",
-      "stars": 170833,
+      "stars": 170916,
       "today": "2051",
-      "forks": 9292,
+      "forks": 9298,
       "created": "2026-06-12",
       "license": "MIT",
       "topics": [
@@ -142,9 +142,9 @@
       "repo": "Comfy-Org/ComfyUI",
       "lang": "Python",
       "desc": "The most powerful and modular diffusion model GUI, api and backend with a graph/nodes interface. The fastest local inference engine in the world.",
-      "stars": 141250,
+      "stars": 141277,
       "today": "914",
-      "forks": 16704,
+      "forks": 16707,
       "created": "2023-01-17",
       "license": "GPL-3.0",
       "topics": [
@@ -164,9 +164,9 @@
       "repo": "supabase/supabase",
       "lang": "TypeScript",
       "desc": "The Postgres development platform. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications.",
-      "stars": 112667,
+      "stars": 112706,
       "today": "509",
-      "forks": 16837,
+      "forks": 16849,
       "created": "2019-10-12",
       "license": "Apache-2.0",
       "topics": [
@@ -188,9 +188,9 @@
       "repo": "twentyhq/twenty",
       "lang": "TypeScript",
       "desc": "The open alternative to Salesforce, designed for AI.",
-      "stars": 58848,
+      "stars": 58884,
       "today": "105",
-      "forks": 9644,
+      "forks": 9646,
       "created": "2022-12-01",
       "license": "NOASSERTION",
       "topics": [
@@ -212,9 +212,9 @@
       "repo": "shiyu-coder/Kronos",
       "lang": "Python",
       "desc": "Kronos: A Foundation Model for the Language of Financial Markets",
-      "stars": 42630,
+      "stars": 42647,
       "today": "570",
-      "forks": 7047,
+      "forks": 7048,
       "created": "2025-07-01",
       "license": "MIT",
       "topics": [],
@@ -227,9 +227,9 @@
       "repo": "strelov1/freehire",
       "lang": "Go",
       "desc": "freehire — the open-source search engine for job seekers",
-      "stars": 2059,
+      "stars": 2092,
       "today": "405",
-      "forks": 229,
+      "forks": 230,
       "created": "2026-06-07",
       "license": "MIT",
       "topics": [
@@ -245,15 +245,15 @@
       "homepage": "https://freehire.me",
       "url": "https://github.com/strelov1/freehire",
       "summary": "freehire — 为求职者提供的开源搜索引擎",
-      "readmeCN": "# 免费雇用\n\n### 每项 IT 工作，都直接来自源头。\n\n**超过 330 万条实时帖子直接从公司招聘页面提取 - 没有招聘人员、没有转发、没有死链接。完全开源。**\n\n[**现场试用 →**](https://freehire.me) · [功能](docs/features.md) · [架构](docs/architecture.md) · [源](#sources) · [API](#api) · [添加源](#adding-a-source) · [贡献](CONTRIBUTING.md)\n\n[](https://freehire.me)\n[]（许可证）\n\n[](https://github.com/strelov1/freehire/stargazers)\n[](https://github.com/strelov1/freehire/graphs/contributors)\n[](https://discord.gg/79cgB9RRfx)\n\n \n \n \n \n\n## 为什么免费雇用？\n\n- **直接从源头获取。** 每个列表均直接从公司的\n 自己的 ATS——Workday、Greenhouse、Lever、Ashby、iCIMS 和其他的长尾——以及\n 链接到原始帖子。没有招聘人员转发，没有聚合中间商，没有\n 死链接。\n- **一个模式，重复数据删除。** 发布到三个板的相同角色会折叠成\n 一个条目：每个帖子都被标准化为单一形状，并在\n 稳定的密钥。\n- **了解职位的搜索。**跨区域、工作模式的分面全文搜索，\n 资历、技能和薪水——来自精选词典，从未被猜测过。\n- **实际上是开放的。** MIT 许可且可自托管，管道和数据都在\n 打开。添加公司是董事会目录中的一行\n （[如何]（#adding-a-source））。\n- **您的构建基础。** 干净的 HTTP API、CLI、Telegram 摘要和整体\n\n目录顶部的工作区 - 请参阅[目录之外](#beyond-the-catalogue)。\n 使用托管站点、运行您自己的站点或在其上构建。\n\n聚合来自 **470,000 多家公司** 的 **330 万+ 条独特的实时帖子**\n**124 个 ATS 平台**，聚合器和直接馈送的长尾，以及 **97 个\nTelegram 频道** — **总共 320 个来源**，请参阅 [来源](#sources) 了解完整信息\n崩溃。一项工作的跨部门转发已折叠，因此这里的每个数字都是\n[freehire.me/jobs](https://freehire.me/jobs) 实际显示了什么。\n\n> 如果免费雇用可以节省您的时间——或者您只是喜欢直接从公司获得工作的想法\n> 来源 — a ⭐ 可以帮助其他人找到它。\n\n## 目录之外\n\n找到帖子就解决了一半问题。另一半——写简历，\n发送它，并了解它发生了什么 - 是建立在相同的数据之上的，在\n相同的存储库，相同的许可证。\n\n| **查找** |分面搜索、精选收藏、通过电子邮件/电报摘要保存搜索、共享板、市场分析、幽灵工作信号 |\n| **申请** |简历生成器，具有 ATS 安全 PDF 模板、确定性简历↔空缺评分、AI 适合度分析、无发明的简历剪裁、跟踪器链接、推荐 |\n| **追踪** |一个带有阶段的申请板，一个将招聘人员回复与他们回答的申请链接起来的邮件收件箱，一个仅附加的事件分类账，提醒|\n\n| **询问** |具有五个预设的进程中代理 - 聊天、浏览、个人资料、简历定制、面试排练 - 没有外壳，也没有铸造的凭证 |\n| **建立在** |无密钥公共 API、[CLI](https://github.com/strelov1/freehire-cli)、用于 Claude Desktop 和 Claude Code 的 [MCP 服务器](https://github.com/strelov1/freehire-mcp)、表单填写浏览器扩展、ChatGPT Actions |\n\n**[完整功能参考 → `docs/features.md`](docs/features.md)** — 每一项都是什么\n确实如此，它位于树中的位置，需要配置 LLM 端点，并且\n利用人工智能学分。\n\n## 堆栈\n\n- **Go** + [Fiber v2](https://go Fiber.io/) — HTTP 服务器\n- **PostgreSQL** + [pgvector](https://github.com/pgvector/pgvector) — 存储、过滤、语义嵌入\n- **[sqlc](https://sqlc.dev/)** — 从 SQL 进行类型安全的数据库访问（无 ORM）\n- **[Meilisearch](https://www.meilisearch.com/)** — 全文和多方面的职位搜索\n- **[langchaingo](https://github.com/tmc/langchaingo)** — 通过任何 OpenAI 兼容端点进行 LLM 访问（无供应商内置）\n- **[Bifrost](https://github.com/maximhq/bifrost)** — LLM 网关：每用户虚拟密钥、跨提供商回退、支出跟踪\n- **[Langfuse](https://langfuse.com/)** — LLM 调用跟踪和可观察性\n- **[SvelteKit](https://kit.svelte.dev/) 2** (Svelte 5 runes) + **Tailwind 4** — `web/` 下的服务器渲染前端\n- **Redis** — 速率限制和实时扇出 · **S3 兼容的对象存储** — 简历、头像、预览"
+      "readmeCN": "# 免费雇用\n\n### 每项 IT 工作，都直接来自源头。\n\n**超过 330 万条实时帖子直接从公司招聘页面提取 - 没有招聘人员、没有转发、没有死链接。完全开源。**\n\n[**现场试用 →**](https://freehire.me) · [功能](docs/features.md) · [架构](docs/architecture.md) · [源](#sources) · [API](#api) · [添加源](#adding-a-source) · [贡献](CONTRIBUTING.md)\n\n[](https://freehire.me)\n[]（许可证）\n\n[](https://github.com/strelov1/freehire/stargazers)\n[](https://github.com/strelov1/freehire/graphs/contributors)\n[](https://discord.gg/79cgB9RRfx)\n\n \n \n \n \n\n## 为什么免费雇用？\n\n- **直接从源头获取。** 每个列表均直接从公司的\n 自己的 ATS——Workday、Greenhouse、Lever、Ashby、iCIMS 和其他的长尾——以及\n 链接到原始帖子。没有招聘人员转发，没有聚合中间商，没有\n 死链接。\n- **一个模式，重复数据删除。** 发布到三个板的相同角色会折叠成\n 一个条目：每个帖子都被标准化为单一形状，并在\n 稳定的密钥。\n- **了解职位的搜索。**跨区域、工作模式的分面全文搜索，\n 资历、技能和薪水——来自精选词典，从未被猜测过。\n- **实际上是开放的。** MIT 许可且可自托管，管道和数据都在\n 打开。添加公司是董事会目录中的一行\n （[如何]（#adding-a-source））。\n- **您的构建基础。** 干净的 HTTP API、CLI、Telegram 摘要和整体\n\n目录顶部的工作区 - 请参阅[目录之外](#beyond-the-catalogue)。\n 使用托管站点、运行您自己的站点或在其上构建。\n\n聚合来自 **470,000 多家公司** 的 **330 万+ 条独特的实时帖子**\n**124 个 ATS 平台**，聚合器和直接馈送的长尾，以及 **97\nTelegram 频道** — **总共 320 个来源**，请参阅 [来源](#sources) 了解完整内容\n崩溃。一项工作的跨部门转发已折叠，因此这里的每个数字都是\n[freehire.me/jobs](https://freehire.me/jobs) 实际显示了什么。\n\n> 如果免费雇用可以节省您的时间——或者您只是喜欢直接从公司获得工作的想法\n> 来源 — a ⭐ 可以帮助其他人找到它。\n\n## 目录之外\n\n找到帖子就解决了一半问题。另一半——写简历，\n发送它，并了解它发生了什么 - 是建立在相同的数据之上的，在\n相同的存储库，相同的许可证。\n\n| **查找** |分面搜索、精选收藏、通过电子邮件/电报摘要保存的搜索、共享板、市场分析、幽灵工作信号 |\n| **申请** |简历生成器，具有 ATS 安全 PDF 模板、确定性简历↔空缺评分、AI 适合度分析、无发明的简历剪裁、跟踪器链接、推荐 |\n| **追踪** |一个带有阶段的申请板，一个将招聘人员回复与他们回答的申请链接起来的邮件收件箱，一个仅附加的事件分类账，提醒|\n\n| **询问** |具有五个预设的进程中代理 - 聊天、浏览、个人资料、简历定制、面试排练 - 没有外壳，也没有铸造的凭证 |\n| **建立在** |无密钥公共 API、[CLI](https://github.com/strelov1/freehire-cli)、用于 Claude Desktop 和 Claude Code 的 [MCP 服务器](https://github.com/strelov1/freehire-mcp)、表单填写浏览器扩展、ChatGPT Actions |\n\n**[完整功能参考 → `docs/features.md`](docs/features.md)** — 每一项都是什么\n确实如此，它位于树中的位置，需要配置 LLM 端点，并且\n利用人工智能学分。\n\n## 堆栈\n\n- **Go** + [Fiber v2](https://go Fiber.io/) — HTTP 服务器\n- **PostgreSQL** + [pgvector](https://github.com/pgvector/pgvector) — 存储、过滤、语义嵌入\n- **[sqlc](https://sqlc.dev/)** — 从 SQL 进行类型安全的数据库访问（无 ORM）\n- **[Meilisearch](https://www.meilisearch.com/)** — 全文和多方面的职位搜索\n- **[langchaingo](https://github.com/tmc/langchaingo)** — 通过任何 OpenAI 兼容端点进行 LLM 访问（无供应商内置）\n- **[Bifrost](https://github.com/maximhq/bifrost)** — LLM 网关：每用户虚拟密钥、跨提供商回退、支出跟踪\n- **[Langfuse](https://langfuse.com/)** — LLM 调用跟踪和可观察性\n- **[SvelteKit](https://kit.svelte.dev/) 2** (Svelte 5 runes) + **Tailwind 4** — `web/` 下的服务器渲染前端\n- **Redis** — 速率限制和实时扇出 · **S3 兼容的对象存储** — 简历、头像、预览"
     },
     {
       "repo": "akitaonrails/ai-memory",
       "lang": "Rust",
       "desc": "Solution for long term memory for agent coding CLIs and to facilitate handoff between different agent vendors",
-      "stars": 12059,
+      "stars": 12084,
       "today": "810",
-      "forks": 854,
+      "forks": 855,
       "created": "2026-05-21",
       "license": "MIT",
       "topics": [],
@@ -266,9 +266,9 @@
       "repo": "Graphify-Labs/graphify",
       "lang": "Python",
       "desc": "Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor, Codex, and Gemini CLI: local deterministic AST parsing, every edge explained, no vector store.",
-      "stars": 131038,
+      "stars": 131106,
       "today": "1434",
-      "forks": 12593,
+      "forks": 12599,
       "created": "2026-04-03",
       "license": "Apache-2.0",
       "topics": [
@@ -284,7 +284,7 @@
       "homepage": "https://www.graphify.com",
       "url": "https://github.com/Graphify-Labs/graphify",
       "summary": "将任何代码库及其文档、SQL 架构、配置和 PDF 转换为可查询的知识图。适用于 Claude Code、Cursor、Codex 和 Gemini CLI 的 /graphify 技能：本地确定性 AST 解析，每条边均已解释，无向量存储。",
-      "readmeCN": "阅读其他语言版本\n\n英语 | 简体中文 | 日本语 | 한국어 |德语 |法语 |西班牙语 | हिन्दी |葡萄牙语 | Русский | 俄罗斯迪拜 | | | | | | | | | | | | | |意大利 |波兰 |荷兰 |土耳其 | Українська | Українська |越南 | Tiếng Việt |印度尼西亚语 |瑞典 | Ελληνικά |罗马 |切什蒂纳 |芬兰 |丹麦 |挪威 |马扎尔 | ภาษาไทย |奥兹别克查 | 繁体中文 |菲律宾语 |奥古斯都\n\n \n \n \n \n \n \n \n \n \n \n\n 将代理代币支出削减 80%。 Graphify Cloud 是始终在线的内存，可管理您的代理、保持高代码质量并通过形式验证证明正确性。开始 14 天免费试用 →\n\n在 AI 编码助手中输入“/graphify”，它会将您的整个项目（代码、文档、PDF、图像、视频）映射到**知识图**中，您可以通过文件**查询而不是 grep**。\n\n- **免费的代码映射，完全本地化。** 代码使用树守护者 AST 进行解析：确定性，没有法学硕士，没有任何东西离开你的机器。 （文档、PDF、图像和视频使用助手的模型或配置的 API 密钥来进行语义传递。）\n- **每条边都有解释。** 每个连接都被标记为“EXTRACTED”（在源中明确）或“INFERRED”（由 graphify 解析），因此您可以从推断的内容中直接判断读取的内容。\n- **不是向量索引。** 没有嵌入，没有向量存储：您遍历的真实图形。提出一个问题，追踪两件事之间的路径，或者解释一个概念。\n\n> [!注意]\n\n> **想要这种始终在线的功能吗？** [Graphify Cloud](https://app.graphify.com/login) 使图表在整个 SDLC 中保持实时状态：单一存储库和跨存储库支持、形式化验证和代码审查，以及 SDLC 的鸟瞰图，以及 Sentry、Jira 等的连接器，因此事件和票证与您的代码位于同一图表中。 **[在 app.graphify.com 开始 14 天免费试用](https://app.graphify.com/login)**。\n\n \n\n 由 graphify 映射的 FastAPI 代码库。每个节点都是一个概念，颜色是检测到的社区，整个内容都可以在 graph.html 中点击。\n\n**开始**（30 秒）。需要 Python 3.10+ 和 uv（或 pipx）：\n\n````bash\nuv tool install graphifyy # 安装 CLI（或：pipx install graphifyy）\ngraphify install # 检测你的助手并注册技能\n````\n\n然后，在你的人工智能助手中：\n\n````\n/graphify 。\n````\n\n就是这样。你得到**三个文件**：\n\n````\n图形化输出/\n├── graph.html 在任何浏览器中打开：点击节点、过滤、搜索\n├── GRAPH_REPORT.md 亮点：关键概念、令人惊讶的联系、建议的问题\n└── graph.json 完整图表：随时查询，无需重新读取文件\n````\n\n持久化图表包含“graph.schema_version”，因此集成可以检测到\n不兼容的格式更改，加上“graph.graphify_version”标识\n生成它的 Graphify 版本。\n\n**一次安装，任何助手，任何操作系统。** Claude Code、Cursor、Codex、Gemini CLI、GitHub Copilot 以及 macOS、Linux 和 Windows 上的 20 多个：[选择您的平台](#install)。\n\n---\n\n## 查看实际效果\n\n \n\n构建图表后，您可以查询它而不是读取文件。实际输出，graphify 在 FastAPI 代码库上运行，如上所示：\n\n````文本\n$ graphify 解释“APIRouter”\n节点：API路由器\n 来源：routing.py L2210\n 社区：2\n 学位：47\n\n连接 (47)：\n --> RequestValidationError [使用] [推断]\n --> 依赖[使用][推断]\n --> .get() [方法] [提取]\n 默认占位符模型字段\n````\n\n每条边都带有**置信标签**（“EXTRACTE"
+      "readmeCN": "阅读其他语言版本\n\n英语 | 简体中文 | 日本语 | 한국어 |德语 |法语 |西班牙语 | हिन्दी |葡萄牙语 | Русский | 俄罗斯迪拜 | | | | | | | | | | | | | |意大利 |波兰 |荷兰 |土耳其 | Українська | Українська |越南 | Tiếng Việt |印度尼西亚语 |瑞典 | Ελληνικά |罗马 |切什蒂纳 |芬兰 |丹麦 |挪威 |马扎尔 | ภาษาไทย |奥兹别克查 | 繁体中文 |菲律宾语 |奥古斯都\n\n \n \n \n \n \n \n \n \n \n \n\n 将代理代币支出削减 80%。 Graphify Cloud 是始终在线的内存，可管理您的代理、保持高代码质量并通过形式验证证明正确性。开始 14 天免费试用 →\n\n在 AI 编码助手中输入“/graphify”，它会将您的整个项目（代码、文档、PDF、图像、视频）映射到**知识图**中，您可以通过文件**查询而不是 grep**。\n\n- **免费的代码映射，完全本地化。** 代码使用树守护者 AST 进行解析：确定性，无法学硕士，任何东西都不会离开您的机器。 （文档、PDF、图像和视频使用助手的模型或配置的 API 密钥来进行语义传递。）\n- **每条边都有解释。** 每个连接都被标记为“EXTRACTED”（在源中明确）或“INFERRED”（由 graphify 解析），因此您可以从推断的内容中直接判断读取的内容。\n- **不是向量索引。** 没有嵌入，没有向量存储：您遍历的真实图形。提出一个问题，追踪两件事之间的路径，或者解释一个概念。\n\n> [!注意]\n\n> **想要这种始终在线的功能吗？** [Graphify Cloud](https://app.graphify.com/login) 使图表在整个 SDLC 中保持实时状态：单一存储库和跨存储库支持、形式化验证和代码审查，以及 SDLC 的鸟瞰图，以及 Sentry、Jira 等的连接器，因此事件和票证与您的代码位于同一图表中。 **[在 app.graphify.com 开始 14 天免费试用](https://app.graphify.com/login)**。\n\n \n\n 由 graphify 映射的 FastAPI 代码库。每个节点都是一个概念，颜色是检测到的社区，整个内容都可以在 graph.html 中点击。\n\n**开始**（30 秒）。需要 Python 3.10+ 和 uv（或 pipx）：\n\n````bash\nuv tool install graphifyy # 安装 CLI（或：pipx install graphifyy）\ngraphify install # 检测你的助手并注册技能\n````\n\n然后，在你的人工智能助手中：\n\n````\n/graphify 。\n````\n\n就是这样。你得到**三个文件**：\n\n````\n图形化输出/\n├── graph.html 在任何浏览器中打开：点击节点、过滤、搜索\n├── GRAPH_REPORT.md 亮点：关键概念、令人惊讶的联系、建议的问题\n└── graph.json 完整图表：随时查询，无需重新读取文件\n````\n\n持久化图表包含“graph.schema_version”，因此集成可以检测到\n不兼容的格式更改，加上“graph.graphify_version”标识\n生成它的 Graphify 版本。\n\n**一次安装，任何助手，任何操作系统。** Claude Code、Cursor、Codex、Gemini CLI、GitHub Copilot 以及 macOS、Linux 和 Windows 上的 20 多个：[选择您的平台](#install)。\n\n---\n\n## 查看实际效果\n\n \n\n构建图表后，您可以查询它而不是读取文件。实际输出，graphify 在 FastAPI 代码库上运行，如上所示：\n\n````文本\n$ graphify 解释“APIRouter”\n节点：API路由器\n 来源：routing.py L2210\n 社区：2\n 学位：47\n\n连接 (47)：\n --> RequestValidationError [使用] [推断]\n --> 依赖[使用][推断]\n --> .get() [方法] [提取]\n 默认占位符模型字段\n````\n\n每条边都带有**置信标签**（“EXTRACTE"
     }
   ]
 }
