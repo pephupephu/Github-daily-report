@@ -35,13 +35,6 @@ jobs:
           MAIL_TO: ${{ secrets.MAIL_TO }}
         run: node article.mjs
 
-      - name: 发送到邮箱
-        env:
-          MAIL_USER: ${{ secrets.MAIL_USER }}
-          MAIL_PASS: ${{ secrets.MAIL_PASS }}
-          MAIL_TO: ${{ secrets.MAIL_TO }}
-        run: node mail.mjs
-
       - name: 提交报告
         run: |
           git config user.name  "report-bot"

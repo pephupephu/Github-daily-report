@@ -247,11 +247,6 @@ function section(r, i, shotCid) {
     <strong>一句话概括：</strong>${esc(r.desc || r.summary || "")}<br>
     <strong>适合谁：</strong>对 ${esc((r.topics || []).slice(0, 3).join("、") || "这个领域")} 感兴趣的开发者。
   </div>
-  <p style="margin:0;padding:8px 12px;background:#fff8e6;border-left:3px solid #fa9d3b;font-size:13px;color:#8a6d3b;line-height:1.8">
-    <strong>💡 需要你补：</strong>在这里插入你的实际体验（装了没？跑得顺不顺？效果怎样？）<br>
-    ⬜️ 插入截图：${img ? "上面已放，可替换为你自己的" : "暂无，需要自己截个演示界面放进来"}<br>
-    ⬜️ 插入音频/视频：如果项目能生成内容，把你生成的样本贴上来。
-  </p>
 </section>`;
 }
 
