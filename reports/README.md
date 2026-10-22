@@ -15,3 +15,4 @@
 - [daily-2026-10-21](./daily-2026-10-21.md) — 榜首 MadsLorentzen/ai-job-search (+3131)
 - [daily-2026-10-22](./daily-2026-10-22.md) — 榜首 cloudflare/security-audit-skill (+2012)
 - [daily-2026-10-22](./daily-2026-10-22.md) — 榜首 php/php-src (+110)
+- [daily-2026-10-22](./daily-2026-10-22.md) — 榜首 php/php-src (+110)
