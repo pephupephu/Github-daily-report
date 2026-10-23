@@ -17,3 +17,4 @@
 - [daily-2026-10-22](./daily-2026-10-22.md) — 榜首 php/php-src (+110)
 - [daily-2026-10-22](./daily-2026-10-22.md) — 榜首 php/php-src (+110)
 - [daily-2026-10-22](./daily-2026-10-22.md) — 榜首 php/php-src (+110)
+- [daily-2026-10-23](./daily-2026-10-23.md) — 榜首 php/php-src (+287)
