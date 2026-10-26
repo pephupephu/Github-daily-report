@@ -12,6 +12,65 @@ import { createTransport } from "nodemailer";
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const UA = { "user-agent": "gh-daily-article" };
 
+// ---------- 大模型逐个深度分析（OpenAI 兼容协议；默认智谱 glm-4-flash 免费档）----------
+
+const LLM = process.env.OPENAI_API_KEY
+  ? {
+      key: process.env.OPENAI_API_KEY,
+      base: (process.env.OPENAI_BASE_URL || "https://open.bigmodel.cn/api/paas/v4").replace(/\/+$/, ""),
+      model: process.env.OPENAI_MODEL || "glm-4-flash",
+    }
+  : null;
+
+const AI_PROMPT = `你是公众号科技编辑。根据下面的仓库信息，为普通读者写一段中文深度解读。
+仓库名：{repo}（语言 {lang}，总星 {stars}，今日涨 {today}）
+官方简介：{desc}
+README 摘录：
+{readme}
+
+严格输出 JSON（不要代码块、不要任何解释文字）：
+{
+ "hook": "一句抓人的开头。禁止“今天看到XX上榜了”的句式，改用“分享一个爆火的开源项目”“这个项目一晚上涨了几千 star”“不用花一分钱就能…”等，口语化不喊口号",
+ "what": "一句大白话说清它到底是什么，非技术读者也能懂",
+ "core": "核心机制/突破：2-3 句大白话讲清它凭什么有用、解决了什么痛点。必须基于 README 事实，不要编造，不堆术语",
+ "usecases": ["具体刚需场景1", "具体场景2", "具体场景3"],
+ "who": "适合谁（一类具体人群，如：经常让 AI 生成前端页面的开发者）"
+}`;
+
+async function analyzeOne(r, md) {
+  if (!LLM) return null;
+  try {
+    const res = await fetch(`${LLM.base}/chat/completions`, {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${LLM.key}` },
+      signal: AbortSignal.timeout(90000),
+      body: JSON.stringify({
+        model: LLM.model,
+        temperature: 0.7,
+        messages: [
+          { role: "system", content: "你是公众号科技编辑：文字口语化、有信息量、基于事实、不堆术语不喊口号。只输出 JSON。" },
+          { role: "user", content: AI_PROMPT.replace("{repo}", r.repo).replace("{lang}", r.lang || "-").replace("{stars}", String(r.stars ?? "")).replace("{today}", r.today ?? "").replace("{desc}", r.desc || "").replace("{readme}", md.slice(0, 3500)) },
+        ],
+      }),
+    });
+    const text = await res.text();
+    if (!res.ok) throw new Error(`HTTP ${res.status} ${text.slice(0, 150)}`);
+    const s = text.indexOf("{"), e = text.lastIndexOf("}");
+    if (s < 0 || e <= s) throw new Error(`返回非 JSON：${text.slice(0, 150)}`);
+    const ai = JSON.parse(text.slice(s, e + 1));
+    return {
+      hook: String(ai.hook || ""),
+      what: String(ai.what || ""),
+      core: String(ai.core || ""),
+      usecases: Array.isArray(ai.usecases) ? ai.usecases.map(String).filter(Boolean).slice(0, 3) : [],
+      who: String(ai.who || ""),
+    };
+  } catch (e) {
+    process.stderr.write(`[大模型] ${r.repo} 分析失败：${e.message}\n`);
+    return null;
+  }
+}
+
 // ---------- 链接抽取 ----------
 
 const DEMO = /(demo|try (it )?(online|out)|live|playground|play ?with|online demo|web ?ui|体验|演示|试用|在线|玩一下|在线体验)/i;
@@ -214,13 +273,13 @@ const CN_DATE = (d) => `${d.slice(0, 4)}年${d.slice(5, 7)}月${d.slice(8)}日`;
 const fmtStars = (n) => `+${String(n || 0).replace(/,/g, "")}`;
 const repoShort = (repo) => repo.split("/")[1];
 
-// 公众号风格：每个项目一节，先写“人的话”，再给链接，最后留占位
+// 公众号风格：每个项目一节，AI 钩子开头，带核心机制/使用场景/适合谁；AI 缺席时退回简版
 function section(r, i, shotCid) {
-  const tags = (r.topics || []).slice(0, 4).map((t) => `<span style="display:inline-block;background:#f2f3f5;color:#5a6472;font-size:11px;padding:2px 9px;border-radius:10px;margin:0 6px 0 0">${esc(t)}</span>`).join("");
-  const body = esc(r.summary || r.readmeCN?.slice(0, 700) || r.desc);
+  const ai = r.ai;
   const cmd = r.install ? `<pre style="background:#282c34;color:#abb2bf;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:13px;line-height:1.6;margin:10px 0"><code>${esc(r.install)}</code></pre>` : "";
   const img = shotCid ? `<img src="cid:${shotCid}" style="max-width:100%;border-radius:6px;margin:0 0 14px;display:block" alt="${esc(repoShort(r.repo))} 演示截图" />` : "";
   const vids = r.videos?.length ? videoBlock(r.videos) : "";
+  const p = `style="margin:0 0 10px;font-size:15px;line-height:1.9;color:#3a3a3a"`;
 
   const links = [];
   if (r.homepage) links.push(`<a href="${esc(r.homepage)}" style="color:#576b95;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`);
@@ -228,8 +287,12 @@ function section(r, i, shotCid) {
   r.links.demo.slice(0, 2).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#576b95;text-decoration:none">官方演示 → ${esc(l.url)}</a>`));
   r.links.paper.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#8a6d3b;text-decoration:none">论文 → ${esc(l.url)}</a>`));
 
-  const hook = (r.summary || r.desc).split("。")[0].slice(0, 40);
-  const lead = hook ? `今天看到 ${esc(repoShort(r.repo))} 上榜了，${hook.replace(/^(这个|该|它)/, "")}。` : `今天看到 ${esc(repoShort(r.repo))} 上榜了。`;
+  const hook = ai?.hook || `分享一个爆火的开源项目 —— ${repoShort(r.repo)}，今天单日再涨 ${fmtStars(r.today)} star。`;
+  const what = ai?.what || (r.summary || r.readmeCN?.slice(0, 500) || r.desc || "");
+  const coreHtml = ai?.core ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${esc(ai.core)}</p>` : "";
+  const casesHtml = ai?.usecases?.length ? `<p ${p}"><b style="color:#1a1a1a">能用来干什么：</b></p><ul style="margin:4px 0 10px 22px;padding:0">${ai.usecases.map((u) => `<li style="margin:3px 0">${esc(u)}</li>`).join("")}</ul>` : "";
+  const whoHtml = ai?.who ? `<p ${p}"><b style="color:#1a1a1a">适合谁：</b>${esc(ai.who)}</p>` : "";
+  const fallbackBox = ai ? "" : `<div style="margin:0;padding:10px 14px;background:#f7f8fa;border-radius:6px;font-size:13px;color:#5a6472;line-height:1.8"><strong>一句话概括：</strong>${esc(r.desc || "")}</div>`;
 
   return `
 <section style="margin:0 0 34px;padding-bottom:26px;border-bottom:1px solid #eceef1">
@@ -238,15 +301,16 @@ function section(r, i, shotCid) {
     <span style="margin-left:8px">${esc(repoShort(r.repo))}</span>
     <small style="color:#9a9a9a;font-weight:400">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} star · 今日 ${fmtStars(r.today)}</small>
   </h2>
-  <p style="margin:0 0 10px;font-size:15px;line-height:1.9;color:#3a3a3a">${lead}${esc((r.summary || r.desc).slice(hook.length))}</p>
+  <p ${p}"><b style="color:#1a1a1a">${esc(hook)}</b></p>
+  <p ${p}">${esc(what)}</p>
+  ${coreHtml}
+  ${casesHtml}
   ${cmd}
   ${img}
   ${vids}
   ${links.length ? `<div style="margin:10px 0">${links.join("　　")}</div>` : ""}
-  <div style="margin:0;padding:10px 14px;background:#f7f8fa;border-radius:6px;font-size:13px;color:#5a6472;line-height:1.8">
-    <strong>一句话概括：</strong>${esc(r.desc || r.summary || "")}<br>
-    <strong>适合谁：</strong>对 ${esc((r.topics || []).slice(0, 3).join("、") || "这个领域")} 感兴趣的开发者。
-  </div>
+  ${whoHtml}
+  ${fallbackBox}
 </section>`;
 }
 
@@ -261,7 +325,7 @@ function buildHTML(data, cidMap) {
 <body style="margin:0;background:#f5f6f8">
 <div style="max-width:677px;margin:0 auto;background:#fff;padding:26px 20px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
 
-<p style="margin:0 0 6px;font-size:12px;color:#b2b2b2">这是 AI 生成的文章初稿，链接已核实，<b>体验部分需要你亲自补</b>（每段下方灰框已标出）。</p>
+<p style="margin:0 0 6px;font-size:12px;color:#b2b2b2">${LLM ? "AI 深度初稿，内容基于各仓库 README 生成，发稿前请人工核对事实与链接。" : "⚠️ 未配置 OPENAI_API_KEY，本次为简版初稿。"}</p>
 <hr style="border:none;border-top:1px solid #eceef1;margin:14px 0 22px">
 
 <h1 style="margin:0 0 6px;font-size:24px;font-weight:800;color:#1a1a1a;line-height:1.4">GitHub 今日热榜 · ${CN_DATE(day)}</h1>
@@ -294,6 +358,7 @@ try { data = JSON.parse(readFileSync(join(ROOT, "reports", "latest.json"), "utf8
 catch { console.error("找不到 reports/latest.json —— 先跑 node trending.mjs"); process.exit(1); }
 
 console.error(`[文章] 处理 ${data.repos.length} 个项目…`);
+if (!LLM) console.error("[警告] 未配置 OPENAI_API_KEY —— 本次为简版文章。去 GitHub 仓库 Settings > Secrets > Actions 添加 OPENAI_API_KEY");
 let cidMap = {};
 await withBrowser(async () => {
   const page = await browser.newPage();
@@ -303,6 +368,7 @@ await withBrowser(async () => {
   r.links = classify(parseLinks(md), r.repo, r.homepage);
   r.install = installCmd(md);
   r.videos = extractVideos(md, r.url);
+  r.ai = await analyzeOne(r, md);
     if (!r.links.cnDemo.length) {
       const targets = [...r.links.demo.slice(0, 1).map((l) => l.url), r.homepage].filter(Boolean);
       for (const cand of targets) {
@@ -328,7 +394,7 @@ await withBrowser(async () => {
       cidMap[r.repo] = cid;
       cidMap[cid] = { path: shotPath };
     }
-    process.stderr.write(`  ${i + 1}/${data.repos.length} ${r.repo} → 演示${r.links.demo.length} 中文${r.links.cnDemo.length}\n`);
+    process.stderr.write(`  ${i + 1}/${data.repos.length} ${r.repo} → 演示${r.links.demo.length} 中文${r.links.cnDemo.length} AI:${r.ai ? "✓" : "✗"}\n`);
     await new Promise((s) => setTimeout(s, 300));
   }
   await page.close();
