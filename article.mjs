@@ -18,58 +18,74 @@ const LLM = process.env.OPENAI_API_KEY
   ? {
       key: process.env.OPENAI_API_KEY,
       base: (process.env.OPENAI_BASE_URL || "https://open.bigmodel.cn/api/paas/v4").replace(/\/+$/, ""),
-      model: process.env.OPENAI_MODEL || "glm-4-flash",
+      model: process.env.OPENAI_MODEL || "glm-4.7-flash",
     }
   : null;
 
-const AI_PROMPT = `你是公众号科技编辑。根据下面的仓库信息，为普通读者写一段中文深度解读。
-仓库名：{repo}（语言 {lang}，总星 {stars}，今日涨 {today}）
+const AI_PROMPT = `你是资深公众号科技编辑，为一个 GitHub 热门项目写中文深度解读。要求像真人作者写的：口语化、句子完整通顺、有具体细节、不说空话、不堆术语（出现专业词就用半句话解释它对读者的意义）。
+
+仓库名：{repo}（{lang}，总星 {stars}，今日涨 {today}）
 官方简介：{desc}
 README 摘录：
 {readme}
 
-严格输出 JSON（不要代码块、不要任何解释文字）：
-{
- "hook": "一句抓人的开头。禁止“今天看到XX上榜了”的句式，改用“分享一个爆火的开源项目”“这个项目一晚上涨了几千 star”“不用花一分钱就能…”等，口语化不喊口号",
- "what": "一句大白话说清它到底是什么，非技术读者也能懂",
- "core": "核心机制/突破：2-3 句大白话讲清它凭什么有用、解决了什么痛点。必须基于 README 事实，不要编造，不堆术语",
- "usecases": ["具体刚需场景1", "具体场景2", "具体场景3"],
- "who": "适合谁（一类具体人群，如：经常让 AI 生成前端页面的开发者）"
-}`;
+本期已用过的开头角度：{used}
+你的开头必须换一个全新角度：从该仓库自身找一个具体抓手（一个扎眼的数字、一个真实痛点、一个反常识的设计决策、一个“终于有人把它做出来了”的问题），禁止以“分享一个”“爆火”“上榜”“今天看到”这类套话开头，也禁止喊口号。
 
-async function analyzeOne(r, md) {
+只输出 JSON（不要代码块、不要任何解释）：
+{"hook":"开头一句，30字内，不与已用开头雷同","what":"3句以内大白话说明：它是做什么的、解决谁的问题，没接触过的人能秒懂","core":"3句以内讲清它是怎么做到的：关键机制为什么有效。基于 README 事实，不编造","usecases":["谁在什么情况下用它省掉了什么事，一句话一个场景，要具体，共3个"],"who":"适合谁用，具体到身份，如：天天让 AI 写页面但总不满意的前端开发"}`;
+
+async function analyzeOne(r, md, usedHooks = []) {
   if (!LLM) return null;
   try {
+    const prompt = AI_PROMPT
+      .replace("{used}", usedHooks.length ? usedHooks.map((h, i) => `${i + 1}. ${h}`).join("；") : "（无，可自由发挥，但仍禁止“分享一个/爆火/上榜”式套话）")
+      .replace("{repo}", r.repo).replace("{lang}", r.lang || "-").replace("{stars}", String(r.stars ?? "")).replace("{today}", r.today ?? "")
+      .replace("{desc}", r.desc || "").replace("{readme}", md.slice(0, 4000));
     const res = await fetch(`${LLM.base}/chat/completions`, {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${LLM.key}` },
-      signal: AbortSignal.timeout(90000),
+      signal: AbortSignal.timeout(120000),
       body: JSON.stringify({
         model: LLM.model,
-        temperature: 0.7,
+        temperature: 0.85,
         messages: [
-          { role: "system", content: "你是公众号科技编辑：文字口语化、有信息量、基于事实、不堆术语不喊口号。只输出 JSON。" },
-          { role: "user", content: AI_PROMPT.replace("{repo}", r.repo).replace("{lang}", r.lang || "-").replace("{stars}", String(r.stars ?? "")).replace("{today}", r.today ?? "").replace("{desc}", r.desc || "").replace("{readme}", md.slice(0, 3500)) },
+          { role: "system", content: "你是写得一手好中文的公众号科技编辑：句子通顺、口语但有信息量、只讲事实不喊口号。只输出 JSON。" },
+          { role: "user", content: prompt },
         ],
       }),
     });
     const text = await res.text();
     if (!res.ok) throw new Error(`HTTP ${res.status} ${text.slice(0, 150)}`);
-    const s = text.indexOf("{"), e = text.lastIndexOf("}");
-    if (s < 0 || e <= s) throw new Error(`返回非 JSON：${text.slice(0, 150)}`);
-    const ai = JSON.parse(text.slice(s, e + 1));
-    return {
-      hook: String(ai.hook || ""),
-      what: String(ai.what || ""),
-      core: String(ai.core || ""),
-      usecases: Array.isArray(ai.usecases) ? ai.usecases.map(String).filter(Boolean).slice(0, 3) : [],
-      who: String(ai.who || ""),
+    // 正确解包：外层是 API 信封，正文在 choices[0].message.content，正文里可能还有 ```json 围栏
+    let content = "";
+    try { content = JSON.parse(text)?.choices?.[0]?.message?.content || ""; } catch { /* 非标准响应,退回原文 */ }
+    if (!content) content = text;
+    const m = content.match(/\{[\s\S]*\}/);
+    if (!m) throw new Error(`返回无 JSON 内容：${content.slice(0, 120)}`);
+    const raw = JSON.parse(m[0]);
+    const out = {
+      hook: String(raw.hook || "").trim(),
+      what: String(raw.what || "").trim(),
+      core: String(raw.core || "").trim(),
+      usecases: Array.isArray(raw.usecases) ? raw.usecases.map((u) => String(u).trim()).filter(Boolean).slice(0, 3) : [],
+      who: String(raw.who || "").trim(),
     };
+    if (!out.hook || !out.what) throw new Error(`关键字段为空：hook=${!!out.hook} what=${!!out.what}`);
+    return out;
   } catch (e) {
     process.stderr.write(`[大模型] ${r.repo} 分析失败：${e.message}\n`);
     return null;
   }
 }
+
+// AI 缺席时的轮换兜底开头，避免每段一个模子
+const FALLBACK_HOOKS = [
+  (n, name) => `单日 +${n} star，${name} 做的事值得花两分钟看看：`,
+  (n, name) => `今天涨得最凶的工具型项目之一是 ${name}，+${n} star 都不是冲动关注：`,
+  (n, name) => `${name} 火得有理由，一天 +${n} star：`,
+  (n, name) => `如果你也被同一个问题烦过，${name} 就是答案，今天 +${n} star：`,
+];
 
 // ---------- 链接抽取 ----------
 
@@ -287,7 +303,7 @@ function section(r, i, shotCid) {
   r.links.demo.slice(0, 2).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#576b95;text-decoration:none">官方演示 → ${esc(l.url)}</a>`));
   r.links.paper.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#8a6d3b;text-decoration:none">论文 → ${esc(l.url)}</a>`));
 
-  const hook = ai?.hook || `分享一个爆火的开源项目 —— ${repoShort(r.repo)}，今天单日再涨 ${fmtStars(r.today)} star。`;
+  const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const what = ai?.what || (r.summary || r.readmeCN?.slice(0, 500) || r.desc || "");
   const coreHtml = ai?.core ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${esc(ai.core)}</p>` : "";
   const casesHtml = ai?.usecases?.length ? `<p ${p}"><b style="color:#1a1a1a">能用来干什么：</b></p><ul style="margin:4px 0 10px 22px;padding:0">${ai.usecases.map((u) => `<li style="margin:3px 0">${esc(u)}</li>`).join("")}</ul>` : "";
@@ -360,6 +376,7 @@ catch { console.error("找不到 reports/latest.json —— 先跑 node trending
 console.error(`[文章] 处理 ${data.repos.length} 个项目…`);
 if (!LLM) console.error("[警告] 未配置 OPENAI_API_KEY —— 本次为简版文章。去 GitHub 仓库 Settings > Secrets > Actions 添加 OPENAI_API_KEY");
 let cidMap = {};
+let usedHooks = [];
 await withBrowser(async () => {
   const page = await browser.newPage();
   page.setViewportSize({ width: 1280, height: 800 });
@@ -368,7 +385,8 @@ await withBrowser(async () => {
   r.links = classify(parseLinks(md), r.repo, r.homepage);
   r.install = installCmd(md);
   r.videos = extractVideos(md, r.url);
-  r.ai = await analyzeOne(r, md);
+  r.ai = await analyzeOne(r, md, usedHooks);
+  if (r.ai?.hook) usedHooks.push(r.ai.hook);
     if (!r.links.cnDemo.length) {
       const targets = [...r.links.demo.slice(0, 1).map((l) => l.url), r.homepage].filter(Boolean);
       for (const cand of targets) {

@@ -24,7 +24,7 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || secrets.ANALYSIS_API_KEY }}
           OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4' }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'glm-4-flash' }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'glm-4.7-flash' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node trending.mjs daily
 
@@ -32,7 +32,7 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || secrets.ANALYSIS_API_KEY }}
           OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4' }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'glm-4-flash' }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'glm-4.7-flash' }}
           MAIL_USER: ${{ secrets.MAIL_USER }}
           MAIL_PASS: ${{ secrets.MAIL_PASS }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
