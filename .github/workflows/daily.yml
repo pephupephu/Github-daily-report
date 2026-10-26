@@ -9,6 +9,10 @@ permissions:
 
 jobs:
   report:
+    # 同一时间只允许一个运行：防止手动连点时并行抢提交、连发多封邮件
+    concurrency:
+      group: daily-report
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
