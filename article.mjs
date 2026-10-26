@@ -35,47 +35,61 @@ README 摘录：
 只输出 JSON（不要代码块、不要任何解释）：
 {"hook":"开头一句，30字内，不与已用开头雷同","what":"3句以内大白话说明：它是做什么的、解决谁的问题，没接触过的人能秒懂","core":"3句以内讲清它是怎么做到的：关键机制为什么有效。基于 README 事实，不编造","usecases":["谁在什么情况下用它省掉了什么事，一句话一个场景，要具体，共3个"],"who":"适合谁用，具体到身份，如：天天让 AI 写页面但总不满意的前端开发"}`;
 
+async function callAI(prompt) {
+  const res = await fetch(`${LLM.base}/chat/completions`, {
+    method: "POST",
+    headers: { "content-type": "application/json", authorization: `Bearer ${LLM.key}` },
+    signal: AbortSignal.timeout(120000),
+    body: JSON.stringify({
+      model: LLM.model,
+      temperature: 0.85,
+      messages: [
+        { role: "system", content: "你是写得一手好中文的公众号科技编辑：句子通顺、口语但有信息量、只讲事实不喊口号。只输出 JSON。" },
+        { role: "user", content: prompt },
+      ],
+    }),
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(`HTTP ${res.status} ${text.slice(0, 150)}`);
+  // 正确解包：外层是 API 信封，正文在 choices[0].message.content，正文里可能还有 ```json 围栏
+  let content = "";
+  try { content = JSON.parse(text)?.choices?.[0]?.message?.content || ""; } catch { /* 非标准响应,退回原文 */ }
+  if (!content) content = text;
+  const m = content.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error(`返回无 JSON 内容：${content.slice(0, 120)}`);
+  const raw = JSON.parse(m[0]);
+  const out = {
+    hook: String(raw.hook || "").trim(),
+    what: String(raw.what || "").trim(),
+    core: String(raw.core || "").trim(),
+    usecases: Array.isArray(raw.usecases) ? raw.usecases.map((u) => String(u).trim()).filter(Boolean).slice(0, 3) : [],
+    who: String(raw.who || "").trim(),
+  };
+  if (!out.hook || !out.what) throw new Error(`关键字段为空：hook=${!!out.hook} what=${!!out.what}`);
+  return out;
+}
+
+// 智谱免费档限流特征：HTTP 429 / code 1302(账户频率) / 1305(模型过载)，退避重试有效
+const RATE_LIMITED = /HTTP 429|1302|1305|速率|访问量过大/;
+
 async function analyzeOne(r, md, usedHooks = []) {
   if (!LLM) return null;
-  try {
-    const prompt = AI_PROMPT
-      .replace("{used}", usedHooks.length ? usedHooks.map((h, i) => `${i + 1}. ${h}`).join("；") : "（无，可自由发挥，但仍禁止“分享一个/爆火/上榜”式套话）")
-      .replace("{repo}", r.repo).replace("{lang}", r.lang || "-").replace("{stars}", String(r.stars ?? "")).replace("{today}", r.today ?? "")
-      .replace("{desc}", r.desc || "").replace("{readme}", md.slice(0, 4000));
-    const res = await fetch(`${LLM.base}/chat/completions`, {
-      method: "POST",
-      headers: { "content-type": "application/json", authorization: `Bearer ${LLM.key}` },
-      signal: AbortSignal.timeout(120000),
-      body: JSON.stringify({
-        model: LLM.model,
-        temperature: 0.85,
-        messages: [
-          { role: "system", content: "你是写得一手好中文的公众号科技编辑：句子通顺、口语但有信息量、只讲事实不喊口号。只输出 JSON。" },
-          { role: "user", content: prompt },
-        ],
-      }),
-    });
-    const text = await res.text();
-    if (!res.ok) throw new Error(`HTTP ${res.status} ${text.slice(0, 150)}`);
-    // 正确解包：外层是 API 信封，正文在 choices[0].message.content，正文里可能还有 ```json 围栏
-    let content = "";
-    try { content = JSON.parse(text)?.choices?.[0]?.message?.content || ""; } catch { /* 非标准响应,退回原文 */ }
-    if (!content) content = text;
-    const m = content.match(/\{[\s\S]*\}/);
-    if (!m) throw new Error(`返回无 JSON 内容：${content.slice(0, 120)}`);
-    const raw = JSON.parse(m[0]);
-    const out = {
-      hook: String(raw.hook || "").trim(),
-      what: String(raw.what || "").trim(),
-      core: String(raw.core || "").trim(),
-      usecases: Array.isArray(raw.usecases) ? raw.usecases.map((u) => String(u).trim()).filter(Boolean).slice(0, 3) : [],
-      who: String(raw.who || "").trim(),
-    };
-    if (!out.hook || !out.what) throw new Error(`关键字段为空：hook=${!!out.hook} what=${!!out.what}`);
-    return out;
-  } catch (e) {
-    process.stderr.write(`[大模型] ${r.repo} 分析失败：${e.message}\n`);
-    return null;
+  const prompt = AI_PROMPT
+    .replace("{used}", usedHooks.length ? usedHooks.map((h, i) => `${i + 1}. ${h}`).join("；") : "（无，可自由发挥，但仍禁止“分享一个/爆火/上榜”式套话）")
+    .replace("{repo}", r.repo).replace("{lang}", r.lang || "-").replace("{stars}", String(r.stars ?? "")).replace("{today}", r.today ?? "")
+    .replace("{desc}", r.desc || "").replace("{readme}", md.slice(0, 4000));
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      return await callAI(prompt);
+    } catch (e) {
+      if (attempt < 2 && RATE_LIMITED.test(e.message)) {
+        process.stderr.write(`[大模型] ${r.repo} 被限流，${attempt ? 60 : 25}s 后重试\n`);
+        await new Promise((s) => setTimeout(s, attempt ? 60000 : 25000));
+        continue;
+      }
+      process.stderr.write(`[大模型] ${r.repo} 分析失败：${e.message}\n`);
+      return null;
+    }
   }
 }
 
@@ -304,7 +318,8 @@ function section(r, i, shotCid) {
   r.links.paper.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#8a6d3b;text-decoration:none">论文 → ${esc(l.url)}</a>`));
 
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
-  const what = ai?.what || (r.summary || r.readmeCN?.slice(0, 500) || r.desc || "");
+  const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
+  const what = ai?.what || (cleanSum || r.readmeCN?.slice(0, 500) || r.desc || "");
   const coreHtml = ai?.core ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${esc(ai.core)}</p>` : "";
   const casesHtml = ai?.usecases?.length ? `<p ${p}"><b style="color:#1a1a1a">能用来干什么：</b></p><ul style="margin:4px 0 10px 22px;padding:0">${ai.usecases.map((u) => `<li style="margin:3px 0">${esc(u)}</li>`).join("")}</ul>` : "";
   const whoHtml = ai?.who ? `<p ${p}"><b style="color:#1a1a1a">适合谁：</b>${esc(ai.who)}</p>` : "";
@@ -413,7 +428,7 @@ await withBrowser(async () => {
       cidMap[cid] = { path: shotPath };
     }
     process.stderr.write(`  ${i + 1}/${data.repos.length} ${r.repo} → 演示${r.links.demo.length} 中文${r.links.cnDemo.length} AI:${r.ai ? "✓" : "✗"}\n`);
-    await new Promise((s) => setTimeout(s, 300));
+    await new Promise((s) => setTimeout(s, 1500));
   }
   await page.close();
 });
@@ -433,11 +448,16 @@ const attachments = Object.entries(cidMap)
   .filter(([k]) => k.startsWith("shot-"))
   .map(([k, v]) => ({ filename: `${k}.png`, path: v.path, cid: k }));
 
-await transport.sendMail({
-  from: `"GitHub 日报" <${user}>`,
-  to: process.env.MAIL_TO || user,
-  subject: `【公众号初稿】GitHub 热榜 ${data.day} · ${data.repos.length} 个项目`,
-  html,
-  attachments,
-});
-console.error(`[文章] 已发送 ${data.repos.length} 个项目到邮箱，附件截图 ${attachments.length} 张`);
+try {
+  await transport.sendMail({
+    from: `"GitHub 日报" <${user}>`,
+    to: process.env.MAIL_TO || user,
+    subject: `【公众号初稿】GitHub 热榜 ${data.day} · ${data.repos.length} 个项目 · ${new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false })}`,
+    html,
+    attachments,
+  });
+  console.error(`[文章] 已发送 ${data.repos.length} 个项目到邮箱，附件截图 ${attachments.length} 张`);
+} catch (e) {
+  // 发送失败也别让整个 job 变红：文章已在仓库里，重跑一次即可
+  console.error(`[邮件] 发送失败：${e.message}（文章已生成并归档，重跑 workflow 即可补发）`);
+}

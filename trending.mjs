@@ -187,7 +187,9 @@ async function askJSON(system, user, temperature = 0.3) {
       }
     } catch (e) {
       lastErr = e;
-      await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
+      // 1302/1305 是智谱限流，需要更长的退避；其他错误 0.8s 级退避就够
+      const wait = /HTTP 429|1302|1305|速率|过大/.test(e.message) ? 15000 * (attempt + 1) : 800 * (attempt + 1);
+      await new Promise((r) => setTimeout(r, wait));
     }
   }
   throw lastErr;
@@ -228,7 +230,8 @@ async function analyze(repo) {
       一句话判断: j.一句话判断 || repo.desc,
     };
   } catch (e) {
-    return { ...EMPTY, 是什么: `分析失败（${e.message.slice(0, 80)}）`, 一句话判断: repo.desc };
+    process.stderr.write(`[分析] ${repo.repo} 失败：${e.message.slice(0, 100)}\n`);
+    return { ...EMPTY, 是什么: "", 一句话判断: repo.desc };
   }
 }
 
@@ -348,7 +351,7 @@ writeFileSync(join(ROOT, "reports", "latest.json"), JSON.stringify({
     stars: r.stars ?? 0, today: r.today, forks: r.forks ?? 0,
     created: r.created, license: r.license, topics: r.topics, homepage: r.homepage,
     url: `https://github.com/${r.repo}`,
-    summary: notes[i]?.是什么 || "",
+    summary: notes[i]?.是什么 || r.desc || "",
     readmeCN: notes[i]?.readmeCN || "",
   })),
 }, null, 2));
