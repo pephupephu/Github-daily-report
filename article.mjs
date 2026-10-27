@@ -30,10 +30,10 @@ README 摘录：
 {readme}
 
 本期已用过的开头角度：{used}
-你的开头必须换一个全新角度：从该仓库自身找一个具体抓手（一个扎眼的数字、一个真实痛点、一个反常识的设计决策、一个“终于有人把它做出来了”的问题），禁止以“分享一个”“爆火”“上榜”“今天看到”这类套话开头，也禁止喊口号。
+hook（开头）是全文胜负手：读者看完这一句才决定要不要往下读。从该仓库自身找一个具体抓手——一个扎眼的数字、一个真实痛点、一个反常识的设计决策、或一句“终于有人把它做出来了”的感叹——像人随口跟朋友说话那样写出来，有画面、有悬念，但不是标题党。禁止以“分享一个”“爆火”“上榜”“今天看到”这类套话开头，禁止喊口号和排比。
 
 只输出 JSON（不要代码块、不要任何解释）：
-{"hook":"开头一句，30字内，不与已用开头雷同","what":"3句以内大白话说明：它是做什么的、解决谁的问题，没接触过的人能秒懂","core":"3句以内讲清它是怎么做到的：关键机制为什么有效。基于 README 事实，不编造","usecases":["谁在什么情况下用它省掉了什么事，一句话一个场景，要具体，共3个"],"who":"适合谁用，具体到身份，如：天天让 AI 写页面但总不满意的前端开发"}`;
+{"hook":"开头一句，30字内，用上面说的新角度，不与已用开头雷同","oneliner":"18字内说清它是干嘛的，像介绍给完全没听过的朋友，例如：一条命令把老照片一键修复上色；禁止'平台/框架/生态/无缝/赋能'这类词","what":"3句以内大白话说明：它是做什么的、解决谁的问题，没接触过的人能秒懂","core":"3句以内讲清它是怎么做到的：关键机制为什么有效。基于 README 事实，不编造","usecases":["谁在什么情况下用它省掉了什么事，一句话一个场景，要具体，共3个"],"who":"适合谁用，具体到身份，如：天天让 AI 写页面但总不满意的前端开发"}`;
 
 async function callAI(prompt) {
   const res = await fetch(`${LLM.base}/chat/completions`, {
@@ -60,6 +60,7 @@ async function callAI(prompt) {
   const raw = JSON.parse(m[0]);
   const out = {
     hook: String(raw.hook || "").trim(),
+    oneliner: String(raw.oneliner || "").trim(),
     what: String(raw.what || "").trim(),
     core: String(raw.core || "").trim(),
     usecases: Array.isArray(raw.usecases) ? raw.usecases.map((u) => String(u).trim()).filter(Boolean).slice(0, 3) : [],
@@ -352,6 +353,29 @@ function buildHTML(data, cidMap) {
   const total = repos.reduce((s, r) => s + (+String(r.today || 0).replace(/,/g, "") || 0), 0);
   const sections = repos.map((r, i) => section(r, i, cidMap[r.repo] || "")).join("");
 
+  // 文首总览表：一chart表把今天的推荐直接铺开，oneliner 缺了就退回 trending 摘要/官方简介
+  const ths = `padding:8px;background:#f7f8fa;border-bottom:1px solid #eceef1;color:#8a8a8a;font-size:12px;font-weight:600`;
+  const rows = repos.map((r, i) => {
+    const line = String(r.ai?.oneliner || r.summary || r.desc || "").replace(/\s+/g, " ").slice(0, 46);
+    return `<tr>
+    <td style="padding:9px 4px 9px 8px;border-bottom:1px solid #eceef1;color:#07c160;font-weight:700;vertical-align:top">${String(i + 1).padStart(2, "0")}</td>
+    <td style="padding:9px 8px;border-bottom:1px solid #eceef1;white-space:nowrap;vertical-align:top"><a href="${esc(r.url)}" style="color:#1a1a1a;font-weight:600;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
+    <td style="padding:9px 8px;border-bottom:1px solid #eceef1;color:#3a3a3a;line-height:1.75">${esc(line)}</td>
+    <td style="padding:9px 8px 9px 4px;border-bottom:1px solid #eceef1;color:#fa5151;white-space:nowrap;text-align:right;vertical-align:top;font-size:12px">+${fmtStars(r.today)}</td>
+  </tr>`;
+  }).join("");
+  const overview = repos.length ? `
+<p style="margin:0 0 10px;font-size:15px;font-weight:700;color:#1a1a1a">今日 ${repos.length} 个仓库 · 一分钟速览</p>
+<table style="width:100%;border-collapse:collapse;font-size:13px;margin:0 0 30px">
+  <tr>
+    <th align="left" style="${ths};width:34px">#</th>
+    <th align="left" style="${ths}">仓库</th>
+    <th align="left" style="${ths};padding-left:12px">一眼看懂</th>
+    <th align="right" style="${ths}">今日</th>
+  </tr>
+  ${rows}
+</table>` : "";
+
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>GitHub 日报 ${day}</title></head>
 <body style="margin:0;background:#f5f6f8">
 <div style="max-width:677px;margin:0 auto;background:#fff;padding:26px 20px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
@@ -364,6 +388,8 @@ function buildHTML(data, cidMap) {
   今天在 GitHub 上又看到了不少有意思的开源项目。今天 ${repos.length} 个项目上榜，累计新增 ${total.toLocaleString()} star。
   ${cn ? `其中 ${cn} 个有 <b>中文体验入口</b>` : ""}，直接点下面的链接就能打开，不用自己折腾部署。
 </p>
+
+${overview}
 
 ${top ? `<section style="background:#07c160;color:#fff;border-radius:10px;padding:18px 20px;margin:0 0 28px">
   <p style="margin:0 0 6px;font-size:12px;opacity:.9">今日最热</p>
