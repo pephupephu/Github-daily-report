@@ -33,7 +33,7 @@ README 摘录：
 hook（开头）是全文胜负手：读者看完这一句才决定要不要往下读。从该仓库自身找一个具体抓手——一个扎眼的数字、一个真实痛点、一个反常识的设计决策、或一句“终于有人把它做出来了”的感叹——像人随口跟朋友说话那样写出来，有画面、有悬念，但不是标题党。禁止以“分享一个”“爆火”“上榜”“今天看到”这类套话开头，禁止喊口号和排比。
 
 只输出 JSON（不要代码块、不要任何解释）：
-{"hook":"开头一句，30字内，用上面说的新角度，不与已用开头雷同","oneliner":"18字内说清它是干嘛的，像介绍给完全没听过的朋友，例如：一条命令把老照片一键修复上色；禁止'平台/框架/生态/无缝/赋能'这类词","what":"3句以内大白话说明：它是做什么的、解决谁的问题，没接触过的人能秒懂","core":"3句以内讲清它是怎么做到的：关键机制为什么有效。基于 README 事实，不编造","usecases":["谁在什么情况下用它省掉了什么事，一句话一个场景，要具体，共3个"],"who":"适合谁用，具体到身份，如：天天让 AI 写页面但总不满意的前端开发"}`;
+{"hook":"开头一句，30字内，用上面说的新角度，不与已用开头雷同","oneliner":"18字内说清它是干嘛的，像介绍给完全没听过的朋友，例如：一条命令把老照片一键修复上色；禁止'平台/框架/生态/无缝/赋能'这类词","what":"3句以内大白话说明：它是做什么的、解决谁的问题，没接触过的人能秒懂","case":"写一个贴合实际的具体运用案例：谁（具体身份）、被什么问题卡住、用它的哪个能力解决、前后对比省了什么，2到3句。基调务实可信，像真实用户复述经历，基于 README 提到的能力，不编造它没有的功能","core":"3句以内讲清它是怎么做到的：关键机制为什么有效。基于 README 事实，不编造","who":"适合谁用，具体到身份，如：天天让 AI 写页面但总不满意的前端开发"}`;
 
 async function callAI(prompt) {
   const res = await fetch(`${LLM.base}/chat/completions`, {
@@ -62,8 +62,8 @@ async function callAI(prompt) {
     hook: String(raw.hook || "").trim(),
     oneliner: String(raw.oneliner || "").trim(),
     what: String(raw.what || "").trim(),
+    case: String(raw.case || raw.usecases?.[0] || "").trim(),
     core: String(raw.core || "").trim(),
-    usecases: Array.isArray(raw.usecases) ? raw.usecases.map((u) => String(u).trim()).filter(Boolean).slice(0, 3) : [],
     who: String(raw.who || "").trim(),
   };
   if (!out.hook || !out.what) throw new Error(`关键字段为空：hook=${!!out.hook} what=${!!out.what}`);
@@ -321,8 +321,8 @@ function section(r, i, shotCid) {
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || r.readmeCN?.slice(0, 500) || r.desc || "");
+  const caseHtml = ai?.case ? `<p ${p}><b style="color:#1a1a1a">放进一个真实场景：</b>${esc(ai.case)}</p>` : "";
   const coreHtml = ai?.core ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${esc(ai.core)}</p>` : "";
-  const casesHtml = ai?.usecases?.length ? `<p ${p}"><b style="color:#1a1a1a">能用来干什么：</b></p><ul style="margin:4px 0 10px 22px;padding:0">${ai.usecases.map((u) => `<li style="margin:3px 0">${esc(u)}</li>`).join("")}</ul>` : "";
   const whoHtml = ai?.who ? `<p ${p}"><b style="color:#1a1a1a">适合谁：</b>${esc(ai.who)}</p>` : "";
   const fallbackBox = ai ? "" : `<div style="margin:0;padding:10px 14px;background:#f7f8fa;border-radius:6px;font-size:13px;color:#5a6472;line-height:1.8"><strong>一句话概括：</strong>${esc(r.desc || "")}</div>`;
 
@@ -335,8 +335,8 @@ function section(r, i, shotCid) {
   </h2>
   <p ${p}"><b style="color:#1a1a1a">${esc(hook)}</b></p>
   <p ${p}">${esc(what)}</p>
+  ${caseHtml}
   ${coreHtml}
-  ${casesHtml}
   ${cmd}
   ${img}
   ${vids}
