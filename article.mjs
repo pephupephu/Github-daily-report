@@ -283,7 +283,12 @@ async function probeAndShot(page, demoUrl, repo) {
     const shotDir = join(ROOT, "shots");
     mkdirSync(shotDir, { recursive: true });
     const shotPath = join(shotDir, `${repo.replace("/", "__")}.png`);
-    await page.screenshot({ path: shotPath, fullPage: true });
+    // 触发懒加载后只截首屏：fullPage 会把 demo 页底出的长空白全拍进来
+    await page.evaluate(() => window.scrollTo(0, 400)).catch(() => {});
+    await page.waitForTimeout(400);
+    await page.evaluate(() => window.scrollTo(0, 0)).catch(() => {});
+    const h = await page.evaluate(() => Math.min(800, Math.max(document.documentElement.scrollHeight, 300))).catch(() => 600);
+    await page.screenshot({ path: shotPath, clip: { x: 0, y: 0, width: 1280, height: h } });
     return { cnUrls: [...new Set(cn)].slice(0, 3), shotPath };
   } catch (e) {
     process.stderr.write(`[浏览器] ${demoUrl} 渲染失败：${e.message}\n`);
@@ -365,7 +370,7 @@ function buildHTML(data, cidMap) {
   </tr>`;
   }).join("");
   const overview = repos.length ? `
-<p style="margin:0 0 10px;font-size:15px;font-weight:700;color:#1a1a1a">今日 ${repos.length} 个仓库 · 一分钟速览</p>
+<p style="margin:0 0 10px;font-size:16px;font-weight:800;color:#1a1a1a">🔥 最新开源的顶级实用 AI 仓库</p>
 <table style="width:100%;border-collapse:collapse;font-size:13px;margin:0 0 30px">
   <tr>
     <th align="left" style="${ths};width:34px">#</th>
@@ -386,7 +391,7 @@ function buildHTML(data, cidMap) {
 <h1 style="margin:0 0 6px;font-size:24px;font-weight:800;color:#1a1a1a;line-height:1.4">GitHub 今日热榜 · ${CN_DATE(day)}</h1>
 <p style="margin:0 0 24px;font-size:14px;color:#8a8a8a;line-height:1.8;border-bottom:2px solid #07c160;padding-bottom:12px">
   今天在 GitHub 上又看到了不少有意思的开源项目。今天 ${repos.length} 个项目上榜，累计新增 ${total.toLocaleString()} star。
-  ${cn ? `其中 ${cn} 个有 <b>中文体验入口</b>` : ""}，直接点下面的链接就能打开，不用自己折腾部署。
+  ${cn ? `其中 ${cn} 个有 <b>中文体验入口</b>` : ""}，点击链接交给你的 Agent 部署即可。
 </p>
 
 ${overview}
@@ -444,14 +449,14 @@ await withBrowser(async () => {
         }
       }
     } else {
-      const shotDir = join(ROOT, "shots");
-      mkdirSync(shotDir, { recursive: true });
-      const shotPath = join(shotDir, `${r.repo.replace("/", "__")}.png`);
-      await page.screenshot({ path: shotPath, fullPage: false, clip: { x: 0, y: 0, width: 1200, height: 675 } });
-      const cid = `shot-${i}`;
-      r.shotCid = cid;
-      cidMap[r.repo] = cid;
-      cidMap[cid] = { path: shotPath };
+      // 先真的打开中文入口再截图——此前直接截的 page 还停在上一仓库的页面，错图/空白都因这
+      const hit = await probeAndShot(page, r.links.cnDemo[0].url, r.repo);
+      if (hit.shotPath) {
+        const cid = `shot-${i}`;
+        r.shotCid = cid;
+        cidMap[r.repo] = cid;
+        cidMap[cid] = { path: hit.shotPath };
+      }
     }
     process.stderr.write(`  ${i + 1}/${data.repos.length} ${r.repo} → 演示${r.links.demo.length} 中文${r.links.cnDemo.length} AI:${r.ai ? "✓" : "✗"}\n`);
     await new Promise((s) => setTimeout(s, 1500));
