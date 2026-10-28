@@ -223,11 +223,11 @@ async function analyze(repo) {
     const j = await askJSON(ANALYST, `仓库：${repo.repo}\n语言：${repo.lang}\n简介：${repo.desc}\n\nREADME 摘录：\n${md}`);
     return {
       ...EMPTY,
-      是什么: j.是什么 || repo.desc,
+      是什么: j.是什么 || "",
       核心机制: Array.isArray(j.核心机制) ? j.核心机制 : [j.核心机制].filter(Boolean),
       使用场景: Array.isArray(j.使用场景) ? j.使用场景 : [j.使用场景].filter(Boolean),
       坑: Array.isArray(j.坑) ? j.坑 : [j.坑].filter(Boolean),
-      一句话判断: j.一句话判断 || repo.desc,
+      一句话判断: j.一句话判断 || "",
     };
   } catch (e) {
     process.stderr.write(`[分析] ${repo.repo} 失败：${e.message.slice(0, 100)}\n`);
@@ -351,7 +351,7 @@ writeFileSync(join(ROOT, "reports", "latest.json"), JSON.stringify({
     stars: r.stars ?? 0, today: r.today, forks: r.forks ?? 0,
     created: r.created, license: r.license, topics: r.topics, homepage: r.homepage,
     url: `https://github.com/${r.repo}`,
-    summary: notes[i]?.是什么 || r.desc || "",
+    summary: notes[i]?.是什么 || "",
     readmeCN: notes[i]?.readmeCN || "",
   })),
 }, null, 2));

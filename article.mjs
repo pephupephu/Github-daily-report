@@ -305,6 +305,8 @@ function installCmd(md) {
 }
 
 const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]);
+// 中文哨兵：兜底数据里宁可不显示，也不放英文让读者出戏
+const CN = (s) => (/[\u4e00-\u9fa5]/.test(s) ? s : "");
 const CN_DATE = (d) => `${d.slice(0, 4)}年${d.slice(5, 7)}月${d.slice(8)}日`;
 const fmtStars = (n) => `+${String(n || 0).replace(/,/g, "")}`;
 const repoShort = (repo) => repo.split("/")[1];
@@ -325,11 +327,11 @@ function section(r, i, shotCid) {
 
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
-  const what = ai?.what || (cleanSum || r.readmeCN?.slice(0, 500) || r.desc || "");
+  const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || "");
   const caseHtml = ai?.case ? `<p ${p}><b style="color:#1a1a1a">放进一个真实场景：</b>${esc(ai.case)}</p>` : "";
   const coreHtml = ai?.core ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${esc(ai.core)}</p>` : "";
   const whoHtml = ai?.who ? `<p ${p}"><b style="color:#1a1a1a">适合谁：</b>${esc(ai.who)}</p>` : "";
-  const fallbackBox = ai ? "" : `<div style="margin:0;padding:10px 14px;background:#f7f8fa;border-radius:6px;font-size:13px;color:#5a6472;line-height:1.8"><strong>一句话概括：</strong>${esc(r.desc || "")}</div>`;
+  const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:10px 14px;background:#f7f8fa;border-radius:6px;font-size:13px;color:#5a6472;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
 
   return `
 <section style="margin:0 0 34px;padding-bottom:26px;border-bottom:1px solid #eceef1">
@@ -361,7 +363,7 @@ function buildHTML(data, cidMap) {
   // 文首总览表：一chart表把今天的推荐直接铺开，oneliner 缺了就退回 trending 摘要/官方简介
   const ths = `padding:8px;background:#f7f8fa;border-bottom:1px solid #eceef1;color:#8a8a8a;font-size:12px;font-weight:600`;
   const rows = repos.map((r, i) => {
-    const line = String(r.ai?.oneliner || r.summary || r.desc || "").replace(/\s+/g, " ").slice(0, 46);
+    const line = String(r.ai?.oneliner || CN(r.summary) || CN(r.desc) || "详情见下").replace(/\s+/g, " ").slice(0, 46);
     return `<tr>
     <td style="padding:9px 4px 9px 8px;border-bottom:1px solid #eceef1;color:#07c160;font-weight:700;vertical-align:top">${String(i + 1).padStart(2, "0")}</td>
     <td style="padding:9px 8px;border-bottom:1px solid #eceef1;white-space:nowrap;vertical-align:top"><a href="${esc(r.url)}" style="color:#1a1a1a;font-weight:600;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
@@ -399,7 +401,7 @@ ${overview}
 ${top ? `<section style="background:#07c160;color:#fff;border-radius:10px;padding:18px 20px;margin:0 0 28px">
   <p style="margin:0 0 6px;font-size:12px;opacity:.9">今日最热</p>
   <p style="margin:0 0 8px;font-size:20px;font-weight:700">${esc(repoShort(top.repo))}</p>
-  <p style="margin:0 0 10px;font-size:13px;line-height:1.75;opacity:.96">${esc(top.desc).slice(0, 130)}</p>
+  <p style="margin:0 0 10px;font-size:13px;line-height:1.75;opacity:.96">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || "详情见下文各仓库一节").slice(0, 130))}</p>
   <p style="margin:0;font-size:12px;opacity:.9">今日 +${fmtStars(top.today)} star · 总 ${(top.stars || 0).toLocaleString()} star</p>
 </section>` : ""}
 
