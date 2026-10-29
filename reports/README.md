@@ -35,3 +35,4 @@
 - [daily-2026-10-27](./daily-2026-10-27.md) — 榜首 Nutlope/hallmark (+2859)
 - [daily-2026-10-28](./daily-2026-10-28.md) — 榜首 elayadesign/ai-design-skills (+1395)
 - [daily-2026-10-28](./daily-2026-10-28.md) — 榜首 JetBrains/thinkrail (+1075)
+- [daily-2026-10-29](./daily-2026-10-29.md) — 榜首 JetBrains/thinkrail (+1068)
