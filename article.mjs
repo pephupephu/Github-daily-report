@@ -332,6 +332,13 @@ function section(r, i, shotCid) {
   const coreHtml = ai?.core ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${esc(ai.core)}</p>` : "";
   const whoHtml = ai?.who ? `<p ${p}"><b style="color:#1a1a1a">适合谁：</b>${esc(ai.who)}</p>` : "";
   const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:10px 14px;background:#f7f8fa;border-radius:6px;font-size:13px;color:#5a6472;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
+  // 收尾上手区：仓库地址 + 一句可直接复制给任意 AI Agent 的安装提示词
+  const agentBox = `
+<div style="margin:16px 0 0;padding:12px 16px;background:#f7fdf9;border-left:4px solid #07c160;border-radius:6px;font-size:14px;line-height:2;color:#3a3a3a">
+  <b style="color:#1a1a1a">仓库地址：</b><a href="https://github.com/${esc(r.repo)}" style="color:#576b95;text-decoration:none">github.com/${esc(r.repo)}</a><br>
+  <b style="color:#1a1a1a">交给 Agent 安装：</b>把这句话发给任意 AI Agent（Claude Code / Codex / Cursor / Qwen Code 都行）——
+  <span style="display:block;margin-top:4px;padding:8px 12px;background:#fff;border:1px dashed #c8d8cf;border-radius:6px;font-size:13px;line-height:1.8">帮我克隆 https://github.com/${esc(r.repo)}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用</span>
+</div>`;
 
   return `
 <section style="margin:0 0 34px;padding-bottom:26px;border-bottom:1px solid #eceef1">
@@ -349,6 +356,7 @@ function section(r, i, shotCid) {
   ${vids}
   ${links.length ? `<div style="margin:10px 0">${links.join("　　")}</div>` : ""}
   ${whoHtml}
+  ${agentBox}
   ${fallbackBox}
 </section>`;
 }
