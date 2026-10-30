@@ -70,7 +70,7 @@ async function callAI(prompt) {
     core: String(raw.core || "").trim(),
     who: String(raw.who || "").trim(),
   };
-  if (!out.hook || !out.what) throw new Error(`关键字段为空：hook=${!!out.hook} what=${!!out.what}`);
+  if (!out.hook && !out.what) throw new Error("hook/what 均为空");
   return out;
 }
 
@@ -83,13 +83,14 @@ async function analyzeOne(r, md, usedHooks = []) {
     .replace("{used}", usedHooks.length ? usedHooks.map((h, i) => `${i + 1}. ${h}`).join("；") : "（无，可自由发挥，但仍禁止“分享一个/爆火/上榜”式套话）")
     .replace("{repo}", r.repo).replace("{lang}", r.lang || "-").replace("{stars}", String(r.stars ?? "")).replace("{today}", r.today ?? "")
     .replace("{desc}", r.desc || "").replace("{readme}", md.slice(0, 4000));
-  for (let attempt = 0; attempt < 3; attempt++) {
+  for (let attempt = 0; attempt < 4; attempt++) {
     try {
       return await callAI(prompt);
     } catch (e) {
-      if (attempt < 2 && RATE_LIMITED.test(e.message)) {
-        process.stderr.write(`[大模型] ${r.repo} 被限流，${attempt ? 60 : 25}s 后重试\n`);
-        await new Promise((s) => setTimeout(s, attempt ? 60000 : 25000));
+      if (attempt < 3 && RATE_LIMITED.test(e.message)) {
+        const wait = [25000, 60000, 120000][attempt];
+        process.stderr.write(`[大模型] ${r.repo} 被限流，${wait / 1000}s 后重试\n`);
+        await new Promise((s) => setTimeout(s, wait));
         continue;
       }
       process.stderr.write(`[大模型] ${r.repo} 分析失败：${e.message}\n`);
@@ -327,9 +328,9 @@ function section(r, i, shotCid) {
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || "");
-  const caseHtml = ai?.case ? `<p ${p}><b style="color:#1a1a1a">放进一个真实场景：</b>${md(ai.case)}</p>` : "";
-  const coreHtml = ai?.core ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${md(ai.core)}</p>` : "";
-  const whoHtml = ai?.who ? `<p ${p}"><b style="color:#1a1a1a">适合谁：</b>${md(ai.who)}</p>` : "";
+  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<p ${p}><b style="color:#1a1a1a">放进一个真实场景：</b>${md(ai?.case || r.scenarios[0])}</p>` : "";
+  const coreHtml = (ai?.core || r.mechanics?.length) ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${md(ai?.core || r.mechanics.join("；"))}</p>` : "";
+  const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<p ${p}"><b style="color:#1a1a1a">适合谁：</b>${md(ai?.who || r.scenarios[1])}</p>` : "";
   const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:10px 14px;background:#f7f8fa;border-radius:6px;font-size:13px;color:#5a6472;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
   // 收尾上手区：仓库地址 + 一句可直接复制给任意 AI Agent 的安装提示词
   const agentBox = `
@@ -369,7 +370,7 @@ function buildHTML(data, cidMap) {
   // 文首总览表：一chart表把今天的推荐直接铺开，oneliner 缺了就退回 trending 摘要/官方简介
   const ths = `padding:8px;background:#f7f8fa;border-bottom:1px solid #eceef1;color:#8a8a8a;font-size:12px;font-weight:600`;
   const rows = repos.map((r, i) => {
-    const line = String(r.ai?.oneliner || CN(r.summary) || CN(r.desc) || "详情见下").replace(/\*\*/g, "").replace(/\s+/g, " ").slice(0, 46);
+    const line = String(r.ai?.oneliner || CN(r.judgment) || CN(r.summary) || CN(r.desc) || "详情见下").replace(/\*\*/g, "").replace(/\s+/g, " ").slice(0, 26);
     return `<tr>
     <td style="padding:9px 4px 9px 8px;border-bottom:1px solid #eceef1;color:#07c160;font-weight:700;vertical-align:top">${String(i + 1).padStart(2, "0")}</td>
     <td style="padding:9px 8px;border-bottom:1px solid #eceef1;white-space:nowrap;vertical-align:top"><a href="${esc(r.url)}" style="color:#1a1a1a;font-weight:600;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
@@ -466,7 +467,7 @@ await withBrowser(async () => {
       }
     }
     process.stderr.write(`  ${i + 1}/${data.repos.length} ${r.repo} → 演示${r.links.demo.length} 中文${r.links.cnDemo.length} AI:${r.ai ? "✓" : "✗"}\n`);
-    await new Promise((s) => setTimeout(s, 1500));
+    await new Promise((s) => setTimeout(s, 10000));
   }
   await page.close();
 });

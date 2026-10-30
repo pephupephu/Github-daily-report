@@ -352,6 +352,9 @@ writeFileSync(join(ROOT, "reports", "latest.json"), JSON.stringify({
     created: r.created, license: r.license, topics: r.topics, homepage: r.homepage,
     url: `https://github.com/${r.repo}`,
     summary: notes[i]?.是什么 || "",
+    judgment: notes[i]?.一句话判断 || "",
+    mechanics: notes[i]?.核心机制 || [],
+    scenarios: notes[i]?.使用场景 || [],
     readmeCN: notes[i]?.readmeCN || "",
   })),
 }, null, 2));
