@@ -33,7 +33,9 @@ README 摘录：
 hook（开头）是全文胜负手：读者看完这一句才决定要不要往下读。从该仓库自身找一个具体抓手——一个扎眼的数字、一个真实痛点、一个反常识的设计决策、或一句“终于有人把它做出来了”的感叹——像人随口跟朋友说话那样写出来，有画面、有悬念，但不是标题党。禁止以“分享一个”“爆火”“上榜”“今天看到”这类套话开头，禁止喊口号和排比。
 
 只输出 JSON（不要代码块、不要任何解释）：
-{"hook":"开头一句，30字内，用上面说的新角度，不与已用开头雷同","oneliner":"18字内直戳它最牛的那一点：杀手锏能力/最抓眼的数字/别人做不到而它做到了，例如：本地跑通 70B 大模型；10 行代码生成整个后台；禁止'平台/框架/生态/无缝/赋能'，禁止写成'这是一个…工具'","what":"3句以内大白话说明：它是做什么的、解决谁的问题，没接触过的人能秒懂","case":"写一个贴合实际的具体运用案例：谁（具体身份）、被什么问题卡住、用它的哪个能力解决、前后对比省了什么，2到3句。基调务实可信，像真实用户复述经历，基于 README 提到的能力，不编造它没有的功能","core":"3句以内讲清它是怎么做到的：关键机制为什么有效。基于 README 事实，不编造","who":"适合谁用，具体到身份，如：天天让 AI 写页面但总不满意的前端开发"}`;
+{"hook":"开头一句，30字内。直接给一个具体成果或场景：谁用它能做到什么，带关键数字或名词，让人一眼看到画面；禁止出现：爆火/火得有理由/涨得最凶/杀疯了/上榜/分享一个/今天看到/值得一看","oneliner":"18字内直戳它最牛的那一点：杀手锏能力/最抓眼的数字/别人做不到而它做到了，例如：本地跑通 70B 大模型；10 行代码生成整个后台；禁止'平台/框架/生态/无缝/赋能'，禁止写成'这是一个…工具'","what":"3到4句大白话：它是做什么的、解决谁的问题，要带一个具体的输入→输出例子（例如：丢一张图纸，几分钟后拿回可编辑的 3D 模型），没接触过的人能秒懂","case":"2到3句一个贴合实际的运用案例：谁（具体身份）、被什么卡住、拆成具体动作怎么解决（第一步…第二步…）、前后省了什么。基于 README 能力，不编造","core":"3到4句讲清它是怎么做到的：点名关键组件、步骤和数据流，说清为什么有效。基于 README 事实，不编造","who":"适合谁用，具体到身份，如：天天让 AI 写页面但总不满意的前端开发"}
+
+在 what / case / core 的内容里，把关键名词、数字、量化收益用 **双星号** 包起来标黑（如 **7 美元**、**3295 个可编辑对象**、**一块 ESP32-S3 开发板**），每段 1 到 3 处，不要整句加粗。`;
 
 async function callAI(prompt) {
   const res = await fetch(`${LLM.base}/chat/completions`, {
@@ -94,12 +96,12 @@ async function analyzeOne(r, md, usedHooks = []) {
   }
 }
 
-// AI 缺席时的轮换兜底开头，避免每段一个模子
+// AI 缺席时的轮换兜底开场，只陈述榜单事实，不喊口号
 const FALLBACK_HOOKS = [
-  (n, name) => `单日 +${n} star，${name} 做的事值得花两分钟看看：`,
-  (n, name) => `今天涨得最凶的工具型项目之一是 ${name}，+${n} star 都不是冲动关注：`,
-  (n, name) => `${name} 火得有理由，一天 +${n} star：`,
-  (n, name) => `如果你也被同一个问题烦过，${name} 就是答案，今天 +${n} star：`,
+  (n, name) => `${name} 今天单日 **+${n} star**。`,
+  (n, name) => `**+${n} star** 一天，${name} 在解决一个具体问题。`,
+  (n, name) => `${name} 今天的榜单成绩：**+${n} star**。`,
+  (n, name) => `单日 **+${n} star** 的 ${name}，看看它对你有没有用。`,
 ];
 
 // ---------- 链接抽取 ----------
@@ -305,6 +307,8 @@ function installCmd(md) {
 }
 
 const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]);
+// 先转义再还原 **粗体**：LLM 用双星号标关键名词/数字，这里变成 <b>
+const md = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
 // 中文哨兵：兜底数据里宁可不显示，也不放英文让读者出戏
 const CN = (s) => (/[\u4e00-\u9fa5]/.test(s) ? s : "");
 const CN_DATE = (d) => `${d.slice(0, 4)}年${d.slice(5, 7)}月${d.slice(8)}日`;
@@ -328,9 +332,9 @@ function section(r, i, shotCid) {
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || "");
-  const caseHtml = ai?.case ? `<p ${p}><b style="color:#1a1a1a">放进一个真实场景：</b>${esc(ai.case)}</p>` : "";
-  const coreHtml = ai?.core ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${esc(ai.core)}</p>` : "";
-  const whoHtml = ai?.who ? `<p ${p}"><b style="color:#1a1a1a">适合谁：</b>${esc(ai.who)}</p>` : "";
+  const caseHtml = ai?.case ? `<p ${p}><b style="color:#1a1a1a">放进一个真实场景：</b>${md(ai.case)}</p>` : "";
+  const coreHtml = ai?.core ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${md(ai.core)}</p>` : "";
+  const whoHtml = ai?.who ? `<p ${p}"><b style="color:#1a1a1a">适合谁：</b>${md(ai.who)}</p>` : "";
   const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:10px 14px;background:#f7f8fa;border-radius:6px;font-size:13px;color:#5a6472;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
   // 收尾上手区：仓库地址 + 一句可直接复制给任意 AI Agent 的安装提示词
   const agentBox = `
@@ -347,8 +351,8 @@ function section(r, i, shotCid) {
     <span style="margin-left:8px">${esc(repoShort(r.repo))}</span>
     <small style="color:#9a9a9a;font-weight:400">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} star · 今日 ${fmtStars(r.today)}</small>
   </h2>
-  <p ${p}"><b style="color:#1a1a1a">${esc(hook)}</b></p>
-  <p ${p}">${esc(what)}</p>
+  <p ${p}"><b style="color:#1a1a1a">${md(hook)}</b></p>
+  <p ${p}">${md(what)}</p>
   ${caseHtml}
   ${coreHtml}
   ${cmd}
@@ -371,7 +375,7 @@ function buildHTML(data, cidMap) {
   // 文首总览表：一chart表把今天的推荐直接铺开，oneliner 缺了就退回 trending 摘要/官方简介
   const ths = `padding:8px;background:#f7f8fa;border-bottom:1px solid #eceef1;color:#8a8a8a;font-size:12px;font-weight:600`;
   const rows = repos.map((r, i) => {
-    const line = String(r.ai?.oneliner || CN(r.summary) || CN(r.desc) || "详情见下").replace(/\s+/g, " ").slice(0, 46);
+    const line = String(r.ai?.oneliner || CN(r.summary) || CN(r.desc) || "详情见下").replace(/\*\*/g, "").replace(/\s+/g, " ").slice(0, 46);
     return `<tr>
     <td style="padding:9px 4px 9px 8px;border-bottom:1px solid #eceef1;color:#07c160;font-weight:700;vertical-align:top">${String(i + 1).padStart(2, "0")}</td>
     <td style="padding:9px 8px;border-bottom:1px solid #eceef1;white-space:nowrap;vertical-align:top"><a href="${esc(r.url)}" style="color:#1a1a1a;font-weight:600;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
