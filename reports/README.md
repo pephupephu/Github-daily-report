@@ -38,3 +38,4 @@
 - [daily-2026-10-29](./daily-2026-10-29.md) — 榜首 JetBrains/thinkrail (+1068)
 - [daily-2026-10-29](./daily-2026-10-29.md) — 榜首 HKUDS/DeepTutor (+1926)
 - [daily-2026-10-29](./daily-2026-10-29.md) — 榜首 HKUDS/DeepTutor (+1926)
+- [daily-2026-10-30](./daily-2026-10-30.md) — 榜首 HKUDS/DeepTutor (+1930)
