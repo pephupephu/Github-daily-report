@@ -33,7 +33,9 @@ README 摘录：
 hook（开头）是全文胜负手：读者看完这一句才决定要不要往下读。从该仓库自身找一个具体抓手——一个扎眼的数字、一个真实痛点、一个反常识的设计决策、或一句“终于有人把它做出来了”的感叹——像人随口跟朋友说话那样写出来，有画面、有悬念，但不是标题党。禁止以“分享一个”“爆火”“上榜”“今天看到”这类套话开头，禁止喊口号和排比。
 
 只输出 JSON（不要代码块、不要任何解释）：
-{"hook":"开头一句，30字内。直接给一个具体成果或场景：谁用它能做到什么，带关键数字或名词，让人一眼看到画面；禁止出现：爆火/火得有理由/涨得最凶/杀疯了/上榜/分享一个/今天看到/值得一看","oneliner":"18字内直戳它最牛的那一点：杀手锏能力/最抓眼的数字/别人做不到而它做到了，例如：本地跑通 70B 大模型；10 行代码生成整个后台；禁止'平台/框架/生态/无缝/赋能'，禁止写成'这是一个…工具'","what":"3到4句大白话：它是做什么的、解决谁的问题，要带一个具体的输入→输出例子（例如：丢一张图纸，几分钟后拿回可编辑的 3D 模型），没接触过的人能秒懂","case":"2到3句一个贴合实际的运用案例：谁（具体身份）、被什么卡住、拆成具体动作怎么解决（第一步…第二步…）、前后省了什么。基于 README 能力，不编造","core":"3到4句讲清它是怎么做到的：点名关键组件、步骤和数据流，说清为什么有效。基于 README 事实，不编造","who":"适合谁用，具体到身份，如：天天让 AI 写页面但总不满意的前端开发"}
+{"hook":"开头一句，30字内。直接给一个具体成果或场景：谁用它能做到什么，带关键数字或名词，让人一眼看到画面；禁止出现：爆火/火得有理由/涨得最凶/杀疯了/上榜/分享一个/今天看到/值得一看","oneliner":"18字内直戳它最牛的那一点：杀手锏能力/最抓眼的数字/别人做不到而它做到了，例如：本地跑通 70B 大模型；10 行代码生成整个后台；禁止'平台/框架/生态/无缝/赋能'，禁止写成'这是一个…工具'","what":"3到4句大白话：第一句就说透它最厉害的地方（像'把 AI 接进 iPhone，让它自己帮你操作手机'），不要从'这是一个…项目'开头，不要提实现方式；后面说清它解决谁的问题，带一个具体的输入→输出例子，没接触过的人能秒懂","case":"2到3句一个贴合实际的运用案例：谁（具体身份）、被什么卡住、拆成具体动作怎么解决（第一步…第二步…）、前后省了什么。基于 README 能力，不编造","core":"3到4句讲清它是怎么做到的：点名关键部件、步骤和数据流向，说清为什么有效。基于 README 事实，不编造","who":"适合谁用，具体到身份，如：天天让 AI 写页面但总不满意的前端开发"}
+
+全文禁止代码化表达：不出现代码、函数名、变量名、命令行、配置文件、API/SDK 这类词；技术名词只留普通人听得懂的（开发板、模型、插件、浏览器），拿不准就换成日常比喻。读者是不写代码的人也能看懂。
 
 在 what / case / core 的内容里，把关键名词、数字、量化收益用 **双星号** 包起来标黑（如 **7 美元**、**3295 个可编辑对象**、**一块 ESP32-S3 开发板**），每段 1 到 3 处，不要整句加粗。`;
 
@@ -300,12 +302,6 @@ async function probeAndShot(page, demoUrl, repo) {
 
 // ---------- 文案 ----------
 
-function installCmd(md) {
-  const fences = [...md.matchAll(/```(?:bash|sh|shell|console)?\n([\s\S]{0,400}?)```/g)].map((m) => m[1].trim());
-  const score = (c) => (/git clone/.test(c) ? 10 : 0) + (/pip install|npm i|npm install|cargo|uv |brew install/.test(c) ? 6 : 0) + (/^python |^node /.test(c) ? 2 : 0) - (c.split("\n").length > 12 ? 3 : 0);
-  return fences.sort((a, b) => score(b) - score(a))[0] || "";
-}
-
 const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]);
 // 先转义再还原 **粗体**：LLM 用双星号标关键名词/数字，这里变成 <b>
 const md = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
@@ -318,7 +314,6 @@ const repoShort = (repo) => repo.split("/")[1];
 // 公众号风格：每个项目一节，AI 钩子开头，带核心机制/使用场景/适合谁；AI 缺席时退回简版
 function section(r, i, shotCid) {
   const ai = r.ai;
-  const cmd = r.install ? `<pre style="background:#282c34;color:#abb2bf;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:13px;line-height:1.6;margin:10px 0"><code>${esc(r.install)}</code></pre>` : "";
   const img = shotCid ? `<img src="cid:${shotCid}" style="max-width:100%;border-radius:6px;margin:0 0 14px;display:block" alt="${esc(repoShort(r.repo))} 演示截图" />` : "";
   const vids = r.videos?.length ? videoBlock(r.videos) : "";
   const p = `style="margin:0 0 10px;font-size:15px;line-height:1.9;color:#3a3a3a"`;
@@ -355,7 +350,6 @@ function section(r, i, shotCid) {
   <p ${p}">${md(what)}</p>
   ${caseHtml}
   ${coreHtml}
-  ${cmd}
   ${img}
   ${vids}
   ${links.length ? `<div style="margin:10px 0">${links.join("　　")}</div>` : ""}
@@ -443,7 +437,6 @@ await withBrowser(async () => {
   for (const [i, r] of data.repos.entries()) {
   const md = await readme(r.repo);
   r.links = classify(parseLinks(md), r.repo, r.homepage);
-  r.install = installCmd(md);
   r.videos = extractVideos(md, r.url);
   r.ai = await analyzeOne(r, md, usedHooks);
   if (r.ai?.hook) usedHooks.push(r.ai.hook);
