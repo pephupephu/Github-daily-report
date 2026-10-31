@@ -312,6 +312,26 @@ const CN_DATE = (d) => `${d.slice(0, 4)}年${d.slice(5, 7)}月${d.slice(8)}日`;
 const fmtStars = (n) => `+${String(n || 0).replace(/,/g, "")}`;
 const repoShort = (repo) => repo.split("/")[1];
 
+// 无 LLM 时的最后保障：用 topics 词表拼一句中文，绝不让表格/正文出现"详情见下"这种空壳
+const TOPIC_CN = {
+  ai: "AI", llm: "大模型", "ai-agents": "AI Agent", agents: "Agent", "agent-skills": "Agent 技能",
+  skills: "技能包", mcp: "MCP 工具", rag: "知识库检索", automation: "自动化",
+  browser: "浏览器", "browser-automation": "浏览器自动化", headless: "无头浏览器", scraper: "网页抓取",
+  web: "网页", react: "React", nextjs: "Next.js", typescript: "TypeScript", python: "Python",
+  rust: "Rust", zig: "Zig", go: "Go", golang: "Go", cli: "命令行工具", devtools: "开发者工具",
+  design: "设计", ui: "界面", database: "数据库", api: "API", docker: "Docker",
+  crm: "CRM", email: "邮件", video: "视频", image: "图片", audio: "音频", speech: "语音",
+  memory: "记忆", "computer-use": "电脑操作", desktop: "桌面应用", electron: "桌面应用",
+  ios: "iOS", android: "Android", note: "笔记", markdown: "Markdown", pdf: "PDF",
+  prompt: "提示词", "prompt-engineering": "提示词", tutor: "学习辅导", learning: "学习",
+  game: "游戏", "3d": "3D", blender: "Blender", seo: "SEO", security: "安全", proxy: "代理",
+};
+function metaLine(r) {
+  const t = [...new Set((r.topics || []).map((x) => TOPIC_CN[String(x).toLowerCase()]).filter(Boolean))].slice(0, 2);
+  const lang = r.lang && r.lang !== "—" ? `${r.lang} ` : "";
+  return t.length ? `面向${t.join("、")}的${lang}项目` : `${lang}开源项目`;
+}
+
 // 公众号风格：每个项目一节，AI 钩子开头，带核心机制/使用场景/适合谁；AI 缺席时退回简版
 function section(r, i, shotCid) {
   const ai = r.ai;
@@ -327,7 +347,7 @@ function section(r, i, shotCid) {
 
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
-  const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || "");
+  const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r));
   const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<p ${p}><b style="color:#1a1a1a">放进一个真实场景：</b>${md(ai?.case || r.scenarios[0])}</p>` : "";
   const coreHtml = (ai?.core || r.mechanics?.length) ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${md(ai?.core || r.mechanics.join("；"))}</p>` : "";
   const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<p ${p}"><b style="color:#1a1a1a">适合谁：</b>${md(ai?.who || r.scenarios[1])}</p>` : "";
@@ -370,7 +390,7 @@ function buildHTML(data, cidMap) {
   // 文首总览表：一chart表把今天的推荐直接铺开，oneliner 缺了就退回 trending 摘要/官方简介
   const ths = `padding:8px;background:#f7f8fa;border-bottom:1px solid #eceef1;color:#8a8a8a;font-size:12px;font-weight:600`;
   const rows = repos.map((r, i) => {
-    const line = String(r.ai?.oneliner || CN(r.judgment) || CN(r.summary) || CN(r.desc) || "详情见下").replace(/\*\*/g, "").replace(/\s+/g, " ").slice(0, 26);
+    const line = String(r.ai?.oneliner || CN(r.judgment) || CN(r.summary) || CN(r.desc) || metaLine(r)).replace(/\*\*/g, "").replace(/\s+/g, " ").slice(0, 26);
     return `<tr>
     <td style="padding:9px 4px 9px 8px;border-bottom:1px solid #eceef1;color:#07c160;font-weight:700;vertical-align:top">${String(i + 1).padStart(2, "0")}</td>
     <td style="padding:9px 8px;border-bottom:1px solid #eceef1;white-space:nowrap;vertical-align:top"><a href="${esc(r.url)}" style="color:#1a1a1a;font-weight:600;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
@@ -408,7 +428,7 @@ ${overview}
 ${top ? `<section style="background:#07c160;color:#fff;border-radius:10px;padding:18px 20px;margin:0 0 28px">
   <p style="margin:0 0 6px;font-size:12px;opacity:.9">今日最热</p>
   <p style="margin:0 0 8px;font-size:20px;font-weight:700">${esc(repoShort(top.repo))}</p>
-  <p style="margin:0 0 10px;font-size:13px;line-height:1.75;opacity:.96">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || "详情见下文各仓库一节").slice(0, 130))}</p>
+  <p style="margin:0 0 10px;font-size:13px;line-height:1.75;opacity:.96">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
   <p style="margin:0;font-size:12px;opacity:.9">今日 +${fmtStars(top.today)} star · 总 ${(top.stars || 0).toLocaleString()} star</p>
 </section>` : ""}
 
