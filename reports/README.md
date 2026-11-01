@@ -42,3 +42,4 @@
 - [daily-2026-10-30](./daily-2026-10-30.md) — 榜首 thedotmack/claude-mem (+1145)
 - [daily-2026-10-31](./daily-2026-10-31.md) — 榜首 thedotmack/claude-mem (+1140)
 - [daily-2026-11-01](./daily-2026-11-01.md) — 榜首 thedotmack/claude-mem (+1723)
+- [daily-2026-11-01](./daily-2026-11-01.md) — 榜首 thedotmack/claude-mem (+1723)
