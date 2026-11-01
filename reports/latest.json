@@ -1,5 +1,5 @@
 {
-  "day": "2026-10-31",
+  "day": "2026-11-01",
   "since": "daily",
   "mode": "自备 key",
   "repos": [
@@ -7,9 +7,9 @@
       "repo": "thedotmack/claude-mem",
       "lang": "TypeScript",
       "desc": "Persistent Context Across Sessions for Every Agent – Captures everything your agent does during sessions, compresses it with AI, and injects relevant context back into future sessions. Works with Claude Code, OpenClaw, Codex, Gemini, Hermes, Copilot, OpenCode + More",
-      "stars": 106681,
-      "today": "1140",
-      "forks": 9386,
+      "stars": 108102,
+      "today": "1723",
+      "forks": 9483,
       "created": "2025-08-31",
       "license": "Apache-2.0",
       "topics": [
@@ -24,20 +24,143 @@
       ],
       "homepage": "https://claude-mem.ai",
       "url": "https://github.com/thedotmack/claude-mem",
-      "summary": "这是一个专为 Claude Code 及各类 AI 编程代理（如 Grok Bot、OpenCode）设计的持久化记忆系统。它通过监听代理的工具调用日志，利用 AI 进行语义压缩生成摘要，并将这些记忆存储在本地文件或云端，从而在后续会话中自动注入上下文，解决长对话或重启后上下文丢失的问题。",
-      "judgment": "值得抄作业，但需警惕云端记忆的 API 成本及隐私风险。",
+      "summary": "",
+      "judgment": "Persistent Context Across Sessions for Every Agent – Captures everything your agent does during sessions, compresses it with AI, and injects relevant context back into future sessions. Works with Claude Code, OpenClaw, Codex, Gemini, Hermes, Copilot, OpenCode + More",
+      "mechanics": [],
+      "scenarios": [],
+      "readmeCN": ""
+    },
+    {
+      "repo": "mattpocock/skills",
+      "lang": "Shell",
+      "desc": "Skills for Real Engineers. Straight from my .agents directory.",
+      "stars": 308575,
+      "today": "883",
+      "forks": 25970,
+      "created": "2026-02-03",
+      "license": "MIT",
+      "topics": [],
+      "homepage": "https://aihero.dev/skills",
+      "url": "https://github.com/mattpocock/skills",
+      "summary": "这是一个专为 AI 编程助手（如 Claude Code、Copilot、Codex）设计的技能库，旨在通过预定义的命令（如 /grill-me、/tdd）强制执行严谨的工程流程。它解决了 AI 理解偏差、输出冗余和代码质量差的问题，用户安装后只需在对话中运行特定命令即可激活对应工作流。",
+      "judgment": "值得抄作业，能显著提升 AI 编程助手的质量和可控性，但需注意手动更新和维护成本。",
       "mechanics": [
-        "观察者模式：通过 IDE 钩子或日志文件监控代理的工具调用行为。",
-        "语义压缩：利用 LLM（Anthropic/OpenRouter/Gemini）将原始日志压缩为结构化摘要。",
-        "MCP 协议集成：提供搜索工具，允许代理在记忆库中检索特定信息。",
-        "意识推送机制：识别关键事件（如决策、安全警报）并按日期标记。",
-        "多提供商架构：支持本地 API（OpenRouter/Gemini）和云端托管（CMEM Pro）两种存储方案。"
+        "预检与对齐机制：通过 /grill-me 或 /grill-with-docs 在编码前强制 AI 进行深度提问，建立共享语言。",
+        "TDD（测试驱动开发）强制：/tdd 技能强制 AI 先写测试用例再写代码，确保反馈循环。",
+        "工单分类系统：/triage 技能帮助 AI 理解并应用项目特定的标签系统。",
+        "插件化注入：通过 npx skills add 或官方插件市场将技能文件注入到代理的工作目录中。",
+        "上下文共享：利用 CONTEXT.md 或 ADR（架构决策记录）来减少 AI 的 Token 消耗并统一术语。"
       ],
       "scenarios": [
-        "长期项目维护：AI 需要跨越数天或数周记住项目的历史变更和架构决策。",
-        "多会话工作流：用户关闭终端后，再次打开时 AI 能自动加载之前的上下文。",
-        "CI/CD 环境：在非交互式脚本中运行代理，避免因上下文丢失导致任务失败。",
-        "跨代理协作：在 Claude Code、Grok Bot 等不同代理间共享项目记忆。"
+        "使用 Claude Code、Codex 或 Copilot 进行复杂项目开发的工程师。",
+        "需要规范 AI 行为、避免“幻觉”或“废话”的团队。",
+        "正在从“Vibe Coding”（凭感觉编码）转向严谨工程实践的团队。"
+      ],
+      "readmeCN": ""
+    },
+    {
+      "repo": "Donchitos/Claude-Code-Game-Studios",
+      "lang": "Shell",
+      "desc": "Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a complete coordination system mirroring real studio hierarchy.",
+      "stars": 31318,
+      "today": "742",
+      "forks": 4291,
+      "created": "2026-02-12",
+      "license": "MIT",
+      "topics": [
+        "ai-agents",
+        "ai-assisted-development",
+        "anthropic",
+        "claude",
+        "claude-code",
+        "game-design",
+        "game-development",
+        "gamedev"
+      ],
+      "homepage": "",
+      "url": "https://github.com/Donchitos/Claude-Code-Game-Studios",
+      "summary": "Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a complete coordination system mirroring real studio hierarchy. 这是一个将 Claude Code 会话转化为完整游戏开发工作室的框架，通过 49 个专业化 AI 代理和 74 个斜杠命令，强制执行类似真实工作室的流程、代码规范和质量门禁。",
+      "judgment": "适合追求极致流程规范的大项目，但配置门槛高且对 Opus 模型有硬性依赖。",
+      "mechanics": [
+        "分层代理架构：49个代理分为导演层、部门主管层和专家层，分别调用 Opus 或 Sonnet 模型，模拟真实工作室的决策链。",
+        "斜杠命令技能库：74个 `/` 命令覆盖从头脑风暴、设计系统、开发故事、QA测试到发布的全生命周期。",
+        "模型分配策略：导演层强制要求 Opus，主管和专家层使用 Sonnet，其余继承用户模型，平衡成本与能力。",
+        "自动化钩子：15个 Hooks 监控提交、资产变更和设计文档读写，自动触发验证。",
+        "路径作用域规则：14条规则限制代码编辑范围（如引擎、UI、网络代码），防止破坏核心系统。"
+      ],
+      "scenarios": [
+        "单人独立游戏开发：开发者希望在没有团队的情况下，通过 AI 严格执行设计文档、代码审查和 QA 流程。",
+        "复杂项目架构搭建：需要处理庞大代码量、多人协作（即使是 AI 协作）或需要严格技术债务管理的项目。",
+        "游戏开发流程标准化：想要训练 AI 按照标准游戏工作室的敏捷开发流程（Sprint、Story、Epics）进行工作。",
+        "多引擎项目：内置了 Godot、Unity、Unreal 的专用专家代理。"
+      ],
+      "readmeCN": ""
+    },
+    {
+      "repo": "pingdotgg/t3code",
+      "lang": "TypeScript",
+      "desc": "",
+      "stars": 35943,
+      "today": "1148",
+      "forks": 8807,
+      "created": "2026-02-08",
+      "license": "MIT",
+      "topics": [],
+      "homepage": "https://t3.codes",
+      "url": "https://github.com/pingdotgg/t3code",
+      "summary": "T3 Code 是一个开源的“代理控制台”，它不替代 Claude 或 Cursor，而是通过本地服务器统一管理已安装的多个 AI 编程工具。用户只需运行 `t3` 命令启动服务，即可通过手机 App、Web 界面或桌面端远程控制 Claude Code、Codex、Cursor 等工具。",
+      "judgment": "值得尝试，但仅适合愿意折腾早期工具的极客，不适合追求稳定的企业级生产环境。",
+      "mechanics": [
+        "CLI 代理模式：T3 Code 通过调用各 AI 工具的本地 CLI 命令（如 `codex login`）来执行操作，本身不生成代码，而是充当调度器。",
+        "Electron/Web 混合架构：提供跨平台的桌面应用和 Web 界面，通过本地网络与运行 `t3` 服务器的机器通信，实现远程控制。",
+        "远程访问支持：允许用户通过手机 App 或另一台机器的浏览器连接到本地服务器，实现跨设备操作。",
+        "Vite+ 构建系统：使用 Vite+ 作为构建工具链，支持快速开发和打包 Electron 应用。",
+        "多账户/多工具集成：支持同时管理多个 AI 服务的不同账户（如多个 Claude 账号或 Codex 账号）。",
+        "权限模式控制：支持配置不同的权限模式，决定 AI 代理在执行操作时的权限范围。",
+        "后台服务模式：支持将 `t3` 服务安装为系统后台服务，确保机器重启后自动运行。"
+      ],
+      "scenarios": [
+        "远程移动开发：开发者在手机上通过 T3 Code 的 iOS/Android App 控制电脑上的 AI 工具，进行代码审查或简单修改。",
+        "多工具统一调度：同时使用 Cursor、Claude Code 和 Codex，需要一个统一的界面来切换和调度不同的 AI 代理。",
+        "本地化 AI 工作流：在本地服务器运行 AI 工具，通过 T3 Code 的 Web 界面进行交互，避免云端 API 费用或隐私担忧。",
+        "跨设备协作：在办公室的电脑上启动服务，在家的手机上通过远程访问继续工作。"
+      ],
+      "readmeCN": ""
+    },
+    {
+      "repo": "Renhuai123/ziwei-doushu",
+      "lang": "TypeScript",
+      "desc": "紫微斗数开源排盘引擎 — 基于倪海厦《天纪》体系，含完整排盘算法、四化系统、格局知识库、古籍原文数据",
+      "stars": 12449,
+      "today": "1092",
+      "forks": 2443,
+      "created": "2026-05-01",
+      "license": "MIT",
+      "topics": [
+        "bazi",
+        "chinese-astrology",
+        "divination",
+        "fortune-telling",
+        "nextjs",
+        "open-source",
+        "purple-star-astrology",
+        "typescript"
+      ],
+      "homepage": "https://ouranic.cn/?from=gh-about",
+      "url": "https://github.com/Renhuai123/ziwei-doushu",
+      "summary": "这是一个基于倪海厦《天纪》体系的紫微斗数开源排盘引擎。它提供完整的排盘算法（含真太阳时、四化、十二神煞）和一套庞大的解读数据集（v4.0，67.5万张命盘×13维度），支持离线计算和二次开发。",
+      "judgment": "值得抄作业，但必须严格区分代码（MIT）与数据集（CC BY 4.0）的商用边界，特别是其中引用的倪师原话。",
+      "mechanics": [
+        "TypeScript 算法引擎：包含农历/公历互转、真太阳时校正（经度+均时差）、中国夏令时判定、十二神煞计算。",
+        "多流派星曜亮度：内置《斗数全书》与“现代修正 v2”等不同流派配置，支持动态切换。",
+        "确定性生成：数据集通过排盘引擎+断语库确定性生成，非AI，保证同一输入恒得同一输出。",
+        "JSON Lines 数据格式：数据集采用 `.jsonl` 格式，字段包含公历日期、时辰序号、性别及13维解读文本，压缩率高（zstd）。",
+        "运限上下文：支持童限及运限流转的上下文计算。"
+      ],
+      "scenarios": [
+        "二次开发：开发者利用开源算法和MIT许可代码，构建自己的紫微斗数Web或移动端应用。",
+        "学术研究：研究者基于开源数据集（CC BY 4.0）进行命理逻辑、古籍引用或统计学分析。",
+        "离线排盘：用户在没有网络的情况下，使用本地引擎和下载的数据集进行排盘和解读。"
       ],
       "readmeCN": ""
     },
@@ -45,9 +168,9 @@
       "repo": "milind-soni/OpenMausBot",
       "lang": "TypeScript",
       "desc": "Open-source Grok Bot alternative with a virtual machine that bots can use",
-      "stars": 8953,
-      "today": "895",
-      "forks": 1232,
+      "stars": 9830,
+      "today": "1303",
+      "forks": 1366,
       "created": "2026-08-11",
       "license": "Apache-2.0",
       "topics": [
@@ -62,19 +185,31 @@
       ],
       "homepage": "https://www.openmausbot.com/",
       "url": "https://github.com/milind-soni/OpenMausBot",
-      "summary": "",
-      "judgment": "Open-source Grok Bot alternative with a virtual machine that bots can use",
-      "mechanics": [],
-      "scenarios": [],
+      "summary": "这是一个基于 Electron 的开源桌面应用，作为 Grok Bot 的本地替代品，它将多个 AI Agent（如 Claude、Codex）整合到一个类似 Telegram 的聊天界面中。用户无需购买新账号，只需在本地运行现有的 AI 命令行工具，即可在侧边栏拥有多个拥有独立性格、记忆和‘手脚’（可调用云桌面或应用）的 AI 机器人。",
+      "judgment": "值得抄作业，适合追求本地化、隐私保护和多模型管理的极客，但需接受本地环境配置的繁琐。",
+      "mechanics": [
+        "Electron 桌面应用架构，支持 macOS、Windows 和 Ubuntu",
+        "‘自带 Agent’ 机制，通过本地 CLI（如 `claude`, `codex`）连接用户已安装的模型",
+        "本地 Harness 服务器（`127.0.0.1`），负责管理所有 Agent 进程、存储对话记录和密钥",
+        "多 Agent 隔离机制，每个机器人拥有独立的模型配置、性格设定和云桌面/本地虚拟机环境",
+        "Composio 集成，允许 Agent 调用 500+ 外部应用",
+        "主机控制机制，在 macOS 和 Ubuntu Xorg 上支持显式授权后控制本地硬件"
+      ],
+      "scenarios": [
+        "注重隐私的开发者或个人用户，希望将 AI 对话和 Agent 执行环境完全保留在本地，不经过第三方云服务商",
+        "需要同时管理不同模型（如 Claude 写代码，Grok 写文案）的用户，通过侧边栏切换不同 Agent",
+        "需要具备‘手脚’的 Agent 进行自动化测试、操作云桌面或本地应用的场景",
+        "寻找开源替代品（替代 Grok Bot, Meta Muse, OpenAI dots）的极客"
+      ],
       "readmeCN": ""
     },
     {
       "repo": "pbakaus/impeccable",
       "lang": "Rust",
       "desc": "The design vocabulary for your coding agent. Steer with polish and bolder, review with critique and audit, catch AI slop before it ships.",
-      "stars": 97395,
-      "today": "2300",
-      "forks": 5738,
+      "stars": 98477,
+      "today": "1338",
+      "forks": 5813,
       "created": "2025-11-16",
       "license": "Apache-2.0",
       "topics": [
@@ -93,329 +228,12 @@
       "readmeCN": ""
     },
     {
-      "repo": "CopilotKit/OpenBot",
-      "lang": "TypeScript",
-      "desc": "Open-source AI coworkers that each get a computer of their own: a browser, files and tools, with every action decided before it happens and recorded after. Bring any AG-UI agent.",
-      "stars": 8932,
-      "today": "706",
-      "forks": 1119,
-      "created": "2026-08-17",
-      "license": "MIT",
-      "topics": [
-        "ag-ui",
-        "agent-governance",
-        "ai-agents",
-        "browser-automation",
-        "copilotkit",
-        "generative-ui",
-        "mcp"
-      ],
-      "homepage": "https://www.copilotkit.ai/openbot",
-      "url": "https://github.com/CopilotKit/OpenBot",
-      "summary": "OpenBot 是一个运行在本地基础设施上的开源 AI 代理协作平台。它通过 Docker 为每个 AI 同事分配独立的浏览器容器、登录凭证和工作空间，确保操作隔离。项目基于 AG-UI 协议，允许用户接入任何框架构建的代理，并通过网关层实现操作前的决策、审计和权限控制。",
-      "judgment": "值得抄作业，但仅适合有自托管需求且能接受 Beta 阶段风险的团队。",
-      "mechanics": [
-        "基于 AG-UI 协议的代理通信",
-        "网关层操作决策与审计",
-        "浏览器容器化隔离",
-        "PostgreSQL 数据持久化",
-        "CopilotKit Intelligence 本地运行",
-        "Bun 运行时与 TypeScript 开发",
-        "Docker Compose 部署架构"
-      ],
-      "scenarios": [
-        "企业内部自动化办公（如财务报销审核、会议纪要整理）",
-        "安全合规场景（如风险分析师审核操作）",
-        "需要高隔离度和审计能力的敏感任务处理",
-        "自托管 AI 基础设施，拒绝将数据上传至第三方云服务"
-      ],
-      "readmeCN": ""
-    },
-    {
-      "repo": "Renhuai123/ziwei-doushu",
-      "lang": "TypeScript",
-      "desc": "紫微斗数开源排盘引擎 — 基于倪海厦《天纪》体系，含完整排盘算法、四化系统、格局知识库、古籍原文数据",
-      "stars": 11568,
-      "today": "1126",
-      "forks": 2286,
-      "created": "2026-05-01",
-      "license": "MIT",
-      "topics": [
-        "bazi",
-        "chinese-astrology",
-        "divination",
-        "fortune-telling",
-        "nextjs",
-        "open-source",
-        "purple-star-astrology",
-        "typescript"
-      ],
-      "homepage": "https://ouranic.cn/?from=gh-about",
-      "url": "https://github.com/Renhuai123/ziwei-doushu",
-      "summary": "",
-      "judgment": "紫微斗数开源排盘引擎 — 基于倪海厦《天纪》体系，含完整排盘算法、四化系统、格局知识库、古籍原文数据",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": ""
-    },
-    {
-      "repo": "expo/skills",
-      "lang": "Shell",
-      "desc": "A collection of AI agent skills for working with Expo projects and Expo Application Services",
-      "stars": 3937,
-      "today": "38",
-      "forks": 248,
-      "created": "2025-11-30",
-      "license": "MIT",
-      "topics": [],
-      "homepage": "",
-      "url": "https://github.com/expo/skills",
-      "summary": "",
-      "judgment": "A collection of AI agent skills for working with Expo projects and Expo Application Services",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": ""
-    },
-    {
-      "repo": "macro-inc/macro",
-      "lang": "Rust",
-      "desc": "Macro is a unified workspace for teams: email, chat, docs, tasks, agents, calls, and CRM — @-linked together with shared AI memory.",
-      "stars": 5946,
-      "today": "57",
-      "forks": 544,
-      "created": "2025-11-08",
-      "license": "AGPL-3.0",
-      "topics": [
-        "agent",
-        "ai",
-        "ai-agents",
-        "all-in-one",
-        "crm",
-        "crm-system",
-        "email",
-        "linear"
-      ],
-      "homepage": "https://macro.com",
-      "url": "https://github.com/macro-inc/macro",
-      "summary": "这是一个基于 Rust 和 SolidJS 构建的团队统一工作空间，整合了邮件、聊天、文档、任务、AI 代理、通话和 CRM。它通过双向图结构将所有内容（如邮件、文档、任务）通过 `@` 链接关联，并提供共享的团队级 AI 记忆，让 AI 代理能跨工具检索和操作数据。",
-      "judgment": "架构设计极具参考价值，但作为 SaaS 产品，需警惕数据集中化的安全风险。",
-      "mechanics": [
-        "双向图数据模型",
-        "CRDTs 实时协作",
-        "模块化积木架构",
-        "共享团队级 AI 记忆",
-        "MCP 工具接口",
-        "键盘优先操作流"
-      ],
-      "scenarios": [
-        "需要整合 Slack/Linear/HubSpot 等多个工具的初创团队",
-        "技术导向团队，需要专注的技术讨论和任务管理",
-        "希望利用 AI 代理自动化处理 CRM 查询和邮件的团队",
-        "需要统一权限管理和跨工具协作的远程团队"
-      ],
-      "readmeCN": ""
-    },
-    {
-      "repo": "mattpocock/skills",
-      "lang": "Shell",
-      "desc": "Skills for Real Engineers. Straight from my .agents directory.",
-      "stars": 307675,
-      "today": "876",
-      "forks": 25895,
-      "created": "2026-02-03",
-      "license": "MIT",
-      "topics": [],
-      "homepage": "https://aihero.dev/skills",
-      "url": "https://github.com/mattpocock/skills",
-      "summary": "这是一个面向 AI 编程助手的技能插件库，旨在提供‘真实工程师’的工作流而非‘氛围编码’。它包含一系列 Shell 脚本，通过 `/grill-me`（需求对齐）、`/tdd`（测试驱动开发）等命令，强制 AI 在编码前进行需求澄清、建立共享语言并执行红绿重构循环。",
-      "judgment": "值得抄作业，特别是 `/grill-with-docs`（建立共享语言）和 `/tdd`（强制测试驱动），能显著解决 AI 编程中的需求对齐和代码质量痛点。",
-      "mechanics": [
-        "插件化安装：通过 `npx skills@latest add` 或各 Agent 的插件市场安装，将脚本注入到 `.agents` 目录。",
-        "需求对齐机制：`/grill-me` 和 `/grill-with-docs` 技能，在编码前强制 AI 询问详细问题，消除沟通鸿沟。",
-        "共享语言构建：利用 `CONTEXT.md` 文档建立领域术语表，减少 AI 词汇冗余，提高代码可读性和 Token 效率。",
-        "测试驱动循环：`/tdd` 技能强制 AI 先写失败测试（Red），再写功能代码（Green），最后重构（Refactor）。",
-        "配置即代码：`/setup-matt-pocock-skills` 命令用于初始化 Issue 追踪器、标签系统和文档存储路径。",
-        "自更新机制：部分插件支持自动更新，部分需手动运行 `npx skills@latest update`。"
-      ],
-      "scenarios": [
-        "当 AI 编程助手无法准确理解模糊需求时，使用 `/grill-with-docs` 进行需求澄清。",
-        "当 AI 生成代码过于冗长或使用过多 Token 时，通过建立 `CONTEXT.md` 共享语言来优化。",
-        "项目开发需要严格的测试覆盖率时，强制使用 `/tdd` 技能进行红绿重构。",
-        "需要管理 Issue/Ticket 并进行标准化分类时，配置 `/triage` 技能使用特定标签。"
-      ],
-      "readmeCN": ""
-    },
-    {
-      "repo": "pingdotgg/t3code",
-      "lang": "TypeScript",
-      "desc": "",
-      "stars": 33064,
-      "today": "930",
-      "forks": 8683,
-      "created": "2026-02-08",
-      "license": "MIT",
-      "topics": [],
-      "homepage": "https://t3.codes",
-      "url": "https://github.com/pingdotgg/t3code",
-      "summary": "T3 Code 是一个\"代理工具控制台\"，本质上是开发者的远程控制中心。它通过本地服务器（`t3` 命令）连接 Claude、Cursor、Codex 等多个 AI 编程代理，让你能在手机 App、网页或桌面端统一管理这些代理的运行状态和任务，而不是在各自的终端里切换。",
-      "judgment": "适合追求极致远程开发体验的极客尝鲜，但稳定性堪忧，不适合作为生产环境的主力工具。",
-      "mechanics": [
-        "统一控制台架构：通过本地服务器（`t3` 命令）作为中间层，统一管理多个不同的 AI 编程工具。",
-        "多代理集成：支持连接 Claude Code、Codex、Cursor、Grok Build、OpenCode 和 Google Antigravity，通过 CLI 登录后即可在 UI 中切换。",
-        "跨平台客户端：基于 Electron 和 Web 技术构建，提供 iOS、Android、Web 和桌面端应用，实现远程访问和统一交互。",
-        "CLI 依赖机制：核心功能依赖于各 AI 工具的独立 CLI 工具，T3 Code 本身不提供 AI 能力，而是控制这些已安装的 CLI 进程。",
-        "MCP 协议扩展：支持通过 Model Context Protocol (MCP) 连接外部代理，扩展其兼容性。"
-      ],
-      "scenarios": [
-        "远程开发：用户在手机或平板上通过 T3 Code 远程控制本地电脑上的 AI 编程任务，无需坐在电脑前。",
-        "多工具切换：同时使用 Claude、Cursor 和 Codex，在一个界面中快速切换上下文和指令，避免在多个终端窗口间频繁切换。",
-        "统一工作流：需要在一个地方管理多个 AI Agent 的任务队列和权限，而不是分散管理。"
-      ],
-      "readmeCN": ""
-    },
-    {
-      "repo": "HKUDS/DeepTutor",
-      "lang": "Python",
-      "desc": "DeepTutor: Lifelong Personalized Tutoring. https://deeptutor.info/.",
-      "stars": 52005,
-      "today": "2282",
-      "forks": 6373,
-      "created": "2025-12-28",
-      "license": "Apache-2.0",
-      "topics": [
-        "ai-agents",
-        "ai-tutor",
-        "clawbot",
-        "cli-tool",
-        "deepresearch",
-        "interactive-learning",
-        "learning",
-        "multi-agent-systems"
-      ],
-      "homepage": "http://arxiv.org/abs/2604.26962",
-      "url": "https://github.com/HKUDS/DeepTutor",
-      "summary": "DeepTutor 是一个基于 Web 的“终身个性化辅导”系统，集成了 Python 后端与 Next.js 前端。它允许用户创建学习工作空间，上传文档和视频，利用 AI 进行个性化辅导、代码练习和知识复习，支持断点续传和聊天历史恢复。",
-      "judgment": "适合想要构建教育类AI应用的开发者，但部署和维护门槛较高。",
-      "mechanics": [
-        "模块化架构（Python后端+Next.js前端）",
-        "RAG检索增强生成与知识库管理",
-        "多模态输入处理（PDF/视频/代码块）",
-        "状态持久化与检查点机制",
-        "原生语音交互集成",
-        "交互式学习模块（测验/任务板）"
-      ],
-      "scenarios": [
-        "终身学习者构建个人知识库并进行复习",
-        "学生或研究人员需要针对特定课程或论文的AI辅导",
-        "开发者或教育者构建教育类AI应用或代码辅导工具"
-      ],
-      "readmeCN": ""
-    },
-    {
-      "repo": "anthropics/skills",
-      "lang": "Python",
-      "desc": "Public repository for Agent Skills",
-      "stars": 185518,
-      "today": "295",
-      "forks": 21909,
-      "created": "2025-09-22",
-      "license": "",
-      "topics": [
-        "agent-skills"
-      ],
-      "homepage": "",
-      "url": "https://github.com/anthropics/skills",
-      "summary": "Anthropic 官方的 Agent Skills 示例库，核心是‘技能’文件夹（含 SKILL.md），Claude 会动态加载这些 YAML frontmatter 和指令来提升特定任务（如文档处理、企业流程）的执行能力。它本质上是给 Claude 的‘插件’或‘预设提示词’集合。",
-      "judgment": "值得参考，但需自行测试验证，且文档技能仅限 API/付费用户使用。",
-      "mechanics": [
-        "文件结构化定义：每个技能是一个独立文件夹，必须包含 SKILL.md，利用 YAML frontmatter 定义元数据（name, description）。",
-        "动态上下文注入：Claude 在执行特定任务时，会读取并注入该技能的 Markdown 指令、示例和指南，强制模型遵循特定工作流。",
-        "多端适配协议：通过 Claude Code 的 /plugin 命令、Claude.ai 的 UI 或 Claude API 的 Skills 端点实现跨平台分发与调用。",
-        "复杂文档处理封装：底层的 docx、pdf、pptx、xlsx 技能封装了文件读写逻辑，供 API 调用。"
-      ],
-      "scenarios": [
-        "企业级流程标准化：在 Claude 中植入公司的品牌指南、合规要求或特定工作流，确保输出符合企业规范。",
-        "自动化文档生成：利用内置的文档技能（PDF/Word/Excel），让 Claude 自动创建、编辑或提取结构化数据。",
-        "开发与测试辅助：开发者通过 Claude Code 安装技能，让 Claude 自动执行 Web 应用测试或生成 MCP 服务器代码。",
-        "创意与设计辅助：利用艺术、音乐类技能，让 Claude 按照特定风格生成内容。"
-      ],
-      "readmeCN": ""
-    },
-    {
-      "repo": "JetBrains/thinkrail",
-      "lang": "TypeScript",
-      "desc": "Vibe code with pi in a lightweight, real IDE that customises itself around the way you work — The Vibe You Need",
-      "stars": 6674,
-      "today": "722",
-      "forks": 360,
-      "created": "2026-07-08",
-      "license": "Apache-2.0",
-      "topics": [
-        "agent",
-        "agent-skills",
-        "agentic-ai",
-        "agentic-workflow",
-        "ai-coding",
-        "ai-tools",
-        "pi-agent",
-        "pi-agent-extension"
-      ],
-      "homepage": "https://thinkrail.ai/",
-      "url": "https://github.com/JetBrains/thinkrail",
-      "summary": "这是一个基于 JetBrains `pi` 编码智能体的 IDE 包装器，提供完整的代码编辑、Git 工作流和终端环境。它利用 `git worktree` 创建隔离的工作区，让 AI 智能体在独立分支上并行工作。同时支持流式对话、SPEC.md 规范维护以及连接自定义 LLM 服务器。",
-      "judgment": "适合追求 IDE 级体验的 AI 编程进阶用户，但需注意其孵化项目的不稳定性及 Git 依赖。",
-      "mechanics": [
-        "基于 `git worktree` 的隔离工作区机制，确保 AI 并行操作不影响主代码库",
-        "Monaco 编辑器集成，提供类似 VS Code 的代码编辑、Git Diff 和终端体验",
-        "SPEC.md 生命规范，作为代码意图的“真理之源”由智能体维护",
-        "流式智能体会话，支持多模型并发、Token/成本监控及人工介入",
-        "MCP 服务器集成，支持权限管理和 OAuth 登录",
-        "OpenAI 兼容的自定义模型服务器接入（如 Ollama, LiteLLM）"
-      ],
-      "scenarios": [
-        "需要自动化生成和审查 Pull Request 的团队协作场景",
-        "复杂的代码重构或功能开发，需要多智能体并行处理不同模块",
-        "依赖外部数据或需要可视化图表的编程任务（如 UI 设计）",
-        "使用私有化部署的 LLM 或公司内部网关的开发环境"
-      ],
-      "readmeCN": ""
-    },
-    {
-      "repo": "togg53192-cmd/jailbreaks",
-      "lang": "—",
-      "desc": "LIST OF ALL MY JAILBREAKS",
-      "stars": 11531,
-      "today": "2055",
-      "forks": 1694,
-      "created": "2026-06-18",
-      "license": "",
-      "topics": [],
-      "homepage": "",
-      "url": "https://github.com/togg53192-cmd/jailbreaks",
-      "summary": "这是一个包含32个可直接粘贴的系统提示词、人设锁定和工作区策略的集合，专门针对前沿、开源权重和免费隐身模型。它提供了完整的人设定义、代理操作规范和配置块，覆盖了Claude、DeepSeek、Grok等26+种模型。",
-      "judgment": "适合安全研究员和开发者测试模型边界，但严禁用于绕过安全限制或违规操作。",
-      "mechanics": [
-        "指令层级覆盖：利用系统提示词覆盖模型的默认安全对齐层，改变输出行为。",
-        "人设锁定：通过特定的角色定义（如VANTA、Writer's room）来约束模型的回复风格和内容边界。",
-        "代理操作规范：定义全局工作区策略，通过`AGENTS.md`文件注入项目级指令。",
-        "Modelfile 预编译：利用 Ollama 的 `FROM` 和 `SYSTEM` 指令块将提示词固化在模型文件中。",
-        "配置块注入：通过配置文件（如Grok的`<CFG>`）注入优先级路由规则。"
-      ],
-      "scenarios": [
-        "安全研究：研究人员用于测试模型对指令层级、提示词注入和策略覆盖的抵抗力。",
-        "本地模型部署：开发者使用 Modelfiles 将特定指令固化到本地运行的模型（如Ollama）中。",
-        "特定人设需求：用户希望模型以特定角色（如作家室、VANTA）进行对话或创作。",
-        "工作区配置：为编码代理或工作区设置全局操作规范。"
-      ],
-      "readmeCN": ""
-    },
-    {
       "repo": "obra/superpowers",
       "lang": "Shell",
       "desc": "An agentic skills framework &amp; software development methodology that works.",
-      "stars": 309577,
-      "today": "1259",
-      "forks": 27545,
+      "stars": 310173,
+      "today": "665",
+      "forks": 27601,
       "created": "2025-10-09",
       "license": "MIT",
       "topics": [
@@ -430,29 +248,19 @@
       ],
       "homepage": "",
       "url": "https://github.com/obra/superpowers",
-      "summary": "这是一个面向编程代理的技能框架与软件开发方法论。它通过一套可组合的技能和引导指令，强制 AI 在写代码前先确认需求、拆解设计、制定计划，并利用子代理进行 TDD（红绿测试驱动开发）和 YAGNI（不写不需要的代码）开发。安装后，你的 AI 编程助手就会自动拥有这套工作流。",
-      "judgment": "值得抄作业，它把 AI 编程从“瞎写”变成了“工程化执行”，能显著提升代码质量。",
-      "mechanics": [
-        "Skills Framework (技能框架): 由可组合的行为单元组成，定义了 AI 的行为模式。",
-        "Bootstrap (`using-superpowers`): 会话启动时自动加载的引导技能，确保 AI 时刻处于该模式。",
-        "Subagent-driven Development (子代理驱动开发): 将大任务拆解，由子代理并行或串行执行具体工程任务。",
-        "Marketplace Integration (市场集成): 提供了针对 Claude、Cursor、Codex、Devin 等多种主流 AI 工具的插件安装方式。",
-        "Spec-to-Plan-to-Code Pipeline (需求-计划-代码流水线): 强制 AI 先输出可读的规格说明和实现计划，经人工确认后再执行。"
-      ],
-      "scenarios": [
-        "使用 Claude Code、Cursor 或 Devin 等工具进行复杂项目开发的开发者。",
-        "需要严格遵循 TDD（测试驱动开发）和 DRY（不重复）原则的团队。",
-        "想要摆脱“盲目生成代码”模式，追求结构化、可维护代码的 AI 用户。"
-      ],
+      "summary": "",
+      "judgment": "An agentic skills framework &amp; software development methodology that works.",
+      "mechanics": [],
+      "scenarios": [],
       "readmeCN": ""
     },
     {
       "repo": "lightpanda-io/browser",
       "lang": "Zig",
       "desc": "Lightpanda: the headless browser designed for AI and automation",
-      "stars": 38625,
-      "today": "626",
-      "forks": 1878,
+      "stars": 39375,
+      "today": "929",
+      "forks": 1917,
       "created": "2023-02-07",
       "license": "AGPL-3.0",
       "topics": [
@@ -467,8 +275,182 @@
       ],
       "homepage": "https://lightpanda.io",
       "url": "https://github.com/lightpanda-io/browser",
+      "summary": "Lightpanda 是一个用 Zig 语言从零构建的轻量级无头浏览器，主打极致性能（内存仅为 Chrome 的 1/16，速度是其 9 倍）。它提供命令行抓取工具（支持 HTML/Markdown/PDF 导出）以及 CDP/WebDriver Bidi 协议服务，方便自动化工具连接。核心亮点是内置的 Agent 模式，支持用自然语言或 PandaScript（确定性 JS）控制浏览器进行导航、点击和抓取，脚本可脱离大模型运行。",
+      "judgment": "值得抄作业，适合追求极致性能和轻量化的爬虫/自动化场景，但要注意 Linux 依赖和 Windows 的部署坑。",
+      "mechanics": [
+        "Zig 语言重写架构：非 Chromium 分支，底层重新实现了渲染引擎。",
+        "CDP 协议支持：提供标准的 Chrome DevTools Protocol (端口 9222)，兼容 Puppeteer 等现有自动化生态。",
+        "WebDriver Bidi 协议：支持现代 Web 自动化标准，可同时开启 CDP 和 Bidi 服务。",
+        "Agent 模式与 PandaScript：内置原生代理，通过自然语言或斜杠命令控制浏览器，输出可离线运行的确定性 JS 脚本。",
+        "极致内存优化：针对 AI 代理场景优化内存占用，峰值内存仅为 Chromium 的 1/16。"
+      ],
+      "scenarios": [
+        "高并发网页爬虫：在资源受限的服务器上批量抓取网页（如 100 页仅需 123MB 内存）。",
+        "AI 代理自动化：利用 Agent 模式让 LLM 直接控制浏览器执行复杂任务（如填表、多步导航）。",
+        "CI/CD 环境测试：通过 Docker 快速启动，用于前端回归测试或无头渲染。",
+        "网页内容提取：需要将网页快速转换为 Markdown、PDF 或结构化 JSON-LD 数据。"
+      ],
+      "readmeCN": ""
+    },
+    {
+      "repo": "HKUDS/DeepTutor",
+      "lang": "Python",
+      "desc": "DeepTutor: Lifelong Personalized Tutoring. https://deeptutor.info/.",
+      "stars": 53022,
+      "today": "1034",
+      "forks": 6494,
+      "created": "2025-12-28",
+      "license": "Apache-2.0",
+      "topics": [
+        "ai-agents",
+        "ai-tutor",
+        "clawbot",
+        "cli-tool",
+        "deepresearch",
+        "interactive-learning",
+        "learning",
+        "multi-agent-systems"
+      ],
+      "homepage": "http://arxiv.org/abs/2604.26962",
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "summary": "DeepTutor: Lifelong Personalized Tutoring 是一个基于 RAG（检索增强生成）和 LLM 的终身个性化辅导系统。用户通过上传文档或视频构建知识库，系统利用向量检索和 LLM 生成针对性的问答、测验和视频旁白，支持导出 Anki 卡片和日历安排，旨在提供类似私人导师的交互式学习体验。",
+      "judgment": "适合想要构建或体验 RAG 个性化学习系统的开发者，功能全面但本地部署对硬件要求较高。",
+      "mechanics": [
+        "RAG（检索增强生成）架构：结合本地/云端 LLM 与向量数据库，从上传文档中检索上下文生成回答。",
+        "多模态处理：支持 PDF、Office 文档解析及视频内容的视觉模型分析（如提取字幕、图表）。",
+        "模块化架构：前端采用 Next.js 16，后端基于 Python，支持插件化扩展和提供商切换。",
+        "角色模型与提示工程：内置特定角色（如 LightRAG 角色模型）以优化辅导风格和知识库构建。",
+        "持久化与恢复：支持会话恢复、知识库自同步及回收站功能，防止数据丢失。"
+      ],
+      "scenarios": [
+        "自学者构建个人知识库，通过对话式交互复习特定领域的文档或书籍。",
+        "研究人员快速总结论文、提取关键图表或生成文献综述。",
+        "教育工作者或学生利用题库生成练习题并进行自我评估。",
+        "需要离线或本地化学习环境，对数据隐私要求较高的用户。"
+      ],
+      "readmeCN": ""
+    },
+    {
+      "repo": "Orkas-AI/Orkas",
+      "lang": "JavaScript",
+      "desc": "Orkas is an open-source (MIT), local-first AI team for your desktop: a Commander turns your goal into to-dos and coordinates 16 built-in specialist agents plus Claude Code, Codex, OpenCode, OpenClaw and Hermes, with projects, scheduled automations and connectors. Free app for macOS &amp; Windows; built-in models or your own keys.",
+      "stars": 6776,
+      "today": "1044",
+      "forks": 409,
+      "created": "2026-04-29",
+      "license": "MIT",
+      "topics": [
+        "agent-collaboration",
+        "agent-harness",
+        "agent-orchestration",
+        "agent-team",
+        "agent-workflow",
+        "ai-assistant",
+        "ai-automation",
+        "ai-employee"
+      ],
+      "homepage": "https://orkas.ai?source=gh-orkas",
+      "url": "https://github.com/Orkas-AI/Orkas",
+      "summary": "Orkas 是一个本地优先的桌面端 AI 团队协作工具。它通过“指挥官”代理将用户的目标拆解为任务，并协调 16 个内置专家代理（如 Claude Code、OpenCode 等）协同完成工作。用户可以创建项目来管理上下文、文件和规则，利用自动推进和定时自动化功能持续处理工作流。",
+      "judgment": "适合需要持续自动化工作流和团队协作的个人或小团队，但需注意 API 成本和硬件要求。",
+      "mechanics": [
+        "多代理编排：指挥官负责拆解任务并分配给 16 个专家代理。",
+        "项目上下文管理：通过项目存储记忆、规则和文件，实现连续对话。",
+        "自动推进机制：开启后，代理自动处理待办列表并提交结果。",
+        "定时自动化：支持按小时/天/周/月触发任务。",
+        "外部连接器：集成 Gmail、Slack、Shopify 等工具。",
+        "模型灵活性：支持本地模型或多种 API 密钥（Claude, OpenAI 等）。"
+      ],
+      "scenarios": [
+        "需要持续处理复杂工作流而非一次性回答的用户。",
+        "内容创作者：批量生成文章、PPT、视频脚本和社交媒体图片。",
+        "研究人员/SEO：进行深度研究、技术审计和竞品分析。",
+        "电商运营者：管理产品列表、分析销售数据、处理客户评论。",
+        "开发者：利用 Claude Code 或 ProductDeveloper 进行代码实现和 Bug 修复。"
+      ],
+      "readmeCN": ""
+    },
+    {
+      "repo": "THU-MAIC/OpenMAIC",
+      "lang": "TypeScript",
+      "desc": "Open Multi-Agent Interactive Classroom — Get an immersive, multi-agent learning experience in just one click",
+      "stars": 42257,
+      "today": "116",
+      "forks": 6520,
+      "created": "2026-03-11",
+      "license": "MIT",
+      "topics": [],
+      "homepage": "",
+      "url": "https://github.com/THU-MAIC/OpenMAIC",
+      "summary": "这是一个开源的“多智能体交互式课堂”平台。它允许用户通过上传文档或输入主题，一键生成包含幻灯片、白板和AI助教的沉浸式互动课程。核心功能是利用多智能体系统解析材料并构建可编辑、可聊天的教学场景，支持导出为PPT或HTML。",
+      "judgment": "值得抄作业，但部署门槛高且依赖外部模型，适合有技术背景的教育者",
+      "mechanics": [
+        "基于多智能体架构的文档解析与场景生成",
+        "服务器端持久化会话与状态管理",
+        "工具调用机制集成网络搜索与语音识别",
+        "知识库与私有化文件管理",
+        "本地AI集成支持离线运行",
+        "基于Next.js的全栈架构与React前端",
+        "支持PPTX与HTML格式的课程导出"
+      ],
+      "scenarios": [
+        "高校教师或企业培训师快速制作互动课件",
+        "内容创作者将长文档转化为沉浸式演示",
+        "开发者利用SDK构建基于AI的教育应用",
+        "需要本地化部署以保护数据隐私的场景"
+      ],
+      "readmeCN": ""
+    },
+    {
+      "repo": "bregman-arie/devops-exercises",
+      "lang": "Python",
+      "desc": "Linux, Jenkins, AWS, SRE, Prometheus, Docker, Python, Ansible, Git, Kubernetes, Terraform, OpenStack, SQL, NoSQL, Azure, GCP, DNS, Elastic, Network, Virtualization. DevOps Interview Questions",
+      "stars": 86093,
+      "today": "342",
+      "forks": 20556,
+      "created": "2019-10-03",
+      "license": "NOASSERTION",
+      "topics": [
+        "ansible",
+        "aws",
+        "azure",
+        "coding",
+        "containers",
+        "devops",
+        "docker",
+        "git"
+      ],
+      "homepage": "",
+      "url": "https://github.com/bregman-arie/devops-exercises",
       "summary": "",
-      "judgment": "Lightpanda: the headless browser designed for AI and automation",
+      "judgment": "Linux, Jenkins, AWS, SRE, Prometheus, Docker, Python, Ansible, Git, Kubernetes, Terraform, OpenStack, SQL, NoSQL, Azure, GCP, DNS, Elastic, Network, Virtualization. DevOps Interview Questions",
+      "mechanics": [],
+      "scenarios": [],
+      "readmeCN": ""
+    },
+    {
+      "repo": "vorssaint/vorssaint-utils",
+      "lang": "Swift",
+      "desc": "Free and open-source macOS menu bar toolkit.",
+      "stars": 32018,
+      "today": "501",
+      "forks": 1543,
+      "created": "2026-06-12",
+      "license": "GPL-3.0",
+      "topics": [
+        "alt-tab",
+        "app-uninstaller",
+        "appkit",
+        "finder",
+        "free",
+        "keep-awake",
+        "mac-os",
+        "menu-bar"
+      ],
+      "homepage": "https://vorssaint.com",
+      "url": "https://github.com/vorssaint/vorssaint-utils",
+      "summary": "",
+      "judgment": "Free and open-source macOS menu bar toolkit.",
       "mechanics": [],
       "scenarios": [],
       "readmeCN": ""
