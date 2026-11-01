@@ -143,6 +143,9 @@ function classify(links, repo, homepage) {
     let u; try { u = new URL(l.url); } catch { continue; }
     const host = u.hostname;
     if (u.hostname === `github.com` && u.pathname.startsWith(`/${repo}`)) continue;
+    // 站内零散页（issues/PR/releases/wiki…）和礼仪性文档没有代表性，跳过
+    if (/\/(issues|pulls|releases|discussions|wiki|actions|security|blob|tree|commit|stargazers)\b/.test(u.pathname)) continue;
+    if (/(contribut|licen[cs]e|code of conduct|changelog|sponsor|funding|privacy|terms)/i.test(l.text)) continue;
     const key = host + u.pathname.replace(/\/$/, "").toLowerCase();
     if (seen.has(key)) continue;
     seen.add(key);
@@ -163,7 +166,43 @@ function classify(links, repo, homepage) {
 
 // ---------- 视频提取 ----------
 
-function extractVideos(md, repoUrl) {
+// README 里相对路径必须转 raw，否则拼出来的是 github.com 网页而不是图片文件
+function toRaw(url, repo) {
+  const u = String(url).trim();
+  if (!/^https?:\/\//i.test(u)) return `https://raw.githubusercontent.com/${repo}/HEAD/${u.replace(/^\.?\//, "")}`;
+  const m = u.match(/^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/(?:blob|raw)\/(.+)$/i);
+  return m ? `https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}` : u;
+}
+
+const IMG_JUNK = /(shields\.io|badge|badgen|visitor|counter|star.?history|contrib\.rocks|travis|codecov|circleci|snyk|dependabot|logo|icon|favicon)/i;
+const imgExt = (u) => (/\.(png|jpe?g|gif|webp)(\?|#|$)/i.exec(u)?.[1] || "png").toLowerCase().replace("jpeg", "jpg");
+
+// README 里第一张非 badge 的图，通常就是产品界面/演示，比盲截首页有代表性
+function readmeHero(md, repo) {
+  for (const m of md.matchAll(/!\[[^\]]*\]\(\s*([^)\s]+)(?:\s+"[^"]*")?\s*\)/g)) {
+    const u = toRaw(m[1], repo);
+    if (!/\.(png|jpe?g|gif|webp)(\?|#|$)/i.test(u)) continue;
+    if (IMG_JUNK.test(u)) continue;
+    if (/(banner|header|cover|social|hero|title|wordmark)/i.test(u)) continue; // 装饰性头图，不是产品界面
+    return u;
+  }
+  return "";
+}
+
+async function grabImage(url, dest) {
+  try {
+    const res = await fetch(url, { headers: UA, redirect: "follow" });
+    if (!res.ok) return null;
+    if (!/^image\//i.test(res.headers.get("content-type") || "")) return null;
+    const buf = Buffer.from(await res.arrayBuffer());
+    if (buf.length < 12 * 1024 || buf.length > 2.5 * 1024 * 1024) return null; // 小图是图标，大图附件吃不消
+    mkdirSync(dirname(dest), { recursive: true });
+    writeFileSync(dest, buf);
+    return dest;
+  } catch { return null; }
+}
+
+function extractVideos(md, repoUrl, repo) {
   const videos = [];
   const seen = new Set();
   const base = new URL(repoUrl);
@@ -197,8 +236,8 @@ function extractVideos(md, repoUrl) {
 
   // 直接视频文件 / GIF
   for (const m of md.matchAll(/(?:(?:src|href)=["'])([^"']*\.(?:mp4|webm|mov|avi|gif)(?:[?#][^"']*)?)["']/gi)) {
-    let url;
-    try { url = new URL(m[1], repoUrl).href; } catch { continue; }
+    const url = toRaw(m[1], repo);
+    if (IMG_JUNK.test(url)) continue;
     if (!seen.has(`file:${url}`)) {
       seen.add(`file:${url}`);
       videos.push({ type: 'file', id: url, url, thumb: url.endsWith('.gif') ? url : undefined });
@@ -207,8 +246,8 @@ function extractVideos(md, repoUrl) {
 
   // Markdown 图片形式的 gif/视频 ![](xxx.mp4)
   for (const m of md.matchAll(/!\[[^\]]*\]\(([^)]*\.(?:mp4|webm|mov|avi|gif)(?:[?#][^)]*)?)\)/gi)) {
-    let url;
-    try { url = new URL(m[1], repoUrl).href; } catch { continue; }
+    const url = toRaw(m[1], repo);
+    if (IMG_JUNK.test(url)) continue;
     if (!seen.has(`md:${url}`)) {
       seen.add(`md:${url}`);
       videos.push({ type: 'file', id: url, url, thumb: url.endsWith('.gif') ? url : undefined });
@@ -356,6 +395,7 @@ function section(r, i, shotCid) {
   if (r.homepage) links.push(`<a href="${esc(r.homepage)}" style="color:#576b95;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`);
   r.links.cnDemo.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#fa5151;font-weight:700;text-decoration:none">中文体验 → ${esc(l.url)}</a>`));
   r.links.demo.slice(0, 2).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#576b95;text-decoration:none">官方演示 → ${esc(l.url)}</a>`));
+  r.links.docs.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#576b95;text-decoration:none">文档 → ${esc(l.url)}</a>`));
   r.links.paper.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#8a6d3b;text-decoration:none">论文 → ${esc(l.url)}</a>`));
 
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
@@ -512,10 +552,18 @@ await withBrowser(async () => {
   for (const [i, r] of data.repos.entries()) {
   const md = await readme(r.repo);
   r.links = classify(parseLinks(md), r.repo, r.homepage);
-  r.videos = extractVideos(md, r.url);
+  r.videos = extractVideos(md, r.url, r.repo);
   r.ai = await analyzeOne(r, md, usedHooks);
   if (r.ai?.hook) usedHooks.push(r.ai.hook);
-    if (!r.links.cnDemo.length) {
+    // 优先用 README 里的产品图（真实界面/演示），比盲截首页更有代表性；拿不到才截 demo 首屏
+    const heroUrl = readmeHero(md, r.repo);
+    const heroPath = heroUrl ? await grabImage(heroUrl, join(ROOT, "shots", `${r.repo.replace("/", "__")}.${imgExt(heroUrl)}`)) : null;
+    if (heroPath) {
+      const cid = `shot-${i}`;
+      r.shotCid = cid;
+      cidMap[r.repo] = cid;
+      cidMap[cid] = { path: heroPath };
+    } else if (!r.links.cnDemo.length) {
       const targets = [...r.links.demo.slice(0, 1).map((l) => l.url), r.homepage].filter(Boolean);
       for (const cand of targets) {
         const hit = await probeAndShot(page, cand, r.repo);
@@ -561,7 +609,7 @@ const transport = createTransport({ host: process.env.MAIL_HOST || "smtp.163.com
 
 const attachments = Object.entries(cidMap)
   .filter(([k]) => k.startsWith("shot-"))
-  .map(([k, v]) => ({ filename: `${k}.png`, path: v.path, cid: k }));
+  .map(([k, v]) => ({ filename: `${k}.${(v.path.split(".").pop() || "png").toLowerCase()}`, path: v.path, cid: k }));
 attachments.push({ filename: `GitHub日报-${data.day}.docx`, content: docxBuf });
 
 try {
