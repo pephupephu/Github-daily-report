@@ -8,6 +8,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createTransport } from "nodemailer";
+import { Document, Packer, Paragraph, TextRun } from "docx";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const UA = { "user-agent": "gh-daily-article" };
@@ -36,6 +37,8 @@ hook（开头）是全文胜负手：读者看完这一句才决定要不要往�
 {"hook":"开头一句，30字内。直接给一个具体成果或场景：谁用它能做到什么，带关键数字或名词，让人一眼看到画面；禁止出现：爆火/火得有理由/涨得最凶/杀疯了/上榜/分享一个/今天看到/值得一看","oneliner":"18字内直戳它最牛的那一点：杀手锏能力/最抓眼的数字/别人做不到而它做到了，例如：本地跑通 70B 大模型；10 行代码生成整个后台；禁止'平台/框架/生态/无缝/赋能'，禁止写成'这是一个…工具'","what":"3到4句大白话：第一句就说透它最厉害的地方（像'把 AI 接进 iPhone，让它自己帮你操作手机'），不要从'这是一个…项目'开头，不要提实现方式；后面说清它解决谁的问题，带一个具体的输入→输出例子，没接触过的人能秒懂","case":"2到3句一个贴合实际的运用案例：谁（具体身份）、被什么卡住、拆成具体动作怎么解决（第一步…第二步…）、前后省了什么。基于 README 能力，不编造","core":"3到4句讲清它是怎么做到的：点名关键部件、步骤和数据流向，说清为什么有效。基于 README 事实，不编造","who":"适合谁用，具体到身份，如：天天让 AI 写页面但总不满意的前端开发"}
 
 全文禁止代码化表达：不出现代码、函数名、变量名、命令行、配置文件、API/SDK 这类词；技术名词只留普通人听得懂的（开发板、模型、插件、浏览器），拿不准就换成日常比喻。读者是不写代码的人也能看懂。
+
+禁止 AI 腔套话，一次都不许出现：值得注意的是、总的来说、总而言之、不可否认、在当今、极大地、深入地、一站式、赋能、致力于、旨在、此外、然而、因此、从而、无缝衔接。写具体事、具体数字、具体动作。
 
 在 what / case / core 的内容里，把关键名词、数字、量化收益用 **双星号** 包起来标黑（如 **7 美元**、**3295 个可编辑对象**、**一块 ESP32-S3 开发板**），每段 1 到 3 处，不要整句加粗。`;
 
@@ -304,8 +307,18 @@ async function probeAndShot(page, demoUrl, repo) {
 // ---------- 文案 ----------
 
 const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]);
+// 去 AI 味：删空话套话、换掉高频书面腔。只做安全的词级替换，不动事实
+const AI_SMELL = [
+  [/值得注意的是[，,]?\s*/g, ""], [/需要指出的是[，,]?\s*/g, ""],
+  [/总的来说[，,]?\s*/g, ""], [/总而言之[，,]?\s*/g, ""], [/不可否认[，,]?\s*/g, ""],
+  [/在当今[^，。]{0,12}(时代|背景下)[，,]?\s*/g, ""],
+  [/极大地/g, "很"], [/深入地/g, "好好"], [/一站式/g, "整套"],
+  [/赋能/g, "帮上忙"], [/致力于/g, "在做"], [/旨在/g, "想"],
+  [/此外[，,]?\s*/g, "另外，"], [/然而[，,]?\s*/g, "但"], [/因此[，,]?\s*/g, "所以"], [/从而/g, "这样"],
+];
+const deAI = (s) => { let t = String(s ?? ""); for (const [re, to] of AI_SMELL) t = t.replace(re, to); return t.replace(/\s{2,}/g, " ").trim(); };
 // 先转义再还原 **粗体**：LLM 用双星号标关键名词/数字，这里变成 <b>
-const md = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+const md = (s) => esc(deAI(s)).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
 // 中文哨兵：兜底数据里宁可不显示，也不放英文让读者出戏
 const CN = (s) => (/[\u4e00-\u9fa5]/.test(s) ? s : "");
 const CN_DATE = (d) => `${d.slice(0, 4)}年${d.slice(5, 7)}月${d.slice(8)}日`;
@@ -348,7 +361,7 @@ function section(r, i, shotCid) {
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r));
-  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<p ${p}><b style="color:#1a1a1a">放进一个真实场景：</b>${md(ai?.case || r.scenarios[0])}</p>` : "";
+  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<p style="margin:0 0 12px;padding:9px 13px;background:#f7fdf9;border-left:3px solid #07c160;border-radius:4px;font-size:15px;line-height:1.9;color:#3a3a3a"><b style="color:#1a1a1a">放进一个真实场景：</b>${md(ai?.case || r.scenarios[0])}</p>` : "";
   const coreHtml = (ai?.core || r.mechanics?.length) ? `<p ${p}><b style="color:#1a1a1a">它是怎么做到的：</b>${md(ai?.core || r.mechanics.join("；"))}</p>` : "";
   const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<p ${p}"><b style="color:#1a1a1a">适合谁：</b>${md(ai?.who || r.scenarios[1])}</p>` : "";
   const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:10px 14px;background:#f7f8fa;border-radius:6px;font-size:13px;color:#5a6472;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
@@ -362,7 +375,7 @@ function section(r, i, shotCid) {
 
   return `
 <section style="margin:0 0 34px;padding-bottom:26px;border-bottom:1px solid #eceef1">
-  <h2 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.5">
+  <h2 style="margin:0 0 8px;padding-left:10px;border-left:4px solid #07c160;font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.5">
     <span style="color:#07c160">${String(i + 1).padStart(2, "0")}</span>
     <span style="margin-left:8px">${esc(repoShort(r.repo))}</span>
     <small style="color:#9a9a9a;font-weight:400">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} star · 今日 ${fmtStars(r.today)}</small>
@@ -434,12 +447,53 @@ ${top ? `<section style="background:#07c160;color:#fff;border-radius:10px;paddin
 
 ${sections}
 
+<section style="margin:6px 0 22px;padding:18px;background:#07c160;border-radius:10px;color:#fff;text-align:center">
+  <p style="margin:0 0 6px;font-size:17px;font-weight:700">每天 9:17 · 顶级 AI 开源，说人话</p>
+  <p style="margin:0;font-size:12.5px;opacity:.92">GitHub 热榜里的新东西，先帮你读懂，再决定要不要动手</p>
+</section>
+
 <section style="margin-top:10px;padding:14px 16px;background:#f7f8fa;border-radius:8px;font-size:12.5px;color:#9a9a9a;line-height:1.85">
   链接全部来自各项目 GitHub 仓库元数据与 README，已自动核对可访问性未做人工验证。中文体验入口靠浏览器渲染 demo 站抓取，可能有漏判，发稿前请点开确认。<br>
   生成时间：${new Date().toLocaleString("zh-CN")} · <a href="https://github.com/pephupephu/Github-daily-report" style="color:#576b95">订阅每日推送</a>
 </section>
 
 </div></body></html>`;
+}
+
+// ---------- Word 文稿（.docx）----------
+
+function buildDocx(data) {
+  const { day, repos } = data;
+  const total = repos.reduce((s, r) => s + (+String(r.today || 0).replace(/,/g, "") || 0), 0);
+  const clean = (s) => deAI(String(s ?? "")).replace(/\*\*/g, "").trim();
+  const para = (text, { bold = false, size = 21, color, before = 0, after = 140 } = {}) =>
+    new Paragraph({ spacing: { before, after }, children: [new TextRun({ text, bold, size, color, font: "微软雅黑" })] });
+
+  const children = [
+    para(`GitHub 今日热榜 · ${CN_DATE(day)}`, { bold: true, size: 36, after: 80 }),
+    para(`今日 ${repos.length} 个项目，累计新增 ${total.toLocaleString()} star`, { color: "8A8A8A", size: 20, after: 240 }),
+  ];
+
+  repos.forEach((r, i) => {
+    const ai = r.ai;
+    children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 28, color: "07A050", before: 240, after: 60 }));
+    children.push(para(`${r.lang || ""} · ${(r.stars || 0).toLocaleString()} star · 今日 +${r.today || 0}`, { color: "9A9A9A", size: 18, after: 120 }));
+    children.push(para(clean(ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo))), { bold: true }));
+    children.push(para(clean(ai?.what || CN(r.summary) || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r))));
+    const cs = ai?.case || r.scenarios?.[0];
+    if (cs) children.push(para(`放进一个真实场景：${clean(cs)}`));
+    const core = ai?.core || (r.mechanics?.length ? r.mechanics.join("；") : "");
+    if (core) children.push(para(`它是怎么做到的：${clean(core)}`));
+    const who = ai?.who || r.scenarios?.[1];
+    if (who) children.push(para(`适合谁：${clean(who)}`));
+    children.push(para(`仓库地址：https://github.com/${r.repo}`, { color: "576B95", size: 19, after: 60 }));
+    children.push(para(`交给 Agent 安装：帮我克隆 https://github.com/${r.repo}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用`, { size: 19, after: 220 }));
+  });
+
+  children.push(para("每天 9:17 · 顶级 AI 开源，说人话", { bold: true, size: 22, before: 300, after: 60 }));
+  children.push(para(`生成时间：${new Date().toLocaleString("zh-CN")}`, { color: "9A9A9A", size: 18 }));
+
+  return new Document({ sections: [{ children }] });
 }
 
 // ---------- 主流程 ----------
@@ -496,7 +550,9 @@ mkdirSync(join(ROOT, "out"), { recursive: true });
 const html = buildHTML(data, cidMap);
 const file = join(ROOT, "out", `article-${data.day}.html`);
 writeFileSync(file, html);
-console.error(`[文章] 已生成 ${file}`);
+const docxBuf = await Packer.toBuffer(buildDocx(data));
+writeFileSync(join(ROOT, "out", `article-${data.day}.docx`), docxBuf);
+console.error(`[文章] 已生成 ${file} 与 article-${data.day}.docx`);
 
 const user = process.env.MAIL_USER, pass = process.env.MAIL_PASS;
 if (!user || !pass) { console.error("[文章] 未配置 MAIL_USER/MAIL_PASS，跳过发信"); process.exit(0); }
@@ -506,6 +562,7 @@ const transport = createTransport({ host: process.env.MAIL_HOST || "smtp.163.com
 const attachments = Object.entries(cidMap)
   .filter(([k]) => k.startsWith("shot-"))
   .map(([k, v]) => ({ filename: `${k}.png`, path: v.path, cid: k }));
+attachments.push({ filename: `GitHub日报-${data.day}.docx`, content: docxBuf });
 
 try {
   await transport.sendMail({
