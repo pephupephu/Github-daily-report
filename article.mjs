@@ -302,7 +302,8 @@ function videoBlock(videos) {
       <a href="${esc(v.url)}" style="text-decoration:none;display:block">
         <div style="display:flex;align-items:center;gap:10px">
           <div style="width:48px;height:36px;background:#282c34;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">▶</div>
-          <div style="font-size:13px;color:#1a1a1a">${esc(v.thumb ? '演示动图' : '演示视频')} · ${esc(new URL(v.url).pathname.split('/').pop() || v.url)}</div>
+          let fname = v.url; try { fname = new URL(v.url).pathname.split('/').pop() || v.url; } catch {}
+        <div style="font-size:13px;color:#1a1a1a">${esc(v.thumb ? '演示动图' : '演示视频')} · ${esc(fname)}</div>
         </div>
       </a>
     </div>`;
@@ -392,7 +393,7 @@ function section(r, i, shotCid) {
   const p = `style="margin:0 0 10px;font-size:15px;line-height:1.9;color:#3a3a3a"`;
 
   const links = [];
-  if (r.homepage) links.push(`<a href="${esc(r.homepage)}" style="color:#576b95;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`);
+  if (r.homepage) { try { links.push(`<a href="${esc(r.homepage)}" style="color:#576b95;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`); } catch {} }
   r.links.cnDemo.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#fa5151;font-weight:700;text-decoration:none">中文体验 → ${esc(l.url)}</a>`));
   r.links.demo.slice(0, 2).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#576b95;text-decoration:none">官方演示 → ${esc(l.url)}</a>`));
   r.links.docs.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#576b95;text-decoration:none">文档 → ${esc(l.url)}</a>`));
