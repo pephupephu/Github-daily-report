@@ -297,12 +297,12 @@ function videoBlock(videos) {
       </div>`;
     }
     // 直接文件
+    let fname = v.url; try { fname = new URL(v.url).pathname.split('/').pop() || v.url; } catch {}
     return `
     <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
       <a href="${esc(v.url)}" style="text-decoration:none;display:block">
         <div style="display:flex;align-items:center;gap:10px">
           <div style="width:48px;height:36px;background:#282c34;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">▶</div>
-          let fname = v.url; try { fname = new URL(v.url).pathname.split('/').pop() || v.url; } catch {}
         <div style="font-size:13px;color:#1a1a1a">${esc(v.thumb ? '演示动图' : '演示视频')} · ${esc(fname)}</div>
         </div>
       </a>
