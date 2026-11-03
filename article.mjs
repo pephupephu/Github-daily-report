@@ -355,6 +355,16 @@ const AI_SMELL = [
   [/极大地/g, "很"], [/深入地/g, "好好"], [/一站式/g, "整套"],
   [/赋能/g, "帮上忙"], [/致力于/g, "在做"], [/旨在/g, "想"],
   [/此外[，,]?\s*/g, "另外，"], [/然而[，,]?\s*/g, "但"], [/因此[，,]?\s*/g, "所以"], [/从而/g, "这样"],
+  // 英文专业词必须说人话：LLM 偶发漏网，这里硬翻译兜底（顺序：长词在前，避免被短词误伤）
+  [/\bDecoder[\s-]only\b/gi, "只往下猜字的生成模型"],
+  [/\bTransformer\b/gi, "大模型"], [/\bTokenizer\b/gi, "切词器"],
+  [/\bToken(s)?\b/gi, "词单元"],
+  [/\bDataFrame\b/gi, "表格数据"], [/\bPandas\b/gi, "表格处理库"],
+  [/\bWayland\b/gi, "新一代桌面显示接口"], [/\bMoE\b/gi, "混合专家架构"],
+  [/\bMCP\b/gi, "软件互联接口"], [/\bGGUF\b/gi, "大模型打包格式"],
+  [/\bFFI\b/gi, "跨语言调用接口"], [/\bOptuna\b/gi, "自动调参工具"],
+  [/\bRANSAC\b/gi, "位姿估算算法"], [/\bSLAM\b/gi, "同步定位建图"],
+  [/\bAPI\b/gi, "接口"], [/\bSDK\b/gi, "开发工具包"], [/\bCLI\b/gi, "命令行工具"],
 ];
 const deAI = (s) => { let t = String(s ?? ""); for (const [re, to] of AI_SMELL) t = t.replace(re, to); return t.replace(/\s{2,}/g, " ").trim(); };
 // 先转义再还原 **粗体**：LLM 用双星号标关键名词/数字，这里变成 <b>
