@@ -44,3 +44,4 @@
 - [daily-2026-11-01](./daily-2026-11-01.md) — 榜首 thedotmack/claude-mem (+1723)
 - [daily-2026-11-01](./daily-2026-11-01.md) — 榜首 thedotmack/claude-mem (+1723)
 - [daily-2026-11-02](./daily-2026-11-02.md) — 榜首 vercel-labs/agent-desktop (+2243)
+- [daily-2026-11-03](./daily-2026-11-03.md) — 榜首 vercel-labs/agent-desktop (+2275)
