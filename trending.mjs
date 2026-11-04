@@ -204,6 +204,45 @@ const ANALYST = "你是开源情报分析师。读项目的 README 后用**中�
 
 const EMPTY = { 是什么: "", 核心机制: [], 使用场景: [], 坑: [], 一句话判断: "", readmeCN: "" };
 
+// 抓「好但没上榜」的优质新仓库：盯权威发布源账号，拉它们新建的仓库（质量高）
+// 用 star 门槛过滤垃圾，排除已在今日榜上的，返回前 N 个，供 article.mjs 渲染「值得关注」板块
+const AUTHORITY_ORGS = [
+  "anthropics", "openai", "google-deepmind", "meta", "MistralAI",
+  "karpathy", "xai", "microsoft", "huggingface", "togethercomputer",
+];
+async function authorityRepos(max = 5) {
+  const h = { ...UA, accept: "application/vnd.github+json" };
+  if (process.env.GITHUB_TOKEN) h.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+  const onBoard = new Set(repos.map((r) => r.repo));
+  const out = [];
+  const seen = new Set();
+  for (const org of AUTHORITY_ORGS) {
+    try {
+      const url = `https://api.github.com/users/${org}/repos?sort=created&direction=desc&per_page=15`;
+      const j = await (await fetch(url, { headers: h })).json();
+      for (const it of j) {
+        if (!it || !it.full_name) continue;
+        if (seen.has(it.full_name)) continue;
+        seen.add(it.full_name);
+        if (onBoard.has(it.full_name)) continue;               // 已在今日榜，跳过
+        if ((it.stargazers_count || 0) < 150) continue;        // 质量门槛：star 太少的不够重磅
+        if ((it.pushed_at || "") < new Date(Date.now() - 40e9).toISOString()) continue; // 很久没维护的不要
+        out.push({
+          repo: it.full_name, lang: it.language || "—",
+          desc: it.description || "", stars: it.stargazers_count ?? 0,
+          today: "0", forks: it.forks_count ?? 0,
+          created: (it.created_at || "").slice(0, 10), license: it.license?.spdx_id || "",
+          topics: (it.topics || []).slice(0, 8), homepage: it.homepage || "",
+          url: `https://github.com/${it.full_name}`,
+          featured: true,
+        });
+        if (out.length >= max) return out;
+      }
+    } catch { /* 单个 org 失败不影响整体 */ }
+  }
+  return out;
+}
+
 // 逐仓库：无 key 就翻译整篇 README，有 key 就深读分析
 async function analyze(repo) {
   const md = await readme(repo.repo);
@@ -261,6 +300,14 @@ for (const [i, r] of repos.entries()) {
   notes.push(await analyze(r));
 }
 const sum = HAS_LLM ? await themes(repos, notes).catch(() => null) : null;
+
+// 「值得关注」板块：权威发布源的新仓库（质量高但可能没进日榜）
+const featured = await authorityRepos(5);
+const featNotes = [];
+for (const [i, r] of featured.entries()) {
+  process.stderr.write(`值得关注 ${i + 1}/${featured.length} ${r.repo}\n`);
+  featNotes.push(await analyze(r).catch(() => null));
+}
 
 // ---- 纯计算部分：不需要模型 ----
 const day = new Date().toISOString().slice(0, 10);
@@ -356,6 +403,15 @@ writeFileSync(join(ROOT, "reports", "latest.json"), JSON.stringify({
     mechanics: notes[i]?.核心机制 || [],
     scenarios: notes[i]?.使用场景 || [],
     readmeCN: notes[i]?.readmeCN || "",
+  })),
+  // 「值得关注」板块：权威发布源的新仓库，质量高但可能没进日榜
+  featured: featured.map((r, i) => ({
+    ...r,
+    summary: featNotes[i]?.是什么 || "",
+    judgment: featNotes[i]?.一句话判断 || "",
+    mechanics: featNotes[i]?.核心机制 || [],
+    scenarios: featNotes[i]?.使用场景 || [],
+    readmeCN: featNotes[i]?.readmeCN || "",
   })),
 }, null, 2));
 

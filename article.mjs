@@ -498,6 +498,23 @@ ${top ? `<section style="background:#07c160;color:#fff;border-radius:10px;paddin
 
 ${sections}
 
+${(data.featured && data.featured.length) ? `
+<section style="margin:0 0 34px;padding:22px 20px;background:#f0faf3;border-radius:12px;border:1px solid #d8f0e0">
+  <h2 style="margin:0 0 6px;font-size:18px;font-weight:800;color:#1a1a1a">🔥 本周值得关注 · 还没上热榜的好东西</h2>
+  <p style="margin:0 0 16px;font-size:13px;color:#5a6472;line-height:1.7">热门榜只盯短期 star 涨速，下面这些是权威机构最近开源、质量在线、但可能还没被捧上热榜的仓库——真正想抄作业的先看这里。</p>
+  ${data.featured.map((r, i) => {
+    const ai = r.ai;
+    const hook = ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} star，值得放进收藏。`;
+    return `
+  <div style="margin:0 0 16px;padding:14px 16px;background:#fff;border-radius:8px;border:1px solid #e6f3eb">
+    <div style="margin:0 0 6px;font-size:15px;font-weight:700;color:#1a1a1a"><a href="${esc(r.url)}" style="color:#1a1a1a;text-decoration:none">${esc(r.repo)}</a></div>
+    <p style="margin:0 0 6px;font-size:13px;line-height:1.8;color:#3a3a3a"><b>${md(hook)}</b></p>
+    <p style="margin:0 0 8px;font-size:13px;line-height:1.8;color:#5a6472">${md(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))}</p>
+    <div style="margin:4px 0 0;font-size:12px;color:#8a8a8a">${(r.stars || 0).toLocaleString()} star · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#576b95">仓库 →</a></div>
+  </div>`;
+  }).join("")}
+</section>` : ""}
+
 <section style="margin:6px 0 22px;padding:18px;background:#07c160;border-radius:10px;color:#fff;text-align:center">
   <p style="margin:0 0 6px;font-size:17px;font-weight:700">每天 9:17 · 顶级 AI 开源，说人话</p>
   <p style="margin:0;font-size:12.5px;opacity:.92">GitHub 热榜里的新东西，先帮你读懂，再决定要不要动手</p>
@@ -600,6 +617,26 @@ await withBrowser(async () => {
       }
     }
     process.stderr.write(`  ${i + 1}/${data.repos.length} ${r.repo} → 演示${r.links.demo.length} 中文${r.links.cnDemo.length} AI:${r.ai ? "✓" : "✗"}\n`);
+    await new Promise((s) => setTimeout(s, 10000));
+  }
+  // 「值得关注」板块：权威发布源的新仓库，走同一套分析管线
+  const featured = data.featured || [];
+  for (let fi = 0; fi < featured.length; fi++) {
+    const r = featured[fi];
+    const md = await readme(r.repo);
+    r.links = classify(parseLinks(md), r.repo, r.homepage);
+    r.videos = extractVideos(md, r.url, r.repo);
+    r.ai = await analyzeOne(r, md, usedHooks);
+    if (r.ai?.hook) usedHooks.push(r.ai.hook);
+    const heroUrl = readmeHero(md, r.repo);
+    const heroPath = heroUrl ? await grabImage(heroUrl, join(ROOT, "shots", `feat__${r.repo.replace("/", "__")}.${imgExt(heroUrl)}`)) : null;
+    if (heroPath) {
+      const cid = `feat-${fi}`;
+      r.shotCid = cid;
+      cidMap[r.repo] = cid;   // 与 section() 的 cidMap[r.repo] 取值保持一致
+      cidMap[cid] = { path: heroPath };
+    }
+    process.stderr.write(`  [值得关注] ${fi + 1}/${featured.length} ${r.repo} → AI:${r.ai ? "✓" : "✗"}\n`);
     await new Promise((s) => setTimeout(s, 10000));
   }
   await page.close();
