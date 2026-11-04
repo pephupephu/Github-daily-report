@@ -1,5 +1,5 @@
 {
-  "day": "2026-11-03",
+  "day": "2026-11-04",
   "since": "daily",
   "mode": "自备 key",
   "repos": [
@@ -7,9 +7,9 @@
       "repo": "thedotmack/claude-mem",
       "lang": "TypeScript",
       "desc": "Persistent Context Across Sessions for Every Agent – Captures everything your agent does during sessions, compresses it with AI, and injects relevant context back into future sessions. Works with Claude Code, OpenClaw, Codex, Gemini, Hermes, Copilot, OpenCode + More",
-      "stars": 111344,
-      "today": "1138",
-      "forks": 9702,
+      "stars": 112228,
+      "today": "1139",
+      "forks": 9760,
       "created": "2025-08-31",
       "license": "Apache-2.0",
       "topics": [
@@ -24,19 +24,31 @@
       ],
       "homepage": "https://claude-mem.ai",
       "url": "https://github.com/thedotmack/claude-mem",
-      "summary": "",
-      "judgment": "Persistent Context Across Sessions for Every Agent – Captures everything your agent does during sessions, compresses it with AI, and injects relevant context back into future sessions. Works with Claude Code, OpenClaw, Codex, Gemini, Hermes, Copilot, OpenCode + More",
-      "mechanics": [],
-      "scenarios": [],
+      "summary": "这是一个为 Claude Code 及其他 AI 代理（如 OpenCode、T3 Code、Grok Bot）提供持久化记忆的插件。它通过监听代理的日志，自动提取关键操作（如决策、Bug 修复），利用 AI 压缩成摘要，并在新会话中注入这些上下文，防止 AI '失忆'。",
+      "judgment": "解决 AI 失忆的神器，但要注意试用结束后的订阅成本和隐私合规。",
+      "mechanics": [
+        "观察者模式监听日志文件",
+        "MCP 协议原生集成",
+        "语义压缩与摘要生成",
+        "多后端存储抽象",
+        "特定标记的意识推送机制",
+        "非交互式安装支持"
+      ],
+      "scenarios": [
+        "长期项目维护，防止 AI 关闭会话后忘记架构决策",
+        "多会话协作，保持跨会话的上下文一致性",
+        "CI/CD 环境，在非交互式脚本中自动记录和检索上下文",
+        "使用 Grok Bot 等非 Claude 原生工具的开发者"
+      ],
       "readmeCN": ""
     },
     {
       "repo": "vercel-labs/agent-desktop",
       "lang": "Rust",
       "desc": "Computer use CLI for AI agents",
-      "stars": 11630,
-      "today": "3792",
-      "forks": 787,
+      "stars": 13469,
+      "today": "3791",
+      "forks": 928,
       "created": "2026-02-19",
       "license": "Apache-2.0",
       "topics": [
@@ -51,19 +63,29 @@
       ],
       "homepage": "https://agent-browser.dev/desktop",
       "url": "https://github.com/vercel-labs/agent-desktop",
-      "summary": "",
-      "judgment": "Computer use CLI for AI agents",
-      "mechanics": [],
-      "scenarios": [],
+      "summary": "这是一个 Rust 编写的 CLI 工具，让 AI 代理能够“看见”并操作桌面应用（macOS/Windows/Linux）。它不依赖截图或像素匹配，而是通过读取操作系统的无障碍树来获取 UI 元素的引用，并支持点击、输入、窗口管理等 60+ 种命令。",
+      "judgment": "值得抄作业，但需要 Agent 自身具备较强的状态感知和错误重试能力。",
+      "mechanics": [
+        "基于无障碍树（Accessibility Tree）的 UI 识别与结构化输出",
+        "引用（Ref）机制：每个元素在快照中有唯一 ID，Agent 通过 ID 操作",
+        "跨平台适配器架构：Rust 核心通过 PlatformAdapter 调用各 OS 原生 API (AX/UI Automation/AT-SPI)",
+        "FFI 支持：提供 C 库供 Agent 进程内直接调用",
+        "MCP 协议集成：通过 stdio 暴露为 MCP 工具"
+      ],
+      "scenarios": [
+        "构建 AI Agent 框架（如 LangChain）以实现桌面自动化操作",
+        "开发需要跨平台 UI 自动化的测试工具",
+        "在本地环境中通过 CLI 或 MCP 协议控制第三方桌面软件"
+      ],
       "readmeCN": ""
     },
     {
       "repo": "max-sixty/worktrunk",
       "lang": "Rust",
       "desc": "Worktrunk is a CLI for Git worktree management, designed for parallel AI agent workflows",
-      "stars": 10267,
-      "today": "437",
-      "forks": 371,
+      "stars": 10670,
+      "today": "438",
+      "forks": 388,
       "created": "2025-10-17",
       "license": "NOASSERTION",
       "topics": [
@@ -76,53 +98,38 @@
       ],
       "homepage": "https://worktrunk.dev",
       "url": "https://github.com/max-sixty/worktrunk",
-      "summary": "这是一个用 Rust 编写的 Git worktree 管理 CLI 工具，专为并行 AI 代理工作流设计。它通过简化命令（如 `wt switch feat`）替代繁琐的 `git worktree add` 和路径切换，并提供钩子自动化、LLM 生成提交信息、合并工作流等高级功能，让管理多个并行分支变得像管理普通分支一样简单。",
-      "judgment": "值得抄作业，如果你需要同时管理多个 AI 代理或并行分支，它能极大提升效率。",
-      "mechanics": [
-        "Git worktree 抽象层：将复杂的路径操作封装为简单的分支名操作，自动计算物理路径。",
-        "钩子系统：支持在创建、合并等生命周期节点自动执行自定义脚本（如运行测试）。",
-        "写时复制构建缓存：利用文件系统特性（APFS/btrfs/XFS）在多个 worktree 间共享 `node_modules` 或 `target` 等构建产物。",
-        "LLM 集成：利用大模型自动分析 Diff 并生成高质量的提交信息。",
-        "交互式选择器：提供流式 CI 状态、Diff 预览和 PR 预览的图形化界面。",
-        "Shell 集成：安装后自动配置环境变量，实现命令执行后自动跳转目录。"
-      ],
-      "scenarios": [
-        "同时运行 5-10 个 AI 代理（如 Claude、Codex）处理不同任务，避免互相干扰。",
-        "需要频繁在多个并行开发的特性分支间切换的开发者。",
-        "希望自动化本地工作流（如自动运行测试、格式化）的开发者。",
-        "需要跨多个分支共享构建缓存以加速 CI/CD 的项目。"
-      ],
+      "summary": "",
+      "judgment": "Worktrunk is a CLI for Git worktree management, designed for parallel AI agent workflows",
+      "mechanics": [],
+      "scenarios": [],
       "readmeCN": ""
     },
     {
       "repo": "JustVugg/colibri",
       "lang": "C",
       "desc": "A hierarchical inference engine for frontier MoE models: hot experts on the GPU (CUDA, Vulkan), warm ones in RAM, cold ones streamed from NVMe. Written in C, runs on the hardware you already own.",
-      "stars": 46955,
-      "today": "803",
-      "forks": 5421,
+      "stars": 47427,
+      "today": "802",
+      "forks": 5478,
       "created": "2026-07-01",
       "license": "Apache-2.0",
       "topics": [],
       "homepage": "https://justvugg.github.io/colibri",
       "url": "https://github.com/JustVugg/colibri",
-      "summary": "这是一个用 C 语言编写的分层推理引擎，旨在让用户在现有硬件上运行超大参数量的 MoE（混合专家）模型。它通过将专家模型分为“热”（GPU）、“温”（RAM）和“冷”（NVMe 流式读取）三级来管理内存，支持 GLM、Qwen、DeepSeek 等数百亿参数模型，并提供兼容 OpenAI API 的本地服务。",
-      "judgment": "值得抄作业，但需注意硬件门槛和 WSL 路径配置，否则体验会很差。",
+      "summary": "Tiny engine, immense model。这是一个用 C 语言编写的分层推理引擎，旨在让用户在普通硬件上运行超大规模 MoE 模型。它通过将“冷门”专家模型流式加载自 NVMe 硬盘，仅将“热门”专家保留在 GPU 或内存中，从而在 8GB 内存和普通硬盘上运行数百亿参数的模型（如 GLM-5.2, Qwen3.6）。它提供兼容 OpenAI API 的 HTTP 服务。",
+      "judgment": "值得抄作业，适合想本地运行超大规模 MoE 模型但硬件预算有限的极客。",
       "mechanics": [
-        "分层推理架构：将专家模型分为热（GPU）、温（RAM）、冷（NVMe）三级管理，动态加载以节省显存",
-        "多后端支持：原生支持 CUDA（NVIDIA）、Vulkan（跨平台）和纯 CPU 推理，自动检测硬件",
-        "MoE 模型适配：专门针对 Mixture of Experts 架构优化，支持 GLM-5.2/5.3、Qwen3.8、DeepSeek V4 等前沿模型",
-        "GGUF 格式兼容：可直接读取 HuggingFace 发布的 GGUF 格式模型文件",
-        "纯 C 实现：单文件家族引擎，无运行时依赖，轻量高效",
-        "MCP 服务器集成：支持 Model Context Protocol，可作为 AI 助手的工具端点",
-        "断点续传下载：支持模型下载中断后恢复"
+        "MoE 专家分流机制：仅激活当前 Token 需要的专家，其余专家按需从磁盘加载。",
+        "分层内存管理：热门专家驻留 GPU/内存，冷门专家流式读取自 NVMe。",
+        "多后端并行支持：支持 CPU、Vulkan 和 CUDA 三种推理后端。",
+        "GGUF 格式兼容：直接读取社区发布的 GGUF 格式模型文件。",
+        "自动化硬件检测：一键脚本自动检测 RAM/Disk/GPU 并推荐适配模型。",
+        "OpenAI API 兼容：提供标准 HTTP 接口，兼容主流 AI 客户端。"
       ],
       "scenarios": [
-        "在消费级硬件（如 16GB+ 内存）上运行数百亿参数的超大模型",
-        "本地部署兼容 OpenAI API 的服务，供 Claude、ChatGPT 等客户端调用",
-        "在无独立显卡的机器上通过 CPU/Vulkan 运行大型语言模型",
-        "研究或实验前沿 AI 模型，无需昂贵的云端算力",
-        "集成到本地工作流中，作为本地大模型的后端"
+        "个人极客/学生：在仅有 8GB+ 内存和 NVMe 的普通 PC 上本地运行大模型。",
+        "开发者/研究员：在资源受限的服务器上通过磁盘扩展运行超大参数模型。",
+        "边缘计算设备：在无独立显卡的嵌入式设备上尝试运行大模型推理。"
       ],
       "readmeCN": ""
     },
@@ -130,28 +137,27 @@
       "repo": "mattpocock/skills",
       "lang": "Shell",
       "desc": "Skills for Real Engineers. Straight from my .agents directory.",
-      "stars": 310851,
+      "stars": 311833,
       "today": "1164",
-      "forks": 26146,
+      "forks": 26204,
       "created": "2026-02-03",
       "license": "MIT",
       "topics": [],
       "homepage": "https://aihero.dev/skills",
       "url": "https://github.com/mattpocock/skills",
-      "summary": "这是一套专为 AI 编码助手设计的 Shell 脚本技能库，旨在通过标准化的命令（如 /grill-me、/tdd）规范 AI 的工作流。用户通过 CLI 安装插件后，需在项目根目录运行 /setup-matt-pocock-skills 初始化，随后即可在对话中调用这些技能来解决需求理解偏差、代码冗余和测试覆盖不足的问题。",
-      "judgment": "这是一套非常实用的工程化 AI 技能集，能显著提升 AI 编码助手的质量和可控性，值得作为标准工作流引入。",
+      "summary": "这是一个为 AI 编程助手（如 Claude、Copilot）定制的技能库，包含一系列 Shell 脚本和工作流指令。安装后，用户可以通过运行特定命令（如 `/grill-me`、`/tdd`）来强制 AI 在编码前进行需求对齐、构建共享语言或执行测试驱动开发，避免“Vibe Coding”。",
+      "judgment": "值得抄作业，但需忍受手动更新和依赖特定 AI 助手的限制。",
       "mechanics": [
-        "Shell 脚本技能注入：核心是轻量级 Shell 脚本，通过 npx skills CLI 工具注入到 Claude、Copilot 等助手的插件系统中。",
-        "前置审问机制：利用 /grill-me 和 /grill-with-docs 强制 AI 在编码前进行深度提问，通过“审问”对齐用户意图。",
-        "共享语言构建：通过 /grill-with-docs 生成项目上下文文档（如 Glossary），建立统一术语表，减少 AI 冗余输出。",
-        "TDD 反馈循环：内置 /tdd 技能，强制 AI 遵循“红-绿-重构”测试驱动开发流程，确保代码质量。",
-        "多模型兼容：设计为与 Claude、Codex、Gemini 等主流 AI 编码助手兼容，不绑定特定模型。"
+        "插件化安装机制：通过 `npx skills` 或各平台插件市场安装，支持 Claude、Copilot、Codex 等多种助手。",
+        "命令触发式工作流：用户输入 `/grill-me` 等命令，触发预设的 Shell 脚本或提示词链，引导 AI 执行特定任务。",
+        "共享语言构建：利用 `CONTEXT.md` 文档让 AI 理解项目术语，减少冗余输出，提升代码可读性。",
+        "TDD 循环引导：`/tdd` 技能强制 AI 遵循红-绿-重构循环，先写测试再写代码。",
+        "自更新机制：部分插件支持自动更新，部分需手动运行 `npx skills@latest update`。"
       ],
       "scenarios": [
-        "新项目初始化：在开始新项目前，通过 /setup 配置 issue tracker、标签系统和文档存储位置。",
-        "需求对齐阶段：在让 AI 写代码前，使用 /grill-me 或 /grill-with-docs 深挖需求细节，避免返工。",
-        "代码重构与维护：在维护旧代码时，利用共享语言文档帮助 AI 快速理解业务逻辑。",
-        "测试驱动开发：在编写新功能时，强制 AI 先写测试用例再写实现代码。"
+        "需要高精度对齐需求的复杂项目开发，防止 AI 理解偏差。",
+        "团队协作中需要统一术语和文档标准的场景。",
+        "习惯测试驱动开发（TDD）的开发者希望 AI 协助执行自动化流程。"
       ],
       "readmeCN": ""
     },
@@ -159,9 +165,9 @@
       "repo": "p-e-w/heretic",
       "lang": "Python",
       "desc": "Training-free language model modification: Remove censorship, suppress slop, reduce sycophancy, and more",
-      "stars": 38478,
-      "today": "699",
-      "forks": 4350,
+      "stars": 39020,
+      "today": "701",
+      "forks": 4402,
       "created": "2025-09-21",
       "license": "AGPL-3.0",
       "topics": [
@@ -175,21 +181,19 @@
       ],
       "homepage": "https://heretic-project.org",
       "url": "https://github.com/p-e-w/heretic",
-      "summary": "Heretic 是一个无需训练即可修改大语言模型行为的 Python 工具。它利用数学技术通过对比示例和评分器来“引导”模型行为，默认功能是移除审查（拒绝回答），也能减少废话或阿谀奉承。用户只需安装并运行命令，即可在本地 PC 上处理模型。",
-      "judgment": "值得抄作业，适合想本地低成本修改模型行为（如去审查）的技术爱好者，但需注意配置迁移和硬件门槛。",
+      "summary": "Heretic 是一个无需重新训练即可修改大语言模型的工具。它通过数学技术（如 ARA 和 Abliteration）来调整模型行为，默认功能是移除审查，也能减少废话或顺从性。用户只需安装库并运行命令，系统会自动优化参数并生成修改后的模型。",
+      "judgment": "值得尝试，但需接受较长的处理时间和硬件要求，适合有特定对齐需求且不想微调的用户。",
       "mechanics": [
-        "Training-free (无训练): 不进行微调，直接通过数学手段修改模型权重。",
-        "Optuna TPE 优化器: 使用树结构帕森估计器自动寻找最优的参数组合。",
-        "ARA (Arbitrary-Rank Ablation): 专为此工具开发的任意秩消融算法，用于修改层权重。",
-        "Abliteration (方向性消融): 经典的拒绝抑制方法，使用灵活的消融权重核。",
-        "Scorers (评分器插件): 可扩展的插件系统，用于动态评估模型输出（如拒绝率、KL散度）。",
-        "On-the-fly Quantization: 支持 bitsandbytes 实时 4-bit 量化，降低显存占用。"
+        "TPE 优化器与 Optuna：使用树结构 Parzen 估计器（TPE）在参数空间中搜索最优解。",
+        "可插拔评分器：通过插件（如拒绝率、KL散度）量化模型行为，作为优化的目标函数。",
+        "ARA (Arbitrary-Rank Ablation)：默认修改器，通过数学方法调整权重矩阵以改变模型输出。",
+        "Abliteration (方向性消融)：经典的拒绝抑制方法，支持投影消融和范数保持。",
+        "动态量化：支持利用 bitsandbytes 在运行时进行 4-bit 量化，降低显存需求。"
       ],
       "scenarios": [
-        "本地部署者想要移除模型的审查机制或拒绝回答。",
-        "研究人员想要调整模型的情感倾向或减少“废话”输出。",
-        "在消费级显卡（如 RTX 3090）上低成本测试模型修改效果。",
-        "需要处理特定架构模型（如 MoE 或多模态模型）的用户。"
+        "本地化隐私需求：用户希望在本地运行模型，且希望移除模型自带的审查机制或安全护栏。",
+        "模型对齐研究：研究人员或开发者想要测试不同的“对齐”技术，而不需要昂贵的微调成本。",
+        "个人算力环境：在拥有中高端显卡的个人电脑上，快速生成特定风格的模型变体。"
       ],
       "readmeCN": ""
     },
@@ -197,29 +201,28 @@
       "repo": "spotify/portal-ai-plugins",
       "lang": "TypeScript",
       "desc": "",
-      "stars": 2922,
-      "today": "94",
-      "forks": 228,
+      "stars": 3102,
+      "today": "91",
+      "forks": 242,
       "created": "2026-07-23",
       "license": "Apache-2.0",
       "topics": [],
       "homepage": "",
       "url": "https://github.com/spotify/portal-ai-plugins",
-      "summary": "这是一个将 Spotify 内部 Portal 系统集成到 Claude Code、Codex、Cursor 和 pi 等 AI 编码工具的 TypeScript 插件集合。它封装了 Portal CLI 的能力，提供认证设置、软件目录搜索、服务简报生成以及 Fleetshift 任务管理（创建、运行、PR 生成）等自动化工作流。此外，它还包含一个名为 'shunt' 的插件，用于将繁重的文件 I/O 任务卸载到更便宜的模型以节省成本。",
-      "judgment": "仅限 Spotify 内部人员使用，但展示了如何将内部工具集成到 AI IDE 中的绝佳范例。",
+      "summary": "这是一个将 Spotify 内部 Portal 工具链（CLI）桥接到外部 AI 编码助手（Claude Code、Cursor 等）的插件集合。它允许 AI 搜索内部软件目录、生成服务简报、运行诊断以及管理内部工作流（如 Fleetshift）。它还包含一个名为 'shunt' 的插件，用于将繁重的 I/O 任务路由到更便宜的模型。",
+      "judgment": "值得抄作业，但仅限于拥有 Spotify 内部访问权限的团队，用于自动化内部工作流。",
       "mechanics": [
-        "通过 npx 调用 @spotify/portal-cli 底层 CLI 进行命令封装",
-        "适配多平台 AI IDE 的插件架构（Claude/Cursor/Codex/pi）",
-        "Shunt 插件利用 AiKA 模式和动作注册表进行 I/O 任务路由",
-        "Fleetshift 工作流支持试运行、确认和 PR 自动生成",
-        "内置安全机制（dry-run、确认）防止误操作",
-        "自然语言查询驱动软件目录和文档检索"
+        "通过 `npx @spotify/portal-cli` 封装内部 CLI，将 Agent 命令转换为内部操作",
+        "Fleetshift 工作流自动化：支持从创建变更、运行到生成 PR 的全流程",
+        "Shunt 插件机制：利用动作注册表将繁重的文件读写任务路由到更便宜的模型",
+        "安全调用机制：内置预览、Dry-run 和确认步骤防止 AI 错误操作",
+        "自然语言搜索：通过 Portal CLI 的 search 命令检索内部文档和目录"
       ],
       "scenarios": [
-        "Spotify 开发者使用 Cursor 或 Claude 搜索内部技术文档",
-        "运维团队通过 Fleetshift 自动化部署和 PR 创建流程",
-        "需要快速生成服务状态简报的工程团队",
-        "希望降低 AI 编码成本的开发者使用 shunt 节省 token"
+        "Spotify 员工在 Cursor 或 Claude Code 中快速检索内部技术文档和目录",
+        "利用 AI 自动化内部变更管理流程（Fleetshift），生成 PR",
+        "在编码过程中进行系统健康检查和诊断",
+        "通过 Shunt 节省 Token 成本，将非核心任务分流"
       ],
       "readmeCN": ""
     },
@@ -227,9 +230,9 @@
       "repo": "floci-io/floci",
       "lang": "Java",
       "desc": "Light, fluffy, and always free - The AWS Local Emulator alternative",
-      "stars": 28207,
-      "today": "219",
-      "forks": 3165,
+      "stars": 29068,
+      "today": "482",
+      "forks": 3230,
       "created": "2026-02-18",
       "license": "MIT",
       "topics": [
@@ -244,21 +247,21 @@
       ],
       "homepage": "https://floci.io/floci/",
       "url": "https://github.com/floci-io/floci",
-      "summary": "Floci 是一个用 Java 编写的本地 AWS 模拟器，旨在作为 LocalStack 的轻量级替代品。它通过 Docker 容器在本地提供兼容 AWS API 的服务（端口 4566），无需云账号、认证令牌或付费功能限制。开发者可以直接使用 AWS CLI、SDK、Terraform 或 CDK 与本地环境交互，实现“Any Cloud. Locally.”。",
-      "judgment": "值得抄作业，特别是想摆脱 LocalStack 的臃肿，追求轻量级本地 AWS 开发体验时。",
+      "summary": "这是一个轻量级、免费的本地 AWS 模拟器，旨在替代 LocalStack。它通过 Docker 运行，将 AWS 服务（如 S3、DynamoDB）暴露在 `localhost:4566`，无需云账号或认证令牌，支持 AWS CLI、SDK、Terraform 等工具直接连接使用。",
+      "judgment": "值得抄作业，作为 LocalStack 的轻量级替代品，特别适合追求“开箱即用”和极简配置的开发者。",
       "mechanics": [
-        "Docker Compose 部署架构",
-        "AWS API 兼容层 (端口 4566)",
-        "Sidecar 容器模式 (Web 控制台)",
-        "环境变量注入机制",
-        "Java 后端实现",
-        "多云家族架构 (Azure/GCP/OCI)"
+        "Docker 容器化架构：核心服务运行在 Docker 容器中，通过 `docker compose up` 启动。",
+        "标准 AWS 端点：监听 `localhost:4566`，提供与真实 AWS API 兼容的 REST 接口。",
+        "环境变量注入：通过 `floci env` 或手动配置 `AWS_ENDPOINT_URL`，将本地工具的请求重定向到模拟器。",
+        "Web Console 侧边车机制：首次访问 UI 时动态拉起一个 Sidecar 容器进行资源监控，无需手动配置端口。",
+        "多分区支持：支持所有 AWS 发布的区域和分区（如 us-east-1, eu-west-1）。",
+        "插件化 UI：支持通过环境变量替换默认的 Web 控制台镜像（如 Floci Dash）。"
       ],
       "scenarios": [
-        "本地开发环境搭建",
-        "CI/CD 流水线中的基础设施测试",
-        "Terraform/CDK 代码的离线验证",
-        "从 LocalStack 迁移至更轻量的替代方案"
+        "本地开发调试：开发人员在本地编写 AWS 代码时，无需配置真实的 AWS 凭证即可测试 S3、DynamoDB 等功能。",
+        "CI/CD 流水线集成：在自动化测试环境中替代昂贵的云环境，降低成本。",
+        "基础设施即代码验证：使用 Terraform、CDK 或 OpenTofu 进行本地资源规划，验证配置正确性。",
+        "AWS SDK 测试：在单元测试中使用 Testcontainers 或直接连接本地模拟器进行集成测试。"
       ],
       "readmeCN": ""
     },
@@ -266,9 +269,9 @@
       "repo": "Usagi-org/ai-goofish-monitor",
       "lang": "Python",
       "desc": "基于 Playwright 和AI实现的闲鱼多任务实时/定时监控与智能分析系统，配备了功能完善的后台管理UI。帮助用户从闲鱼海量商品中，找到心仪产品。",
-      "stars": 16136,
-      "today": "204",
-      "forks": 2825,
+      "stars": 16830,
+      "today": "228",
+      "forks": 2879,
       "created": "2025-07-16",
       "license": "MIT",
       "topics": [
@@ -283,21 +286,22 @@
       ],
       "homepage": "",
       "url": "https://github.com/Usagi-org/ai-goofish-monitor",
-      "summary": "这是一个基于 Python 和 Playwright 的闲鱼自动化监控系统，利用 AI 多模态模型自动筛选商品。它提供 Web 管理界面，支持多任务并发、定时调度和多种通知渠道，帮助用户从海量闲置商品中快速找到符合特定需求的物品。",
-      "judgment": "技术架构成熟，适合想深度定制闲鱼监控逻辑的开发者，但需警惕账号封禁风险。",
+      "summary": "这是一个基于 Python 和 Playwright 的闲鱼多任务智能监控系统，集成了 Web 管理界面。用户可以通过自然语言或关键词创建监控任务，系统自动抓取商品详情和图片，利用多模态 AI 模型分析商品是否符合要求，符合条件时通过多种渠道（如 Telegram、企业微信）推送通知。",
+      "judgment": "值得抄作业，但需注意闲鱼反爬机制和合规风险，且需承担 API 调用成本。",
       "mechanics": [
-        "Playwright 浏览器自动化：模拟真实用户行为进行页面渲染和抓取，支持无头模式。",
-        "多模态 AI 分析：调用 OpenAI 兼容接口，对商品图片和文本进行语义理解并打分。",
-        "SQLite 数据持久化：存储任务配置、抓取结果、价格历史及运行日志。",
-        "代理与账号轮换机制：通过代理池和闲鱼登录态管理，应对反爬虫限制。",
-        "FastAPI 异步架构：提供高性能的 RESTful API 和 WebSocket 实时通信。",
-        "Cron 定时调度：支持灵活的 Cron 表达式配置周期性监控任务。"
+        "Playwright 浏览器自动化：使用无头模式模拟真实用户行为进行页面抓取，内置 Chromium。",
+        "多模态 AI 分析：调用 OpenAI 兼容接口（如 GPT-4o）对商品图片和标题进行语义理解与筛选。",
+        "FastAPI 后端架构：提供 RESTful API 和 WebSocket 支持，处理任务调度、数据存储和前端交互。",
+        "SQLite 持久化存储：存储任务配置、抓取结果、价格历史以及登录态 Cookie。",
+        "代理轮换机制：支持代理池配置和自动轮换，用于规避 IP 封禁和负载均衡。",
+        "Cron 定时调度：支持 Cron 表达式配置，实现周期性自动监控。",
+        "Docker 容器化：镜像内置浏览器，支持一键部署，数据通过卷挂载持久化。"
       ],
       "scenarios": [
-        "二手商品猎人：需要实时监控特定关键词（如相机、显卡）并第一时间收到通知。",
-        "市场调研人员：批量收集闲鱼商品数据，分析价格波动或市场供需。",
-        "卖家：监控竞品价格或特定商品上架情况，辅助定价策略。",
-        "开发者：作为学习爬虫、AI 集成及 Web 后端架构的参考项目。"
+        "二手电子产品猎人：专门监控相机、手机、显卡等高价值商品的发布和降价。",
+        "区域化采购：在特定省/市/区筛选符合特定价格区间或包邮条件的商品。",
+        "批量账号管理：需要同时使用多个闲鱼账号进行不同关键词的监控任务。",
+        "自动化交易辅助：帮助用户从海量商品中快速过滤出符合“详细需求”的候选商品。"
       ],
       "readmeCN": ""
     },
@@ -305,9 +309,9 @@
       "repo": "anomalyco/hex",
       "lang": "Rust",
       "desc": "Local voice dictation for mac, windows and linux",
-      "stars": 4241,
-      "today": "1134",
-      "forks": 249,
+      "stars": 4771,
+      "today": "410",
+      "forks": 268,
       "created": "2026-07-17",
       "license": "MIT",
       "topics": [
@@ -322,19 +326,21 @@
       ],
       "homepage": "https://anoma.ly/hex",
       "url": "https://github.com/anomalyco/hex",
-      "summary": "Hex 是一款跨平台（Mac/Win/Linux）的本地语音转文字工具。用户只需按住快捷键说话，松开后文本会自动粘贴到当前光标位置。它采用离线模式，首次运行后模型不离开设备，确保数据隐私。",
-      "judgment": "值得尝试，适合追求隐私和效率的极客，但需接受闭源维护和硬件门槛。",
+      "summary": "Hex 是一个跨平台的本地语音转文字工具，支持 Mac、Windows 和 Linux。用户只需按住快捷键开始说话，松开后文字会自动粘贴到当前光标位置。它完全在本地设备上运行，不依赖云端服务器，隐私安全。",
+      "judgment": "值得抄作业，适合追求隐私和离线使用的极客。",
       "mechanics": [
-        "跨平台 Rust 编译产物：提供统一的二进制文件或安装包，支持 macOS、Windows 和 Linux。",
-        "系统级全局热键监听：通过监听特定按键组合（如 Ctrl+Space）触发录音状态。",
-        "本地语音识别模型：在设备端运行 Whisper 或类似模型进行实时转录，无需联网。",
-        "剪贴板注入机制：转录完成后自动将文本写入剪贴板，由操作系统完成粘贴操作。"
+        "Rust 编写的跨平台二进制程序",
+        "本地推理引擎进行语音识别",
+        "通过系统剪贴板实现跨应用粘贴",
+        "按住触发机制",
+        "支持多种 Linux 发行版包格式",
+        "首次运行需下载模型文件"
       ],
       "scenarios": [
-        "需要高隐私保护的开发者或内容创作者，避免云端语音数据泄露。",
-        "需要快速输入长文本的用户，通过语音替代繁琐的键盘敲击。",
-        "在无键盘设备（如平板电脑或特定终端环境）上进行操作的用户。",
-        "需要在多语言环境间快速切换输入法的用户。"
+        "需要高隐私保护的开发者或文字工作者",
+        "在 Linux 环境下缺乏原生语音输入工具的用户",
+        "希望完全离线工作且不想使用云服务的自由职业者",
+        "对特定快捷键语音输入有强需求的极客"
       ],
       "readmeCN": ""
     },
@@ -342,9 +348,9 @@
       "repo": "D4Vinci/Scrapling",
       "lang": "Python",
       "desc": "🕷️ The BEST Web Scraping framework that handles everything from a single request to a full-scale crawl! Don't be shy, join here: https://discord.gg/EMgGbDceNQ and follow here for daily tips and tricks: https://x.com/Scrapling_dev",
-      "stars": 93773,
+      "stars": 95360,
       "today": "1658",
-      "forks": 9848,
+      "forks": 9998,
       "created": "2024-10-13",
       "license": "BSD-3-Clause",
       "topics": [
@@ -359,57 +365,37 @@
       ],
       "homepage": "https://scrapling.readthedocs.io/en/latest/",
       "url": "https://github.com/D4Vinci/Scrapling",
-      "summary": "Scrapling 是一个全功能的 Python 网页抓取框架，旨在处理从单页请求到大规模并发爬虫的所有工作流。它集成了快速 HTTP 请求、反检测浏览器、JavaScript 渲染、代理轮换、自动限速以及数据导出功能。用户可以通过 Python 代码、命令行或 AI 代理来使用它。",
-      "judgment": "值得抄作业，特别是需要对抗 Cloudflare 等高级反爬虫机制或集成 AI 代理时。",
-      "mechanics": [
-        "反检测浏览器技术：内置伪装技术，模拟真实浏览器指纹以绕过 Cloudflare Turnstile 等反爬虫检测。",
-        "并发爬虫架构：基于 Spider 类的异步/同步混合模式，支持代理轮换、自动限速和断点续爬。",
-        "多协议解析：支持 CSS 选择器、XPath、正则和自适应元素追踪，用于精准提取数据。",
-        "MCP 服务器集成：提供模型上下文协议（MCP）服务器，允许 AI 代理直接调用其抓取能力。",
-        "持久化会话：支持保持 Cookie 和会话状态，用于模拟登录后的状态抓取。"
-      ],
-      "scenarios": [
-        "绕过反爬虫检测：需要抓取受 Cloudflare 或类似 WAF 保护的网站时。",
-        "大规模数据采集：需要构建高并发爬虫进行全网数据采集或竞品分析。",
-        "动态内容渲染：需要抓取大量依赖 JavaScript 渲染或 API 调用的单页应用（SPA）。",
-        "AI Agent 辅助：开发者希望将网页抓取能力集成到 LLM（大语言模型）智能体中。"
-      ],
+      "summary": "",
+      "judgment": "🕷️ The BEST Web Scraping framework that handles everything from a single request to a full-scale crawl! Don't be shy, join here: https://discord.gg/EMgGbDceNQ and follow here for daily tips and tricks: https://x.com/Scrapling_dev",
+      "mechanics": [],
+      "scenarios": [],
       "readmeCN": ""
     },
     {
       "repo": "shiyu-coder/Kronos",
       "lang": "Python",
       "desc": "Kronos: A Foundation Model for the Language of Financial Markets",
-      "stars": 46241,
+      "stars": 46632,
       "today": "503",
-      "forks": 7624,
+      "forks": 7674,
       "created": "2025-07-01",
       "license": "MIT",
       "topics": [],
       "homepage": "",
       "url": "https://github.com/shiyu-coder/Kronos",
-      "summary": "这是一个专为金融K线（蜡烛图）数据设计的开源基础模型，通过将连续的OHLCV（开高低收量）数据转化为离散Token，再利用自回归Transformer进行预测。它支持从Hugging Face加载模型，使用`KronosPredictor`类直接对历史数据进行预处理和未来价格预测。",
-      "judgment": "适合金融量化研究和中小规模预测任务，但512的上下文窗口限制了长周期分析能力。",
-      "mechanics": [
-        "两阶段框架：先通过专用分词器将连续的OHLCV数据量化为分层离散Token，再喂给自回归Transformer。",
-        "自回归预训练：基于Transformer架构，模仿语言模型预测下一个Token，从而预测K线走势。",
-        "概率采样机制：支持Temperature和Top-p采样，输出预测路径而非单一确定性结果。",
-        "上下文窗口限制：Small和Base模型最大上下文长度为512，Mini为2048，超长序列会被截断。"
-      ],
-      "scenarios": [
-        "金融时间序列预测：利用历史K线数据预测未来一段时间的开盘价、收盘价、成交量等。",
-        "量化策略回测：将模型输出作为策略输入，评估交易策略的有效性。",
-        "金融大模型研究：探索将LLM范式（Token化+Transformer）应用于非自然语言的时间序列数据。"
-      ],
+      "summary": "",
+      "judgment": "Kronos: A Foundation Model for the Language of Financial Markets",
+      "mechanics": [],
+      "scenarios": [],
       "readmeCN": ""
     },
     {
       "repo": "Donchitos/Claude-Code-Game-Studios",
       "lang": "Shell",
       "desc": "Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a complete coordination system mirroring real studio hierarchy.",
-      "stars": 34191,
-      "today": "1181",
-      "forks": 4567,
+      "stars": 34942,
+      "today": "1182",
+      "forks": 4622,
       "created": "2026-02-12",
       "license": "MIT",
       "topics": [
@@ -424,23 +410,10 @@
       ],
       "homepage": "",
       "url": "https://github.com/Donchitos/Claude-Code-Game-Studios",
-      "summary": "这是一个将 Claude Code 会话转化为结构化游戏开发工作室的配置套件。它通过 49 个专业化 AI 代理和 74 个斜杠命令（如 `/design-system`、`/dev-story`），强制执行从需求分析到发布的全流程管理。它要求在编写代码前必须产出设计文档（GDD、ADR 等），并在代码提交前进行自动化的质量门禁检查。",
-      "judgment": "工程化极强的 AI 游戏开发框架，适合追求流程规范的开发者，但需注意成本与人工复核。",
-      "mechanics": [
-        "基于 Claude Code 的 Agent 协作架构，分为导演、部门主管、专家三级层级",
-        "74个斜杠命令覆盖设计、架构、QA、发布全流程",
-        "15个自动化 Hooks 实现提交、资产变更、设计文档读写时的自动验证",
-        "14条路径范围的编码标准规则",
-        "62个文档模板（GDD、ADR、UX规范等）",
-        "支持 Godot/Unity/Unreal 三大引擎的专用代理配置",
-        "强制执行“先文档后代码”及“游戏运行验证”的质量闭环"
-      ],
-      "scenarios": [
-        "独立开发者希望用 AI 模拟专业团队流程",
-        "使用 Claude Code 进行游戏开发的团队需要结构化工作流",
-        "需要特定引擎（Godot/Unity/Unreal）适配的开发者",
-        "希望自动化 QA 检查和代码审查的团队"
-      ],
+      "summary": "",
+      "judgment": "Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a complete coordination system mirroring real studio hierarchy.",
+      "mechanics": [],
+      "scenarios": [],
       "readmeCN": ""
     }
   ]
