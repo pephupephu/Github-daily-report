@@ -47,3 +47,4 @@
 - [daily-2026-11-03](./daily-2026-11-03.md) — 榜首 vercel-labs/agent-desktop (+2275)
 - [daily-2026-11-03](./daily-2026-11-03.md) — 榜首 thedotmack/claude-mem (+1138)
 - [daily-2026-11-04](./daily-2026-11-04.md) — 榜首 thedotmack/claude-mem (+1139)
+- [daily-2026-11-05](./daily-2026-11-05.md) — 榜首 NVIDIA/auto-ontology (+2050)
