@@ -642,6 +642,19 @@ await withBrowser(async () => {
   await page.close();
 });
 
+// 质量门槛：AI 分析失败、又没有一句像样中文介绍的，直接拿掉——宁缺毋滥，不浪费读者时间
+function substantive(r) {
+  if (r.ai?.what && r.ai.what.length > 20) return true;          // AI 讲出了实质内容
+  const sum = String(r.summary || "").replace(/分析失败|HTTP 4\d\d/g, "").trim();
+  const cdesc = /[\u4e00-\u9fa5]{4,}/.test(r.desc || "") ? r.desc : "";
+  return (sum.length >= 20) || (cdesc.length >= 20);             // 有一段像样的中文才算数
+}
+const before = data.repos.length;
+data.repos = data.repos.filter(substantive);
+const dropped = before - data.repos.length;
+if (dropped) console.error(`[文章] 质量门槛：剔除 ${dropped} 个无实质介绍的仓库（AI 分析失败且无可用中文简介）`);
+if (data.featured) data.featured = data.featured.filter(substantive);
+
 mkdirSync(join(ROOT, "out"), { recursive: true });
 const html = buildHTML(data, cidMap);
 const file = join(ROOT, "out", `article-${data.day}.html`);
