@@ -735,6 +735,20 @@ const docxBuf = await Packer.toBuffer(buildDocx(data, cidMap));
 writeFileSync(join(ROOT, "out", `article-${data.day}.docx`), docxBuf);
 console.error(`[文章] 已生成 ${file} 与 article-${data.day}.docx`);
 
+// 微信直发版：把 cid 图片内联成 base64（浏览器复制时图片随剪贴板一起走），贴进公众号编辑器图就自动进来
+const wechatHtml = html.replace(/src="cid:([^"]+)"/g, (m, cid) => {
+  const v = cidMap[cid];
+  if (!v?.path) return m;
+  try {
+    const ext = (v.path.split(".").pop() || "png").toLowerCase();
+    const mime = ext === "jpg" ? "jpeg" : ext === "jpeg" || ext === "png" || ext === "gif" || ext === "webp" ? ext : "png";
+    const b64 = readFileSync(v.path).toString("base64");
+    return `src="data:image/${mime};base64,${b64}"`;
+  } catch { return m; }
+});
+writeFileSync(join(ROOT, "out", `article-${data.day}.wechat.html`), wechatHtml);
+console.error(`[文章] 已生成微信直发版 out/article-${data.day}.wechat.html（图片已内联 base64，浏览器全选复制直接粘进公众号）`);
+
 const user = process.env.MAIL_USER, pass = process.env.MAIL_PASS;
 if (!user || !pass) { console.error("[文章] 未配置 MAIL_USER/MAIL_PASS，跳过发信"); process.exit(0); }
 const port = Number(process.env.MAIL_PORT || 465);
