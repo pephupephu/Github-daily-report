@@ -702,6 +702,12 @@ await withBrowser(async () => {
 
 // 质量门槛：AI 分析失败、又没有一句像样中文介绍的，直接拿掉——宁缺毋滥，不浪费读者时间
 function substantive(r) {
+  // 空壳：正文该讲实质的核心字段全是占位符"无"，即使有 one-line 简介也不够——拿掉
+  const emptyShell = ["what", "core", "case"].every((k) => {
+    const v = String(r.ai?.[k] || "").trim();
+    return !v || v === "无" || v.length < 4;
+  });
+  if (emptyShell) return false;
   if (r.ai?.what && r.ai.what.length > 20) return true;          // AI 讲出了实质内容
   const sum = String(r.summary || "").replace(/分析失败|HTTP 4\d\d/g, "").trim();
   const cdesc = /[\u4e00-\u9fa5]{4,}/.test(r.desc || "") ? r.desc : "";

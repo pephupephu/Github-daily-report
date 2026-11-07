@@ -23,7 +23,9 @@ jobs:
           cache: npm
       - run: npm ci
       - name: 装 Playwright 浏览器（抓中文入口 + 截图）
-        run: npx playwright install chromium
+        # 用项目自带的 playwright-core 装浏览器，版本与 article.mjs 的 import("playwright-core") 严格一致
+        # （不能 npx playwright install，它会装最新 CLI 的浏览器版本，导致 headless shell 版本错位、launch 崩）
+        run: npx playwright-core install chromium
 
       - name: 生成报告
         env:
