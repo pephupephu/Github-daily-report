@@ -269,8 +269,22 @@ async function analyze(repo) {
       一句话判断: j.一句话判断 || "",
     };
   } catch (e) {
-    process.stderr.write(`[分析] ${repo.repo} 失败：${e.message.slice(0, 100)}\n`);
-    return { ...EMPTY, 是什么: "", 一句话判断: repo.desc };
+    // LLM 限流/失败时降级到机翻，别让该仓库变成无内容被质量门槛剔除——保证文章不单薄
+    process.stderr.write(`[分析] ${repo.repo} 失败：${e.message.slice(0, 100)} → 降级机翻\n`);
+    try {
+      const descT = await translate(repo.desc);
+      const r = await translateReadme(repo);
+      return {
+        ...EMPTY,
+        是什么: descT || repo.desc,
+        一句话判断: descT || repo.desc,
+        readmeCN: r.text,
+        truncated: r.truncated,
+        降级: true,
+      };
+    } catch {
+      return { ...EMPTY, 是什么: "", 一句话判断: repo.desc };
+    }
   }
 }
 
