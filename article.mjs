@@ -8,7 +8,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createTransport } from "nodemailer";
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import { Document, Packer, Paragraph, TextRun, ImageRun } from "docx";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const UA = { "user-agent": "gh-daily-article" };
@@ -534,12 +534,27 @@ ${(data.featured && data.featured.length) ? `
 
 // ---------- Word 文稿（.docx）----------
 
-function buildDocx(data) {
+function buildDocx(data, cidMap) {
   const { day, repos } = data;
   const total = repos.reduce((s, r) => s + (+String(r.today || 0).replace(/,/g, "") || 0), 0);
   const clean = (s) => deAI(String(s ?? "")).replace(/\*\*/g, "").trim();
   const para = (text, { bold = false, size = 21, color, before = 0, after = 140 } = {}) =>
     new Paragraph({ spacing: { before, after }, children: [new TextRun({ text, bold, size, color, font: "微软雅黑" })] });
+  // 每个仓库的截图路径：cidMap[r.repo] 是 cid，cidMap[cid].path 是本地文件；自动量宽度等比缩放
+  const imgPara = (r) => {
+    const cid = r.shotCid || cidMap[r.repo];
+    const hit = cid && cidMap[cid];
+    if (!hit?.path) return [];
+    try {
+      const buf = readFileSync(hit.path);
+      const type = String(hit.path).split(".").pop().toLowerCase().replace("jpeg", "jpg");
+      if (!["png", "jpg", "gif", "bmp"].includes(type)) return [];
+      return [new Paragraph({
+        spacing: { before: 60, after: 120 },
+        children: [new ImageRun({ data: buf, type, transformation: { width: 520, height: 320 } })],
+      })];
+    } catch { return []; }
+  };
 
   const children = [
     para(`GitHub 今日热榜 · ${CN_DATE(day)}`, { bold: true, size: 36, after: 80 }),
@@ -552,18 +567,41 @@ function buildDocx(data) {
     children.push(para(`${r.lang || ""} · ${(r.stars || 0).toLocaleString()} star · 今日 +${r.today || 0}`, { color: "9A9A9A", size: 18, after: 120 }));
     children.push(para(clean(ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo))), { bold: true }));
     children.push(para(clean(ai?.what || CN(r.summary) || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r))));
+    // 演示截图直接嵌进 Word，方便打开即看图
+    children.push(...imgPara(r));
     const cs = ai?.case || r.scenarios?.[0];
     if (cs) children.push(para(`放进一个真实场景：${clean(cs)}`));
     const core = ai?.core || (r.mechanics?.length ? r.mechanics.join("；") : "");
     if (core) children.push(para(`它是怎么做到的：${clean(core)}`));
     const who = ai?.who || r.scenarios?.[1];
     if (who) children.push(para(`适合谁：${clean(who)}`));
+    // 演示视频：Word 内嵌播放不现实，放可点击链接（微信发视频也走链接/上传）
+    const vids = (r.videos || []).slice(0, 3);
+    if (vids.length) {
+      const labels = vids.map((v) => `${v.type === "file" ? "演示动图" : "演示视频"} → ${v.url}`).join("\n");
+      children.push(para(labels, { size: 18, color: "576B95", after: 60 }));
+    }
     children.push(para(`仓库地址：https://github.com/${r.repo}`, { color: "576B95", size: 19, after: 60 }));
     children.push(para(`交给 Agent 安装：帮我克隆 https://github.com/${r.repo}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用`, { size: 19, after: 220 }));
   });
 
   children.push(para("每天 9:17 · 顶级 AI 开源，说人话", { bold: true, size: 22, before: 300, after: 60 }));
   children.push(para(`生成时间：${new Date().toLocaleString("zh-CN")}`, { color: "9A9A9A", size: 18 }));
+
+  // 「值得关注」板块也进 Word（和 HTML 对齐）
+  const feat = (data.featured || []).filter((r) => r && r.repo);
+  if (feat.length) {
+    children.push(para("🔥 本周值得关注 · 还没上热榜的好东西", { bold: true, size: 26, color: "07A050", before: 360, after: 100 }));
+    feat.forEach((r, i) => {
+      const ai = r.ai;
+      children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 26, color: "07A050", before: 220, after: 60 }));
+      children.push(para(`${(r.stars || 0).toLocaleString()} star · ${r.lang || ""}`, { color: "9A9A9A", size: 18, after: 100 }));
+      children.push(para(clean(ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} star，值得放进收藏。`), { bold: true }));
+      children.push(para(clean(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))));
+      children.push(...imgPara(r));
+      children.push(para(`仓库地址：https://github.com/${r.repo}`, { color: "576B95", size: 19, after: 200 }));
+    });
+  }
 
   return new Document({ sections: [{ children }] });
 }
@@ -663,7 +701,7 @@ mkdirSync(join(ROOT, "out"), { recursive: true });
 const html = buildHTML(data, cidMap);
 const file = join(ROOT, "out", `article-${data.day}.html`);
 writeFileSync(file, html);
-const docxBuf = await Packer.toBuffer(buildDocx(data));
+const docxBuf = await Packer.toBuffer(buildDocx(data, cidMap));
 writeFileSync(join(ROOT, "out", `article-${data.day}.docx`), docxBuf);
 console.error(`[文章] 已生成 ${file} 与 article-${data.day}.docx`);
 
