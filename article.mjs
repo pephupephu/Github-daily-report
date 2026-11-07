@@ -106,9 +106,9 @@ async function analyzeOne(r, md, usedHooks = []) {
     try {
       return await callAI(prompt);
     } catch (e) {
-      if (attempt < 3 && RATE_LIMITED.test(e.message)) {
+      if (attempt < 3 && (RATE_LIMITED.test(e.message) || /aborted|timeout/i.test(e.message))) {
         const wait = [25000, 60000, 120000][attempt];
-        process.stderr.write(`[大模型] ${r.repo} 被限流，${wait / 1000}s 后重试\n`);
+        process.stderr.write(`[大模型] ${r.repo} 被限流/超时，${wait / 1000}s 后重试\n`);
         await new Promise((s) => setTimeout(s, wait));
         continue;
       }
