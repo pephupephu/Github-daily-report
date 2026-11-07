@@ -358,9 +358,9 @@ const prev = prevFile
 const newcomers = repos.map((r) => r.repo).filter((n) => !prev.includes(n));
 
 const stats = [
-  `在榜项目 **${repos.length}** 个，今日新增 star 合计 **+${total.toLocaleString()}**`,
+  `在榜项目 **${repos.length}** 个，今日新增 ★ 合计 **+${total.toLocaleString()}**`,
   fresh.length ? `**${fresh.length}/${repos.length}** 是 120 天内新建的仓库（${fresh.map((r) => r.repo.split("/")[1]).join("、")}）—— 冷启动极快` : "在榜项目全部已存在超过半年，没有新项目冒头",
-  maxed.length ? `**${maxed.length}** 个项目单日破 2000 star：${maxed.map((r) => `${r.repo}（+${r.today}）`).join("、")}` : "无单日破 2000 的爆发项目",
+  maxed.length ? `**${maxed.length}** 个项目单日破 2000 ★：${maxed.map((r) => `${r.repo}（+${r.today}）`).join("、")}` : "无单日破 2000 的爆发项目",
   prev.length ? (newcomers.length ? `对比上次榜单，**新面孔 ${newcomers.length}** 个：${newcomers.join("、")}` : "与上次榜单完全一致，无新项目") : "首次生成，下次起会做对比",
   `语言分布：${Object.entries(repos.reduce((m, r) => ((m[r.lang] = (m[r.lang] || 0) + 1), m), {})).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(" · ")}`,
 ];

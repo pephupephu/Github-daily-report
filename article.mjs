@@ -120,10 +120,10 @@ async function analyzeOne(r, md, usedHooks = []) {
 
 // AI 缺席时的轮换兜底开场，只陈述榜单事实，不喊口号
 const FALLBACK_HOOKS = [
-  (n, name) => `${name} 今天单日 **+${n} star**。`,
-  (n, name) => `**+${n} star** 一天，${name} 在解决一个具体问题。`,
-  (n, name) => `${name} 今天的榜单成绩：**+${n} star**。`,
-  (n, name) => `单日 **+${n} star** 的 ${name}，看看它对你有没有用。`,
+  (n, name) => `${name} 今天单日 **+${n}★**。`,
+  (n, name) => `**+${n}★** 一天，${name} 在解决一个具体问题。`,
+  (n, name) => `${name} 今天的榜单成绩：**+${n}★**。`,
+  (n, name) => `单日 **+${n}★** 的 ${name}，看看它对你有没有用。`,
 ];
 
 // ---------- 链接抽取 ----------
@@ -457,7 +457,7 @@ function section(r, i, shotCid) {
   <h2 style="margin:0 0 12px;display:flex;align-items:center;font-size:19px;font-weight:700;color:#1a1a1a;line-height:1.4">
     <span style="display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border-radius:8px;background:linear-gradient(135deg,#07c160,#0aa8a0);color:#fff;font-size:15px;font-weight:800;margin-right:10px">${String(i + 1).padStart(2, "0")}</span>
     <span style="margin-right:10px">${esc(repoShort(r.repo))}</span>
-    <small style="color:#9a9a9a;font-weight:400;font-size:12px">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} star · 今日 ${fmtStars(r.today)}</small>
+    <small style="color:#9a9a9a;font-weight:400;font-size:12px">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</small>
   </h2>
   <p ${p}"><b style="color:#1a1a1a">${md(hook)}</b></p>
   <p ${p}">${md(what)}</p>
@@ -511,7 +511,7 @@ function buildHTML(data, cidMap) {
 <div style="margin:0 -20px;padding:28px 20px 24px;background:linear-gradient(135deg,#07c160 0%,#0aa8a0 60%,#0a8f9e 100%);color:#fff">
   <p style="margin:0 0 8px;font-size:12px;opacity:.85;letter-spacing:1px">GitHub DAILY DIGEST · ${CN_DATE(day)}</p>
   <h1 style="margin:0 0 10px;font-size:26px;font-weight:800;line-height:1.35">GitHub 今日热榜</h1>
-  <p style="margin:0;font-size:13px;line-height:1.8;opacity:.95">今天 ${repos.length} 个项目上榜，累计新增 ${total.toLocaleString()} star。
+  <p style="margin:0;font-size:13px;line-height:1.8;opacity:.95">今天 ${repos.length} 个项目上榜，累计新增 ${total.toLocaleString()} ★。
   ${cn ? `其中 ${cn} 个有 <b>中文体验入口</b>` : ""}。点击链接交给你的 Agent 部署即可。</p>
 </div>
 
@@ -523,7 +523,7 @@ ${top ? `<section style="background:linear-gradient(135deg,#07c160,#0aa8a0);colo
   <p style="margin:0 0 8px;font-size:12px;opacity:.85;letter-spacing:1px">🔥 今日最热</p>
   <p style="margin:0 0 10px;font-size:22px;font-weight:800;line-height:1.4">${esc(repoShort(top.repo))}</p>
   <p style="margin:0 0 12px;font-size:14px;line-height:1.8;opacity:.96">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
-  <div style="display:inline-block;background:rgba(255,255,255,.16);border-radius:20px;padding:4px 14px;font-size:12px">今日 +${fmtStars(top.today)} star · 总 ${(top.stars || 0).toLocaleString()} star</div>
+  <div style="display:inline-block;background:rgba(255,255,255,.16);border-radius:20px;padding:4px 14px;font-size:12px">今日 +${fmtStars(top.today)} ★ · 总 ${(top.stars || 0).toLocaleString()} ★</div>
 </section>` : ""}
 
 ${sections}
@@ -531,16 +531,16 @@ ${sections}
 ${(data.featured && data.featured.length) ? `
 <section style="margin:0 0 34px;padding:22px 20px;background:linear-gradient(135deg,#f0faf3,#e8f6ff);border-radius:14px;border:1px solid #d8f0e0">
   <h2 style="margin:0 0 8px;font-size:18px;font-weight:800;color:#1a1a1a">🔥 本周值得关注 · 还没上热榜的好东西</h2>
-  <p style="margin:0 0 16px;font-size:13px;color:#5a6472;line-height:1.7">热门榜只盯短期 star 涨速，下面这些是权威机构最近开源、质量在线、但可能还没被捧上热榜的仓库——真正想抄作业的先看这里。</p>
+  <p style="margin:0 0 16px;font-size:13px;color:#5a6472;line-height:1.7">热门榜只盯短期★涨速，下面这些是权威机构最近开源、质量在线、但可能还没被捧上热榜的仓库——真正想抄作业的先看这里。</p>
   ${data.featured.map((r, i) => {
     const ai = r.ai;
-    const hook = ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} star，值得放进收藏。`;
+    const hook = ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} ★，值得放进收藏。`;
     return `
   <div style="margin:0 0 14px;padding:16px 18px;background:#fff;border-radius:10px;border:1px solid #e6f3eb;box-shadow:0 1px 6px rgba(16,24,40,.05)">
     <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background:linear-gradient(135deg,#07c160,#0aa8a0);color:#fff;border-radius:6px;padding:2px 8px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#1a1a1a;text-decoration:none">${esc(r.repo)}</a></div>
     <p style="margin:0 0 8px;font-size:13px;line-height:1.8;color:#3a3a3a"><b>${md(hook)}</b></p>
     <p style="margin:0 0 10px;font-size:13px;line-height:1.8;color:#5a6472">${md(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))}</p>
-    <div style="margin:0;font-size:12px;color:#8a8a8a">${(r.stars || 0).toLocaleString()} star · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#576b95;font-weight:600">仓库 →</a></div>
+    <div style="margin:0;font-size:12px;color:#8a8a8a">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#576b95;font-weight:600">仓库 →</a></div>
   </div>`;
   }).join("")}
 </section>` : ""}
@@ -584,13 +584,13 @@ function buildDocx(data, cidMap) {
 
   const children = [
     para(`GitHub 今日热榜 · ${CN_DATE(day)}`, { bold: true, size: 36, after: 80 }),
-    para(`今日 ${repos.length} 个项目，累计新增 ${total.toLocaleString()} star`, { color: "8A8A8A", size: 20, after: 240 }),
+    para(`今日 ${repos.length} 个项目，累计新增 ${total.toLocaleString()} ★`, { color: "8A8A8A", size: 20, after: 240 }),
   ];
 
   repos.forEach((r, i) => {
     const ai = r.ai;
     children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 28, color: "07A050", before: 240, after: 60 }));
-    children.push(para(`${r.lang || ""} · ${(r.stars || 0).toLocaleString()} star · 今日 +${r.today || 0}`, { color: "9A9A9A", size: 18, after: 120 }));
+    children.push(para(`${r.lang || ""} · ${(r.stars || 0).toLocaleString()} ★ · 今日 +${r.today || 0}`, { color: "9A9A9A", size: 18, after: 120 }));
     children.push(para(clean(ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo))), { bold: true }));
     children.push(para(clean(ai?.what || CN(r.summary) || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r))));
     // 演示截图直接嵌进 Word，方便打开即看图
@@ -621,8 +621,8 @@ function buildDocx(data, cidMap) {
     feat.forEach((r, i) => {
       const ai = r.ai;
       children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 26, color: "07A050", before: 220, after: 60 }));
-      children.push(para(`${(r.stars || 0).toLocaleString()} star · ${r.lang || ""}`, { color: "9A9A9A", size: 18, after: 100 }));
-      children.push(para(clean(ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} star，值得放进收藏。`), { bold: true }));
+      children.push(para(`${(r.stars || 0).toLocaleString()} ★ · ${r.lang || ""}`, { color: "9A9A9A", size: 18, after: 100 }));
+      children.push(para(clean(ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} ★，值得放进收藏。`), { bold: true }));
       children.push(para(clean(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))));
       children.push(...imgPara(r));
       children.push(para(`仓库地址：https://github.com/${r.repo}`, { color: "576B95", size: 19, after: 200 }));
