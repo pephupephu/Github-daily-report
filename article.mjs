@@ -331,9 +331,19 @@ function videoBlock(videos) {
 
 let browser;
 async function withBrowser(fn) {
-  const { chromium } = await import("playwright-core");
-  browser = await chromium.launch({ args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"] });
-  try { return await fn(); } finally { await browser.close(); }
+  // 浏览器缺失（版本错位/下载失败）时降级：跳过 SPA 截图，但英雄图(HTTP 直抓)+AI 分析照常，文章仍能出，不整崩
+  let page = null;
+  try {
+    const { chromium } = await import("playwright-core");
+    browser = await chromium.launch({ args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"] });
+    page = await browser.newPage();
+    page.setViewportSize({ width: 1280, height: 800 });
+  } catch (e) {
+    browser = null;
+    page = null;
+    process.stderr.write(`[浏览器] 无法启动（${e.message.slice(0, 90)}）→ 降级：本次跳过 SPA 截图，仅用 README 英雄图\n`);
+  }
+  try { return await fn(page); } finally { if (browser) await browser.close(); }
 }
 
 async function probeAndShot(page, demoUrl, repo) {
@@ -632,9 +642,7 @@ console.error(`[文章] 处理 ${data.repos.length} 个项目…`);
 if (!LLM) console.error("[警告] 未配置 OPENAI_API_KEY —— 本次为简版文章。去 GitHub 仓库 Settings > Secrets > Actions 添加 OPENAI_API_KEY");
 let cidMap = {};
 let usedHooks = [];
-await withBrowser(async () => {
-  const page = await browser.newPage();
-  page.setViewportSize({ width: 1280, height: 800 });
+await withBrowser(async (page) => {
   for (const [i, r] of data.repos.entries()) {
   const md = await readme(r.repo);
   r.links = classify(parseLinks(md), r.repo, r.homepage);
@@ -649,7 +657,7 @@ await withBrowser(async () => {
       r.shotCid = cid;
       cidMap[r.repo] = cid;
       cidMap[cid] = { path: heroPath };
-    } else if (!r.links.cnDemo.length) {
+    } else if (page && !r.links.cnDemo.length) {
       const targets = [...r.links.demo.slice(0, 1).map((l) => l.url), r.homepage].filter(Boolean);
       for (const cand of targets) {
         const hit = await probeAndShot(page, cand, r.repo);
@@ -664,7 +672,7 @@ await withBrowser(async () => {
           cidMap[cid] = { path: hit.shotPath };
         }
       }
-    } else {
+    } else if (page) {
       // 先真的打开中文入口再截图——此前直接截的 page 还停在上一仓库的页面，错图/空白都因这
       const hit = await probeAndShot(page, r.links.cnDemo[0].url, r.repo);
       if (hit.shotPath) {
@@ -697,7 +705,7 @@ await withBrowser(async () => {
     process.stderr.write(`  [值得关注] ${fi + 1}/${featured.length} ${r.repo} → AI:${r.ai ? "✓" : "✗"}\n`);
     await new Promise((s) => setTimeout(s, 10000));
   }
-  await page.close();
+  if (page) await page.close();
 });
 
 // 质量门槛：AI 分析失败、又没有一句像样中文介绍的，直接拿掉——宁缺毋滥，不浪费读者时间

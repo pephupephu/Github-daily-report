@@ -25,7 +25,14 @@ jobs:
       - name: 装 Playwright 浏览器（抓中文入口 + 截图）
         # 用项目自带的 playwright-core 装浏览器，版本与 article.mjs 的 import("playwright-core") 严格一致
         # （不能 npx playwright install，它会装最新 CLI 的浏览器版本，导致 headless shell 版本错位、launch 崩）
-        run: npx playwright-core install chromium
+        # 网络不稳时 headless shell 可能下载失败，重试到装出为止；若最终仍缺，article.mjs 会降级成纯 HTTP 英雄图继续出稿
+        run: |
+          for i in 1 2 3; do
+            npx playwright-core install chromium && break
+            echo "浏览器下载第 $i 次失败，重试"
+            sleep 10
+          done
+          npx playwright-core install --list 2>/dev/null || true
 
       - name: 生成报告
         env:
