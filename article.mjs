@@ -758,6 +758,9 @@ const attachments = Object.entries(cidMap)
   .filter(([k]) => k.startsWith("shot-"))
   .map(([k, v]) => ({ filename: `${k}.${(v.path.split(".").pop() || "png").toLowerCase()}`, path: v.path, cid: k }));
 attachments.push({ filename: `GitHub日报-${data.day}.docx`, content: docxBuf });
+// 微信直发版也作为附件：收邮件即拿到内联图片的 html，直接 Chrome 打开复制进公众号即可
+const wechatFile = join(ROOT, "out", `article-${data.day}.wechat.html`);
+attachments.push({ filename: `公众号直发-${data.day}.wechat.html`, content: readFileSync(wechatFile) });
 
 try {
   await transport.sendMail({
