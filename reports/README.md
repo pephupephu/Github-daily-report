@@ -51,3 +51,4 @@
 - [daily-2026-11-05](./daily-2026-11-05.md) — 榜首 NVIDIA/auto-ontology (+2707)
 - [daily-2026-11-07](./daily-2026-11-07.md) — 榜首 zed-industries/zed (+306)
 - [daily-2026-11-07](./daily-2026-11-07.md) — 榜首 vercel-labs/agent-browser (+180)
+- [daily-2026-11-07](./daily-2026-11-07.md) — 榜首 vercel-labs/agent-browser (+180)
