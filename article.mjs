@@ -15,13 +15,16 @@ const UA = { "user-agent": "gh-daily-article" };
 
 // ---------- 大模型逐个深度分析（OpenAI 兼容协议；默认智谱 glm-4-flash 免费档）----------
 
-const LLM = process.env.OPENAI_API_KEY
+const LLM_KEYS = [process.env.OPENAI_API_KEY, process.env.OPENAI_API_KEY_2, process.env.OPENAI_API_KEY_3, process.env.OPENAI_API_KEY_4, process.env.OPENAI_API_KEY_5]
+  .filter(Boolean);
+const LLM = LLM_KEYS.length
   ? {
-      key: process.env.OPENAI_API_KEY,
+      keys: LLM_KEYS,
       base: (process.env.OPENAI_BASE_URL || "https://open.bigmodel.cn/api/paas/v4").replace(/\/+$/, ""),
       model: process.env.OPENAI_MODEL || "glm-4.7-flash",
     }
   : null;
+let LLM_KEY_IDX = 0; // 轮换指针：摊平多账号限流
 
 const AI_PROMPT = `你是资深公众号科技编辑，为一个 GitHub 热门项目写中文深度解读。要求像真人作者写的：口语化、句子完整通顺、有具体细节、不说空话、不堆术语（出现专业词就用半句话解释它对读者的意义）。
 
@@ -43,38 +46,51 @@ hook（开头）是全文胜负手：读者看完这一句才决定要不要往�
 在 what / case / core 的内容里，把关键名词、数字、量化收益用 **双星号** 包起来标黑（如 **7 美元**、**3295 个可编辑对象**、**一块 ESP32-S3 开发板**），每段 1 到 3 处，不要整句加粗。`;
 
 async function callAI(prompt) {
-  const res = await fetch(`${LLM.base}/chat/completions`, {
-    method: "POST",
-    headers: { "content-type": "application/json", authorization: `Bearer ${LLM.key}` },
-    signal: AbortSignal.timeout(120000),
-    body: JSON.stringify({
-      model: LLM.model,
-      temperature: 0.85,
-      messages: [
-        { role: "system", content: "你是写得一手好中文的公众号科技编辑：句子通顺、口语但有信息量、只讲事实不喊口号。只输出 JSON。" },
-        { role: "user", content: prompt },
-      ],
-    }),
-  });
-  const text = await res.text();
-  if (!res.ok) throw new Error(`HTTP ${res.status} ${text.slice(0, 150)}`);
-  // 正确解包：外层是 API 信封，正文在 choices[0].message.content，正文里可能还有 ```json 围栏
-  let content = "";
-  try { content = JSON.parse(text)?.choices?.[0]?.message?.content || ""; } catch { /* 非标准响应,退回原文 */ }
-  if (!content) content = text;
-  const m = content.match(/\{[\s\S]*\}/);
-  if (!m) throw new Error(`返回无 JSON 内容：${content.slice(0, 120)}`);
-  const raw = JSON.parse(m[0]);
-  const out = {
-    hook: String(raw.hook || "").trim(),
-    oneliner: String(raw.oneliner || "").trim(),
-    what: String(raw.what || "").trim(),
-    case: String(raw.case || raw.usecases?.[0] || "").trim(),
-    core: String(raw.core || "").trim(),
-    who: String(raw.who || "").trim(),
-  };
-  if (!out.hook && !out.what) throw new Error("hook/what 均为空");
-  return out;
+  // 多 key 轮换：1305 限流时换下一个 key 重试，摊平负载
+  for (let k = 0; k < LLM.keys.length + 2; k++) {
+    const key = LLM.keys[LLM_KEY_IDX % LLM.keys.length];
+    LLM_KEY_IDX++;
+    const res = await fetch(`${LLM.base}/chat/completions`, {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
+      signal: AbortSignal.timeout(120000),
+      body: JSON.stringify({
+        model: LLM.model,
+        temperature: 0.85,
+        messages: [
+          { role: "system", content: "你是写得一手好中文的公众号科技编辑：句子通顺、口语但有信息量、只讲事实不喊口号。只输出 JSON。" },
+          { role: "user", content: prompt },
+        ],
+      }),
+    });
+    const text = await res.text();
+    if (!res.ok) {
+      const msg = `HTTP ${res.status} ${text.slice(0, 150)}`;
+      if (/HTTP 429|1302|1305|速率|过大/.test(msg)) {
+        if (k < LLM.keys.length + 1) { process.stderr.write(`[大模型] 限流 → 换下一个 key\n`); continue; }
+        throw new Error(msg);
+      }
+      throw new Error(msg);
+    }
+    // 正确解包：外层是 API 信封，正文在 choices[0].message.content，正文里可能还有 ```json 围栏
+    let content = "";
+    try { content = JSON.parse(text)?.choices?.[0]?.message?.content || ""; } catch { /* 非标准响应,退回原文 */ }
+    if (!content) content = text;
+    const m = content.match(/\{[\s\S]*\}/);
+    if (!m) throw new Error(`返回无 JSON 内容：${content.slice(0, 120)}`);
+    const raw = JSON.parse(m[0]);
+    const out = {
+      hook: String(raw.hook || "").trim(),
+      oneliner: String(raw.oneliner || "").trim(),
+      what: String(raw.what || "").trim(),
+      case: String(raw.case || raw.usecases?.[0] || "").trim(),
+      core: String(raw.core || "").trim(),
+      who: String(raw.who || "").trim(),
+    };
+    if (!out.hook && !out.what) throw new Error("hook/what 均为空");
+    return out;
+  }
+  throw new Error("所有 key 均限流");
 }
 
 // 智谱免费档限流特征：HTTP 429 / code 1302(账户频率) / 1305(模型过载)，退避重试有效

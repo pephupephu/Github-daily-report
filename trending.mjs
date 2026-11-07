@@ -11,10 +11,14 @@ const ROOT = dirname(fileURLToPath(import.meta.url));
 const since = process.argv[2] || "daily";
 
 // 分析后端：自备 key（唯一可靠的 LLM 路径）。没 key 就降级到机器翻译。
-const LLM = process.env.OPENAI_API_KEY
-  ? { key: process.env.OPENAI_API_KEY, base: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1", model: process.env.OPENAI_MODEL || "gpt-4o-mini", how: "自备 key" }
+// 支持多 key 轮换（OPENAI_API_KEY / _2 / _3 …）：智谱免费档单账号限流，多账号轮流用摊平负载，减少 1305
+const LLM_KEYS = [process.env.OPENAI_API_KEY, process.env.OPENAI_API_KEY_2, process.env.OPENAI_API_KEY_3, process.env.OPENAI_API_KEY_4, process.env.OPENAI_API_KEY_5]
+  .filter(Boolean);
+const LLM = LLM_KEYS.length
+  ? { keys: LLM_KEYS, base: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1", model: process.env.OPENAI_MODEL || "gpt-4o-mini", how: `自备 key（${LLM_KEYS.length} 个轮换）` }
   : null;
 const HAS_LLM = !!LLM;
+let LLM_KEY_IDX = 0; // 轮换指针
 const UA = { "user-agent": "gh-trending-daily", "accept-language": "en-US,en" };
 const strip = (s) => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 const cn = (n) => (n == null ? "" : String(n).replace(/,/g, ""));
@@ -163,11 +167,14 @@ function extractJSON(text) {
 
 async function askJSON(system, user, temperature = 0.3) {
   let lastErr;
-  for (let attempt = 0; attempt < 3; attempt++) {
+  // 每次调用轮换起始 key，把请求摊到不同账号上
+  for (let attempt = 0; attempt < LLM.keys.length + 2; attempt++) {
+    const key = LLM.keys[LLM_KEY_IDX % LLM.keys.length];
+    LLM_KEY_IDX++;
     try {
       const res = await fetch(`${LLM.base}/chat/completions`, {
         method: "POST",
-        headers: { "content-type": "application/json", authorization: `Bearer ${LLM.key}` },
+        headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
         body: JSON.stringify({
           model: LLM.model,
           temperature,
@@ -187,8 +194,18 @@ async function askJSON(system, user, temperature = 0.3) {
       }
     } catch (e) {
       lastErr = e;
-      // 1302/1305 是智谱限流，需要更长的退避；其他错误 0.8s 级退避就够
-      const wait = /HTTP 429|1302|1305|速率|过大/.test(e.message) ? 15000 * (attempt + 1) : 800 * (attempt + 1);
+      // 1305/1302 是账号级限流 → 立刻换下一个 key 重试，不干等；只有 key 都试过才退避
+      if (/HTTP 429|1302|1305|速率|过大/.test(e.message)) {
+        if (attempt < LLM.keys.length + 1) {
+          process.stderr.write(`[大模型] ${String(e.message).slice(0, 60)} → 换下一个 key 重试\n`);
+          continue;
+        }
+        process.stderr.write(`[大模型] 全部 key 都限流，60s 后重试\n`);
+        await new Promise((r) => setTimeout(r, 60000));
+        continue;
+      }
+      const wait = 800 * (attempt + 1);
+      process.stderr.write(`[大模型] ${String(e.message).slice(0, 60)}，${wait / 1000}s 后重试\n`);
       await new Promise((r) => setTimeout(r, wait));
     }
   }

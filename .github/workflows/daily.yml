@@ -9,11 +9,12 @@ permissions:
 
 jobs:
   report:
-    # 同一时间只允许一个运行：防止手动连点时并行抢提交、连发多封邮件
+    # 同一时间只允许一个运行；改成排队不互杀，避免连点/并发把正在跑的运行杀掉导致前功尽弃
     concurrency:
       group: daily-report
-      cancel-in-progress: true
+      cancel-in-progress: false
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,6 +28,10 @@ jobs:
       - name: 生成报告
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || secrets.ANALYSIS_API_KEY }}
+          OPENAI_API_KEY_2: ${{ secrets.OPENAI_API_KEY_2 }}
+          OPENAI_API_KEY_3: ${{ secrets.OPENAI_API_KEY_3 }}
+          OPENAI_API_KEY_4: ${{ secrets.OPENAI_API_KEY_4 }}
+          OPENAI_API_KEY_5: ${{ secrets.OPENAI_API_KEY_5 }}
           OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4' }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'glm-4.7-flash' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,6 +40,10 @@ jobs:
       - name: 生成文章初稿
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || secrets.ANALYSIS_API_KEY }}
+          OPENAI_API_KEY_2: ${{ secrets.OPENAI_API_KEY_2 }}
+          OPENAI_API_KEY_3: ${{ secrets.OPENAI_API_KEY_3 }}
+          OPENAI_API_KEY_4: ${{ secrets.OPENAI_API_KEY_4 }}
+          OPENAI_API_KEY_5: ${{ secrets.OPENAI_API_KEY_5 }}
           OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4' }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'glm-4.7-flash' }}
           MAIL_USER: ${{ secrets.MAIL_USER }}
