@@ -39,9 +39,9 @@ hook（开头）是全文胜负手：读者看完这一句才决定要不要往�
 只输出 JSON（不要代码块、不要任何解释）：
 {"hook":"开头一句，30字内。直接给一个具体成果或场景：谁用它能做到什么，带关键数字或名词，让人一眼看到画面；禁止出现：爆火/火得有理由/涨得最凶/杀疯了/上榜/分享一个/今天看到/值得一看","oneliner":"18字内直戳它最牛的那一点：杀手锏能力/最抓眼的数字/别人做不到而它做到了，例如：本地跑通 70B 大模型；10 行代码生成整个后台；禁止'平台/框架/生态/无缝/赋能'，禁止写成'这是一个…工具'","what":"3到4句大白话，用普通人不写代码也能秒懂的方式讲透这个仓库最厉害的地方，落到一个具体的输入→输出例子。不要给固定骨架，不同仓库切入角度要各不相同（有的讲解决了谁的具体痛点，有的讲一个惊艳的成果，有的讲一个别的仓库做不到的点），只求每篇都新鲜、有它自己的味道","case":"2到3句一个贴合本仓库真实能力的运用案例。不要套固定结构，每次按这个仓库 README 里最能打的那个能力出发，写一个具体、能落地、别人真会遇到的场景。禁止用'老王''某前端''某程序员''某同事'这类泛指人名开场；禁止'先做A再做B''第一步第二步'这种流水账；禁止空泛的'方便了很多人''效率大增'；每个仓库的案例必须是它独有的、别仓库替代不了的","core":"3到4句讲清它是怎么做到的，点名关键部件、步骤和数据流向，说清为什么有效。不要套同一套写法，不同技术原理要用不同的表述。基于 README 事实，不编造","who":"适合谁用，直接说职业或场景（如'做内容排版的编辑''用电子表格记账的小生意人'）。禁止'热爱折腾的程序员''资深开发者'这类空身份，别给泛化人设"}
 
-全文对"完全不写代码的普通人"说人话。英文专业词一个都不许保留原样，必须翻成中文日常说法，翻不了就拆成大白话解释它管什么用。例如："Decoder-only Transformer"→"只看上文往下猜字的一个模型"、"Wayland 合成器"→"替系统画屏幕、排窗口的软件"、"MoE"→"平时只叫一部分脑子干活、省电"、"MCP"→"让两个软件能互相说话的接头"、"Tokenizer"→"把一句话切成一粒粒小词的切词器"。专有缩写（AI、GPU、手机、Windows）除外。凡是像"SDK/API/CLI/FFI/GGUF/Optuna/IPC/组件/算子/协议"这类读者会卡壳的词，要么换成人话，要么先给一个"说白了就是X"的括号解释，绝不允许原样扔出来。出现英文词必须紧跟着用中文说清楚它是什么。读者是不写代码的人也能看懂。
+全文对"完全不写代码的普通人"说人话。英文专业词一个都不许保留原样，必须翻成中文日常说法，翻不了就拆成大白话解释它管什么用。例如："Decoder-only Transformer"→"只看上文往下猜字的一个模型"、"Wayland 合成器"→"替系统画屏幕、排窗口的软件"、"MoE"→"平时只叫一部分脑子干活、省电"、"MCP"→"让两个软件能互相说话的接头"、"Tokenizer"→"把一句话切成一粒粒小词的切词器"。专有缩写（AI、GPU、手机、Windows）除外。凡是像"SDK/API/CLI/FFI/GGUF/Optuna/IPC/组件/算子/协议"这类读者会卡壳的词，要么换成人话，要么先给一个"说白了就是X"的括号解释，绝不允许原样扔出来。出现英文词必须紧跟着用中文说清楚它是什么。读者是不写代码的人也能看懂。编程语言名、命令行工具名、技术框架名（如 Rust、Shell、Python、npm、Docker、Kubernetes、前端框架名）一概不许原样出现，必须换成"一种主打安全的编程语言""一个命令行小工具""一个打包发布软件的工具"这种说人话的说法；实在绕不开就带括号解释它用来干嘛的。
 
-禁止 AI 腔套话，一次都不许出现：值得注意的是、总的来说、总而言之、不可否认、在当今、极大地、深入地、一站式、赋能、致力于、旨在、此外、然而、因此、从而、无缝衔接。写具体事、具体数字、具体动作。整篇各个仓库的写法要各不相同，绝不允许两篇开头相似、结构雷同，每个仓库都要有它自己的开头和展开方式。
+禁止 AI 腔套话，一次都不许出现：值得注意的是、总的来说、总而言之、不可否认、在当今、极大地、深入地、一站式、赋能、致力于、旨在、此外、然而、因此、从而、无缝衔接。写具体事、具体数字、具体动作。整篇各个仓库的写法要各不相同，绝不允许两篇开头相似、结构雷同，每个仓库都要有它自己的开头和展开方式。严禁空洞废话——像"它不是一个又大又全的东西，而是小而精""功能强大、性能优秀""它是为解决XX而生"这类不落地的形容一概不要，要说就说出它到底小在哪、精在哪、哪个具体点强，用能感知的细节或数字说话。
 
 在 what / case / core 的内容里，把关键名词、数字、量化收益用 **双星号** 包起来标黑（如 **7 美元**、**3295 个可编辑对象**、**一块 ESP32-S3 开发板**），每段 1 到 3 处，不要整句加粗。`;
 
@@ -427,38 +427,38 @@ function section(r, i, shotCid) {
   const img = shotCid ? `<img src="cid:${shotCid}" style="max-width:100%;border-radius:10px;margin:0 0 16px;display:block;box-shadow:0 4px 16px rgba(16,24,40,.08);border:1px solid #f0f1f3" alt="${esc(repoShort(r.repo))} 演示截图" />` : "";
   const vids = r.videos?.length ? videoBlock(r.videos) : "";
   const p = `style="margin:0 0 10px;font-size:15px;line-height:1.9;color:#3a3a3a"`;
-  // 小节标签：绿胶囊，给 case/core/who 一个统一视觉
-  const tag = (t) => `<span style="display:inline-block;background:#e8f7ee;color:#07a055;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:700;margin-right:8px">${t}</span>`;
+  // 小节标签：二次元粉紫胶囊，给 case/core/who 一个统一视觉
+  const tag = (t) => `<span style="display:inline-block;background:#ffe0f3;color:#c75bd6;border-radius:7px;padding:2px 9px;font-size:12px;font-weight:800;margin-right:8px">${t}</span>`;
 
   const links = [];
-  if (r.homepage) { try { links.push(`<a href="${esc(r.homepage)}" style="color:#576b95;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`); } catch {} }
-  r.links.cnDemo.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#fa5151;font-weight:700;text-decoration:none">中文体验 → ${esc(l.url)}</a>`));
-  r.links.demo.slice(0, 2).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#576b95;text-decoration:none">官方演示 → ${esc(l.url)}</a>`));
-  r.links.docs.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#576b95;text-decoration:none">文档 → ${esc(l.url)}</a>`));
-  r.links.paper.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#8a6d3b;text-decoration:none">论文 → ${esc(l.url)}</a>`));
+  if (r.homepage) { try { links.push(`<a href="${esc(r.homepage)}" style="color:#9b6cff;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`); } catch {} }
+  r.links.cnDemo.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#ff5c8a;font-weight:700;text-decoration:none">中文体验 → ${esc(l.url)}</a>`));
+  r.links.demo.slice(0, 2).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">官方演示 → ${esc(l.url)}</a>`));
+  r.links.docs.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">文档 → ${esc(l.url)}</a>`));
+  r.links.paper.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#b08ccd;text-decoration:none">论文 → ${esc(l.url)}</a>`));
 
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r));
-  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#f7fdf9;border:1px solid #dff3e8;border-radius:10px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("真实场景")}${md(ai?.case || r.scenarios[0])}</div>` : "";
-  const coreHtml = (ai?.core || r.mechanics?.length) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#f7f9fb;border:1px solid #eceef1;border-radius:10px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
-  const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#fbf7f0;border:1px solid #f1e6d6;border-radius:10px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
-  const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:12px 14px;background:#f7f8fa;border-radius:10px;font-size:13px;color:#5a6472;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
+  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("真实场景")}${md(ai?.case || r.scenarios[0])}</div>` : "";
+  const coreHtml = (ai?.core || r.mechanics?.length) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#f6f2ff;border:1px solid #e6dbff;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
+  const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#fff4f2;border:1px solid #ffded8;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
+  const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:12px 14px;background:#fbf3ff;border-radius:12px;font-size:13px;color:#b08ccd;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
   // 收尾上手区：仓库地址 + 一句可直接复制给任意 AI Agent 的安装提示词
   const agentBox = `
-<div style="margin:16px 0 0;padding:14px 16px;background:linear-gradient(135deg,#f7fdf9,#eef8f2);border:1px solid #d8f0e0;border-radius:12px;font-size:14px;line-height:2;color:#3a3a3a">
-  <b style="color:#1a1a1a">仓库地址：</b><a href="https://github.com/${esc(r.repo)}" style="color:#576b95;text-decoration:none">github.com/${esc(r.repo)}</a><br>
-  <b style="color:#1a1a1a">交给 Agent 安装：</b>把这句话发给任意 AI Agent（Claude Code / Codex / Cursor / Qwen Code 都行）——
-  <span style="display:block;margin-top:6px;padding:9px 12px;background:#fff;border:1px dashed #b8ddc6;border-radius:8px;font-size:13px;line-height:1.8;color:#2e5c45">帮我克隆 https://github.com/${esc(r.repo)}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用</span>
+<div style="margin:16px 0 0;padding:14px 16px;background:linear-gradient(135deg,#fdf3fb,#eef6ff);border:2px solid #f3d9ff;border-radius:14px;font-size:14px;line-height:2;color:#3a3a3a">
+  <b style="color:#c75bd6">🌈 仓库地址：</b><a href="https://github.com/${esc(r.repo)}" style="color:#9b6cff;text-decoration:none;font-weight:700">github.com/${esc(r.repo)}</a><br>
+  <b style="color:#c75bd6">🤖 交给 Agent 安装：</b>把这句话发给任意 AI Agent（Claude Code / Codex / Cursor / Qwen Code 都行）——
+  <span style="display:block;margin-top:6px;padding:9px 12px;background:#fff;border:2px dashed #e3b7f5;border-radius:10px;font-size:13px;line-height:1.8;color:#7a4fa8">帮我克隆 https://github.com/${esc(r.repo)}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用</span>
 </div>`;
 
   return `
-<section style="margin:0 0 34px;padding:0 2px 26px;border-bottom:1px solid #eceef1${r.weekly ? ";border-left:4px solid #fa5151;padding-left:12px" : ""}">
-  <h2 style="margin:0 0 12px;display:flex;align-items:center;font-size:19px;font-weight:700;color:#1a1a1a;line-height:1.4">
-    <span style="display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border-radius:8px;background:linear-gradient(135deg,#07c160,#0aa8a0);color:#fff;font-size:15px;font-weight:800;margin-right:10px">${String(i + 1).padStart(2, "0")}</span>
+<section style="margin:0 0 34px;padding:0 2px 26px;border-bottom:1px solid #f3e0f0${r.weekly ? ";border-left:4px solid #ff7ba9;padding-left:12px" : ""}">
+  <h2 style="margin:0 0 12px;display:flex;align-items:center;font-size:19px;font-weight:800;color:#1a1a1a;line-height:1.4">
+    <span style="display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border-radius:9px;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;font-size:15px;font-weight:900;margin-right:10px">${String(i + 1).padStart(2, "0")}</span>
     <span style="margin-right:10px">${esc(repoShort(r.repo))}</span>
-    ${r.weekly ? `<span style="background:#fde8e8;color:#fa5151;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:700;margin-right:8px">本周也在榜</span>` : ""}
-    <small style="color:#9a9a9a;font-weight:400;font-size:12px">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</small>
+    ${r.weekly ? `<span style="background:#ffe3ee;color:#ff5c8a;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:700;margin-right:8px">本周也在榜</span>` : ""}
+    <small style="color:#c9a0d6;font-weight:500;font-size:12px">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</small>
   </h2>
   <p ${p}"><b style="color:#1a1a1a">${md(hook)}</b></p>
   <p ${p}">${md(what)}</p>
@@ -486,9 +486,9 @@ function buildHTML(data, cidMap) {
     const parts = [];
     fresh.forEach((r, i) => parts.push(section(r, i, cidMap[r.repo] || "")));
     if (repeat.length) {
-      parts.push(`<section style="margin:0 0 14px;padding:0 0 6px;border-bottom:2px solid #fa5151">
-  <h2 style="margin:0;font-size:17px;font-weight:800;color:#fa5151">🔄 周榜常客 · 本周也在榜（若已看过可略过）</h2>
-  <p style="margin:8px 0 0;font-size:13px;color:#9a9a9a;line-height:1.7">以下 ${repeat.length} 个仓库今天也在热榜、但本周已多次出现，内容可能和之前推过的高度重合，快速扫一眼即可。</p>
+      parts.push(`<section style="margin:0 0 14px;padding:0 0 6px;border-bottom:2px solid #ff7ba9">
+  <h2 style="margin:0;font-size:17px;font-weight:900;color:#ff5c8a">🔄 周榜常客 · 本周也在榜（若已看过可略过）</h2>
+  <p style="margin:8px 0 0;font-size:13px;color:#c99a6b;line-height:1.7">以下 ${repeat.length} 个仓库今天也在热榜、但本周已多次出现，内容可能和之前推过的高度重合，快速扫一眼即可。</p>
 </section>`);
       repeat.forEach((r, j) => parts.push(section(r, fresh.length + j, cidMap[r.repo] || "")));
     }
@@ -499,75 +499,77 @@ function buildHTML(data, cidMap) {
   const ths = `padding:10px 8px;background:#f7f8fa;color:#5a6472;font-size:12px;font-weight:600;letter-spacing:.5px`;
   const rows = repos.map((r, i) => {
     const line = String(r.ai?.oneliner || CN(r.judgment) || CN(r.summary) || CN(r.desc) || metaLine(r)).replace(/\*\*/g, "").replace(/\s+/g, " ").slice(0, 26);
-    return `<tr style="background:${i % 2 ? "#fbfcfd" : "#fff"}">
-    <td style="padding:10px 8px 10px 12px;color:#07c160;font-weight:800;vertical-align:top;border-top:1px solid #f0f1f3">${String(i + 1).padStart(2, "0")}</td>
-    <td style="padding:10px 8px;white-space:nowrap;vertical-align:top;border-top:1px solid #f0f1f3"><a href="${esc(r.url)}" style="color:#1a1a1a;font-weight:600;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
-    <td style="padding:10px 8px;color:#3a3a3a;line-height:1.7;border-top:1px solid #f0f1f3">${esc(line)}</td>
-    <td style="padding:10px 8px 10px 4px;color:#fa5151;white-space:nowrap;text-align:right;vertical-align:top;font-size:12px;font-weight:700;border-top:1px solid #f0f1f3">+${fmtStars(r.today)}</td>
+    return `<tr style="background:${i % 2 ? "#fdf5fc" : "#fff"}">
+    <td style="padding:10px 8px 10px 12px;color:#c77dff;font-weight:800;vertical-align:top;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
+    <td style="padding:10px 8px;white-space:nowrap;vertical-align:top;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
+    <td style="padding:10px 8px;color:#3a3a3a;line-height:1.7;border-top:1px solid #f7e9f5">${esc(line)}</td>
+    <td style="padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:12px;font-weight:700;border-top:1px solid #f7e9f5">+${fmtStars(r.today)}</td>
   </tr>`;
   }).join("");
   const overview = repos.length ? `
-<p style="margin:0 0 12px;font-size:16px;font-weight:800;color:#1a1a1a">🔥 最新开源的顶级实用 AI 仓库</p>
-<div style="border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(16,24,40,.06);border:1px solid #eceef1;margin:0 0 34px">
-<table style="width:100%;border-collapse:collapse;font-size:13px">
+<p style="margin:0 0 14px;font-size:18px;font-weight:900;color:#c77dff">🌸 热榜总览表</p>
+<div style="border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(159,108,255,.12);border:2px solid #f3d9ff;margin:0 0 34px">
+<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff">
   <tr>
-    <th align="left" style="${ths};width:34px">#</th>
-    <th align="left" style="${ths}">仓库</th>
-    <th align="left" style="${ths};padding-left:12px">一眼看懂</th>
-    <th align="right" style="${ths}">今日</th>
+    <th align="left" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">#</th>
+    <th align="left" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">仓库</th>
+    <th align="left" style="${ths};padding-left:12px;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">一眼看懂</th>
+    <th align="right" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">今日</th>
   </tr>
   ${rows}
 </table>
 </div>` : "";
 
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>GitHub 日报 ${day}</title></head>
-<body style="margin:0;background:#eef1f6">
-<div style="max-width:677px;margin:0 auto;background:#fff;padding:0 20px 40px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>最新开源AI仓库热榜 ${day}</title></head>
+<body style="margin:0;background:#fdf3fb">
+<div style="max-width:677px;margin:0 auto;background:#fffdfd;padding:0 20px 40px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
 
-<div style="margin:0 -20px;padding:28px 20px 24px;background:linear-gradient(135deg,#07c160 0%,#0aa8a0 60%,#0a8f9e 100%);color:#fff">
-  <p style="margin:0 0 8px;font-size:12px;opacity:.85;letter-spacing:1px">GitHub DAILY DIGEST · ${CN_DATE(day)}</p>
-  <h1 style="margin:0 0 10px;font-size:26px;font-weight:800;line-height:1.35">GitHub 今日热榜</h1>
-  <p style="margin:0;font-size:13px;line-height:1.8;opacity:.95">今天 ${repos.length} 个项目上榜，累计新增 ${total.toLocaleString()} ★。
-  ${cn ? `其中 ${cn} 个有 <b>中文体验入口</b>` : ""}。</p>
+<div style="margin:0 -20px;padding:32px 20px 28px;background:linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%);color:#fff;position:relative;overflow:hidden">
+  <div style="position:absolute;right:-30px;top:-40px;font-size:120px;opacity:.25;transform:rotate(-12deg)">✨</div>
+  <div style="position:absolute;left:-16px;bottom:-36px;font-size:100px;opacity:.18;transform:rotate(8deg)">🎀</div>
+  <p style="margin:0 0 10px;font-size:13px;font-weight:700;letter-spacing:3px;opacity:.95;position:relative">✦ 二次元情报局 · 每日精选 ✦</p>
+  <h1 style="margin:0 0 12px;font-size:30px;font-weight:900;line-height:1.3;position:relative;letter-spacing:1px">最新开源AI仓库热榜</h1>
+  <p style="margin:0;font-size:13.5px;line-height:1.8;opacity:.95;position:relative">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
 </div>
 
-<p style="margin:14px 0 0;font-size:12px;color:#b2b2b2">分享最新开源免费 AI 技术，帮普通人提效工作、改变生活。</p>
+<p style="margin:16px 0 0;font-size:13px;color:#b08ccd;font-weight:700;text-align:center">🌸 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 🌸</p>
 
 ${overview}
 
-${top ? `<section style="background:linear-gradient(135deg,#07c160,#0aa8a0);color:#fff;border-radius:14px;padding:20px 22px;margin:0 0 30px;box-shadow:0 6px 20px rgba(7,193,96,.25)">
-  <p style="margin:0 0 8px;font-size:12px;opacity:.85;letter-spacing:1px">🔥 今日最热</p>
-  <p style="margin:0 0 10px;font-size:22px;font-weight:800;line-height:1.4">${esc(repoShort(top.repo))}</p>
-  <p style="margin:0 0 12px;font-size:14px;line-height:1.8;opacity:.96">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
-  <div style="display:inline-block;background:rgba(255,255,255,.16);border-radius:20px;padding:4px 14px;font-size:12px">今日 +${fmtStars(top.today)} ★ · 总 ${(top.stars || 0).toLocaleString()} ★</div>
+${top ? `<section style="background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
+  <p style="margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:2px;opacity:.95">🌟 今日最闪耀</p>
+  <p style="margin:0 0 10px;font-size:24px;font-weight:900;line-height:1.35">${esc(repoShort(top.repo))}</p>
+  <p style="margin:0 0 14px;font-size:14px;line-height:1.8;opacity:.97">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
+  <div style="display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:13px;font-weight:700">今日 +${fmtStars(top.today)} ★ · 总 ${(top.stars || 0).toLocaleString()} ★</div>
 </section>` : ""}
 
 ${sections}
 
 ${(data.featured && data.featured.length) ? `
-<section style="margin:0 0 34px;padding:22px 20px;background:linear-gradient(135deg,#f0faf3,#e8f6ff);border-radius:14px;border:1px solid #d8f0e0">
-  <h2 style="margin:0 0 8px;font-size:18px;font-weight:800;color:#1a1a1a">🔥 本周值得关注 · 还没上热榜的好东西</h2>
-  <p style="margin:0 0 16px;font-size:13px;color:#5a6472;line-height:1.7">热门榜只盯短期★涨速，下面这些是权威机构最近开源、质量在线、但可能还没被捧上热榜的仓库——真正想抄作业的先看这里。</p>
+<section style="margin:0 0 34px;padding:22px 20px;background:linear-gradient(135deg,#fdf3fb,#eef6ff);border-radius:18px;border:2px solid #f3d9ff">
+  <h2 style="margin:0 0 8px;font-size:18px;font-weight:900;color:#9b6cff">🌸 本周值得关注 · 还没上热榜的好东西</h2>
+  <p style="margin:0 0 16px;font-size:13px;color:#b08ccd;line-height:1.7">热门榜只盯短期★涨速，下面这些是权威机构最近开源、质量在线、但可能还没被捧上热榜的仓库——真正想抄作业的先看这里。</p>
   ${data.featured.map((r, i) => {
     const ai = r.ai;
     const hook = ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} ★，值得放进收藏。`;
     return `
-  <div style="margin:0 0 14px;padding:16px 18px;background:#fff;border-radius:10px;border:1px solid #e6f3eb;box-shadow:0 1px 6px rgba(16,24,40,.05)">
-    <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background:linear-gradient(135deg,#07c160,#0aa8a0);color:#fff;border-radius:6px;padding:2px 8px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#1a1a1a;text-decoration:none">${esc(r.repo)}</a></div>
+  <div style="margin:0 0 14px;padding:16px 18px;background:#fff;border-radius:14px;border:2px solid #ffe0f3;box-shadow:0 3px 12px rgba(199,125,255,.08)">
+    <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#9b6cff;text-decoration:none;font-weight:800">${esc(r.repo)}</a></div>
     <p style="margin:0 0 8px;font-size:13px;line-height:1.8;color:#3a3a3a"><b>${md(hook)}</b></p>
     <p style="margin:0 0 10px;font-size:13px;line-height:1.8;color:#5a6472">${md(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))}</p>
-    <div style="margin:0;font-size:12px;color:#8a8a8a">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#576b95;font-weight:600">仓库 →</a></div>
+    <div style="margin:0;font-size:12px;color:#b08ccd">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#c77dff;font-weight:700">仓库 →</a></div>
   </div>`;
   }).join("")}
 </section>` : ""}
 
-<section style="margin:6px 0 22px;padding:20px;background:linear-gradient(135deg,#07c160,#0aa8a0);border-radius:12px;color:#fff;text-align:center;box-shadow:0 6px 20px rgba(7,193,96,.22)">
-  <p style="margin:0 0 6px;font-size:18px;font-weight:800">分享最新开源免费 AI 技术，帮普通人提效工作、改变生活</p>
-  <p style="margin:0;font-size:12.5px;opacity:.92">GitHub 热榜里的新东西，先帮你读懂，再决定要不要动手</p>
+<section style="margin:6px 0 22px;padding:22px 20px;background:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;box-shadow:0 8px 26px rgba(199,125,255,.25);border:2px solid #ffe0f3">
+  <p style="margin:0 0 8px;font-size:18px;font-weight:900;letter-spacing:1px">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</p>
+  <p style="margin:0;font-size:12.5px;opacity:.92">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </section>
 
-<section style="margin-top:12px;padding:14px 16px;background:#f7f8fa;border-radius:8px;font-size:12.5px;color:#9a9a9a;line-height:1.85">
-  <a href="https://github.com/pephupephu/Github-daily-report" style="color:#576b95">订阅每日推送</a>
+<section style="margin-top:14px;padding:16px 18px;background:#fbf3ff;border-radius:12px;font-size:12.5px;color:#b08ccd;line-height:1.85;text-align:center">
+  <p style="margin:0 0 6px">本文内容仅作参考，具体以各仓库官方说明为准。</p>
+  <a href="https://github.com/pephupephu/Github-daily-report" style="color:#9b6cff;font-weight:700;text-decoration:none">🌸 订阅每日推送 →</a>
 </section>
 
 </div></body></html>`;
@@ -600,8 +602,8 @@ function buildDocx(data, cidMap) {
   };
 
   const children = [
-    para(`GitHub 今日热榜 · ${CN_DATE(day)}`, { bold: true, size: 36, after: 80 }),
-    para(`今日 ${repos.length} 个项目，累计新增 ${total.toLocaleString()} ★`, { color: "8A8A8A", size: 20, after: 240 }),
+    para("🌸 最新开源AI仓库热榜", { bold: true, size: 36, color: "C77DFF", after: 60 }),
+    para("把今天最值得动手的 AI 开源仓库，用大白话讲给你听", { color: "9B6CFF", size: 20, after: 260 }),
   ];
 
   let num = 0;
@@ -638,16 +640,17 @@ function buildDocx(data, cidMap) {
     repeatRepo.forEach(writeRepo);
   }
 
-  children.push(para("分享最新开源免费 AI 技术，帮普通人提效工作、改变生活", { bold: true, size: 22, before: 300, after: 60 }));
-  children.push(para("订阅每日推送：https://github.com/pephupephu/Github-daily-report", { color: "9A9A9A", size: 18 }));
+  children.push(para("🌸 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 🌸", { bold: true, size: 22, color: "C77DFF", before: 320, after: 40 }));
+  children.push(para("订阅每日推送：https://github.com/pephupephu/Github-daily-report", { color: "9B6CFF", size: 18, after: 60 }));
+  children.push(para("本文内容仅作参考，具体以各仓库官方说明为准。", { color: "B08CCD", size: 18, before: 40, after: 80 }));
 
   // 「值得关注」板块也进 Word（和 HTML 对齐）
   const feat = (data.featured || []).filter((r) => r && r.repo);
   if (feat.length) {
-    children.push(para("🔥 本周值得关注 · 还没上热榜的好东西", { bold: true, size: 26, color: "07A050", before: 360, after: 100 }));
+    children.push(para("🌸 本周值得关注 · 还没上热榜的好东西", { bold: true, size: 26, color: "9B6CFF", before: 360, after: 100 }));
     feat.forEach((r, i) => {
       const ai = r.ai;
-      children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 26, color: "07A050", before: 220, after: 60 }));
+      children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 26, color: "C77DFF", before: 220, after: 60 }));
       children.push(para(`${(r.stars || 0).toLocaleString()} ★ · ${r.lang || ""}`, { color: "9A9A9A", size: 18, after: 100 }));
       children.push(para(clean(ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} ★，值得放进收藏。`), { bold: true }));
       children.push(para(clean(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))));
