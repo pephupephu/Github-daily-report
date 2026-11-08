@@ -7,29 +7,30 @@
       "repo": "vercel-labs/agent-browser",
       "lang": "Rust",
       "desc": "Browser automation CLI for AI agents",
-      "stars": 46892,
+      "stars": 46932,
       "today": "190",
-      "forks": 3214,
+      "forks": 3218,
       "created": "2026-01-11",
       "license": "Apache-2.0",
       "topics": [],
       "homepage": "https://agent-browser.dev",
       "url": "https://github.com/vercel-labs/agent-browser",
-      "summary": "agent-browser 是一个用 Rust 编写的原生 CLI 工具，用于自动化浏览器操作，允许 AI 代理逐条命令控制浏览器，通过 `snapshot` 命令获取页面的紧凑文本表示，并使用引用（如 `@e1`）来操作页面元素，AI 代理可以读取页面检查结果并重复操作，浏览器在命令之间保持打开状态，每个步骤都是一条简短的 shell 调用。",
-      "judgment": "对于需要自动化浏览器操作的 AI 代理，agent-browser 是一个功能强大且灵活的工具，值得尝试。",
+      "summary": "agent-browser 是一个用 Rust 编写的本地 CLI 工具，用于浏览器自动化，允许 AI 代理逐条命令控制浏览器。它可以打开网页，将页面作为可访问性树读取，并通过 shell 对元素进行操作。通过 `snapshot` 命令返回页面的紧凑文本形式，每个元素都有一个引用（如 `@e1`），代理可以根据引用操作元素，然后重新读取页面检查结果，浏览器在命令之间保持打开状态，因此每个步骤都是一条简短的 shell 调用。",
+      "judgment": "如果需要为 AI 代理提供强大的浏览器自动化能力，值得尝试 agent-browser。",
       "mechanics": [
         "使用 Chrome DevTools Protocol 控制浏览器",
-        "通过 snapshot 命令获取页面的可访问性树结构",
-        "使用引用（ref）来定位和操作页面元素",
-        "支持 CSS 选择器、XPath 和语义定位器",
-        "通过后台守护进程管理浏览器会话",
-        "支持多种浏览器引擎和云浏览器提供商",
-        "提供多种命令用于导航、交互、等待和捕获页面状态"
+        "通过 Rust 编写的本地 CLI 发送命令到后台守护进程",
+        "支持多种浏览器引擎，包括 Chrome for Testing、Lightpanda、Obscura 和 Mobile Safari",
+        "提供页面快照功能，将页面元素转换为可引用的格式",
+        "支持 CSS 选择器、XPath 和语义定位器进行元素查找",
+        "内置多种技能，如核心循环、等待和常见工作流",
+        "支持会话持久化，可以在一段时间内保持浏览器状态"
       ],
       "scenarios": [
-        "AI 代理需要自动化浏览器操作的场景，如网页数据抓取、自动化测试、网页交互任务",
-        "需要与网页进行复杂交互的 AI 应用，如填写表单、点击按钮、处理弹窗",
-        "需要实时监控网页变化的场景，如股票行情监控、新闻聚合"
+        "AI 代理需要自动化浏览器任务，如网页抓取、表单填写和交互",
+        "需要将浏览器自动化集成到现有的 AI 工作流中",
+        "开发需要与网页进行交互的智能应用",
+        "测试和调试需要自动化浏览器行为的场景"
       ],
       "readmeCN": ""
     },
@@ -37,30 +38,30 @@
       "repo": "cloudflare/security-audit-skill",
       "lang": "JavaScript",
       "desc": "A coding-agent skill for multi-phase security audits with independently verified, machine-readable findings",
-      "stars": 65823,
+      "stars": 65926,
       "today": "2085",
-      "forks": 4276,
+      "forks": 4285,
       "created": "2026-06-18",
       "license": "MIT",
       "topics": [],
       "homepage": "",
       "url": "https://github.com/cloudflare/security-audit-skill",
-      "summary": "这是一个用于多阶段安全审计的编码代理技能，能够将代理转变为安全审计员。它通过侦察、覆盖引导的搜索、候选验证、结构化输出、独立记录验证和目标中立报告等六个阶段来运行结构化审计，最终生成机器可读的审计结果。",
-      "judgment": "如果你需要一个自动进行多阶段安全审计的技能，值得抄作业",
+      "summary": "这是一个用于多阶段安全审计的编码代理技能，能够将代理转变为安全审计员。它通过侦察、覆盖引导的搜索、候选验证、结构化输出、独立记录验证和目标中立报告等六个阶段来运行结构化审计，并生成机器可读的独立验证发现。",
+      "judgment": "如果需要自动化和结构化的多阶段安全审计，值得参考和使用",
       "mechanics": [
         "使用独立代理通过六个阶段进行结构化审计",
         "通过 `architecture.md` 和 `coverage-ledger.json` 映射架构、信任边界、输入表面和确定性覆盖",
-        "使用 `coverage-ledger.json` 中的记录单元分配独立的搜索代理，并记录它们的检查结果",
-        "使用覆盖评论家（coverage critics）来发现覆盖空白",
-        "每个独特的候选都交给一个新的验证器来尝试证伪",
-        "将 `confirmed`、`needs_validation` 和 `rejected` 记录写入 `findings.json` 并根据 `report-schema.json` 进行验证",
-        "使用独立的代理验证最终来源声明",
-        "从验证的记录和覆盖账本中派生 `REPORT.md`、`FINDINGS-DETAIL.md` 和 `NEEDS-VALIDATION.md`"
+        "使用 `coverage-ledger.json` 中的记录单元分配独立的猎人进行搜索",
+        "使用 `coverage critics` 发现覆盖差距",
+        "对每个唯一候选进行独立验证以尝试证伪",
+        "将 `confirmed`、`needs_validation` 和 `rejected` 记录写入 `findings.json` 并验证它们与 `report-schema.json`",
+        "使用独立代理验证最终源声明",
+        "从验证记录和覆盖账本中派生 `REPORT.md`、`FINDINGS-DETAIL.md` 和 `NEEDS-VALIDATION.md`"
       ],
       "scenarios": [
-        "开源情报分析师在进行代码审计时，可以使用该技能自动进行多阶段安全审计",
-        "软件安全团队在进行漏洞发现和渗透测试时，可以使用该技能来提高审计效率和准确性",
-        "开发者在进行代码审查时，可以使用该技能来发现潜在的安全漏洞"
+        "安全研究员在进行代码审计时使用",
+        "开发团队在进行漏洞发现时使用",
+        "云服务提供商在进行安全评估时使用"
       ],
       "readmeCN": ""
     },
@@ -68,9 +69,9 @@
       "repo": "google/skills",
       "lang": "Python",
       "desc": "Agent Skills for Google products and technologies",
-      "stars": 23449,
+      "stars": 23481,
       "today": "443",
-      "forks": 1959,
+      "forks": 1962,
       "created": "2026-03-31",
       "license": "Apache-2.0",
       "topics": [
@@ -80,23 +81,22 @@
       ],
       "homepage": "",
       "url": "https://github.com/google/skills",
-      "summary": "这是一个包含针对 Google 产品和技术的 Agent Skills 仓库，通过 `skills.sh` 或 `npx` 安装后，可以为 Google Cloud 等产品配置特定的技能，如身份认证、架构设计、AI/ML 集成等，支持更新和管理已安装的技能。",
-      "judgment": "对于需要快速集成和配置 Google Cloud 技能的开发者和运维人员，值得尝试使用",
+      "summary": "这是一个包含针对 Google 产品和技术的 Agent Skills 仓库，主要用于在 Google Cloud 环境中配置和部署各种技能，如身份认证、云资源管理、AI/ML 工作流等，通过 `skills.sh` 或 `npx` 安装和更新技能，支持多种 Google Cloud 服务和 AI 平台。",
+      "judgment": "如果你是 Google Cloud 用户，且需要快速部署和管理 AI/ML 工作流，值得参考和使用。",
       "mechanics": [
-        "使用 Node.js 的 `npm` 和 `npx` 工具进行安装和更新",
-        "基于 Google Cloud 的 Agent Skills 框架进行技能配置和管理",
-        "支持多种 Google 产品和技术，如 IAM、BigQuery、GKE 等",
-        "提供技能注册和版本管理机制",
-        "包含多种技能，如身份认证、架构设计、AI/ML 集成等",
-        "支持技能的动态更新和移除",
-        "使用 Genkit 进行技能开发，支持多种语言如 Dart、Go、JS、Python",
-        "提供技能调试和故障排除工具"
+        "使用 Node.js 的 `npm` 和 `npx` 工具进行技能安装和更新",
+        "基于 Google Cloud 的 Agent Skills 框架，支持多种云服务和 AI 技术",
+        "技能以模块化形式存在，涵盖身份认证、资源管理、AI/ML 工作流等",
+        "支持多产品解决方案，如 Google Cloud 解决方案架构、多代理安全等",
+        "集成 Google Cloud 的各种服务，如 BigQuery、GKE、Gemini API 等",
+        "提供技能注册和管理机制，支持技能的部署和调优",
+        "包含诊断和故障排除工具，如 TPU 性能监控、节点问题排查等"
       ],
       "scenarios": [
-        "Google Cloud 的开发者和运维人员需要快速集成和配置特定技能",
-        "需要为 Google Cloud 产品提供自动化解决方案的企业",
-        "需要利用 Google Cloud 进行 AI/ML 应用的开发者和数据科学家",
-        "需要管理和监控 Google Cloud 资源的系统管理员"
+        "Google Cloud 用户需要快速部署和管理 AI/ML 工作流的场景",
+        "需要集成多个 Google Cloud 服务进行企业级解决方案开发的场景",
+        "需要通过 Agent Skills 进行身份认证、权限管理和资源优化的场景",
+        "需要使用 Gemini API 和 Genkit 进行 AI 应用开发的场景"
       ],
       "readmeCN": ""
     },
@@ -104,30 +104,30 @@
       "repo": "mattpocock/skills",
       "lang": "Shell",
       "desc": "Skills for Real Engineers. Straight from my .agents directory.",
-      "stars": 317782,
+      "stars": 317843,
       "today": "1100",
-      "forks": 26585,
+      "forks": 26591,
       "created": "2026-02-03",
       "license": "MIT",
       "topics": [],
       "homepage": "https://aihero.dev/skills",
       "url": "https://github.com/mattpocock/skills",
-      "summary": "这是一个开源项目，提供一系列用于工程实践的Shell脚本技能，旨在帮助开发者与AI编码代理更好地协作。通过安装这些技能，用户可以在项目中使用特定的命令与代理交互，例如进行需求澄清（/grill-me）、创建共享术语表（/grill-with-docs）以及进行测试驱动开发（/tdd）。这些技能通过更新自身并复制可编辑文件到项目目录，实现快速部署和定制。",
-      "judgment": "如果你需要与AI编码代理进行深度协作，这些技能可以帮助你提高效率和代码质量，值得尝试。",
+      "summary": "这是一个开源项目，提供一系列用于工程实践的Shell脚本技能，旨在帮助开发者与AI编码代理更好地协作，提高开发效率和代码质量。通过安装这些技能，用户可以在自己的项目中使用如问题追踪、代码审查、需求澄清、文档生成等功能，并与代理进行更有效的沟通。",
+      "judgment": "如果你需要提高与AI编码代理的协作效率，这些技能值得尝试，但需要一定的配置和维护成本。",
       "mechanics": [
         "基于Shell脚本编写的可复用技能模块",
-        "通过插件系统集成到不同的AI代理（如Claude Code、Codex、GitHub Copilot、Gemini CLI等）",
-        "使用命令行接口（CLI）与AI代理进行交互",
-        "通过配置文件和命令参数进行定制化设置",
-        "利用版本控制系统管理技能更新",
-        "提供反馈循环机制（如TDD）以优化代理输出",
-        "鼓励创建共享术语表以减少沟通障碍"
+        "通过插件系统集成到不同的AI代理平台（如Claude Code、Codex、GitHub Copilot、Gemini CLI等）",
+        "使用`/setup-matt-pocock-skills`脚本配置项目环境，包括问题追踪器、标签系统和文档存储位置",
+        "提供`/grill-me`和`/grill-with-docs`等技能，用于与代理进行深度沟通和需求澄清",
+        "内置`/tdd`技能，支持测试驱动开发（TDD）流程，帮助代理生成和修复测试用例",
+        "通过共享语言文档（如`CONTEXT.md`）减少沟通中的冗余和歧义",
+        "支持自动化测试反馈循环，提高代码质量和代理的生成准确性"
       ],
       "scenarios": [
-        "软件工程师希望在项目中使用AI编码代理提高效率",
-        "需要与AI代理进行深度协作以完成复杂任务",
-        "希望优化AI代理的输出质量和准确性",
-        "希望在项目中建立一套标准化的AI代理使用流程"
+        "软件工程师和开发团队，希望在项目中使用AI编码代理提高开发效率",
+        "需要与AI代理进行深度协作，进行代码生成、审查和优化的场景",
+        "追求高质量代码和良好开发流程的团队，希望利用AI工具辅助实现TDD等实践",
+        "任何希望减少沟通成本、提高AI代理使用效率的开发者或团队"
       ],
       "readmeCN": ""
     },
@@ -135,9 +135,9 @@
       "repo": "anthropics/skills",
       "lang": "Python",
       "desc": "Public repository for Agent Skills",
-      "stars": 188849,
+      "stars": 188887,
       "today": "390",
-      "forks": 22261,
+      "forks": 22262,
       "created": "2025-09-22",
       "license": "",
       "topics": [
@@ -145,19 +145,21 @@
       ],
       "homepage": "",
       "url": "https://github.com/anthropics/skills",
-      "summary": "这是一个开源仓库，包含Anthropic为Claude开发的技能（skills），技能是一组指令、脚本和资源，Claude可以动态加载它们以在特定任务上提高性能，例如创建符合公司品牌指南的文档、使用组织特定的工作流程分析数据或自动化个人任务。",
-      "judgment": "值得参考，但需注意实际应用中的差异和测试需求",
+      "summary": "这是一个开源仓库，包含用于 Claude 模型的技能实现。技能是一组包含指令、脚本和资源的文件夹，Claude 可以动态加载它们以在特定任务上提升性能。通过技能，Claude 可以学习以可重复的方式完成特定任务，例如创建符合公司品牌指南的文档、使用组织特定的流程分析数据或自动化个人任务。用户可以通过这个仓库找到示例技能，了解如何创建自己的技能，并在 Claude Code、Claude.ai 或通过 API 使用这些技能。",
+      "judgment": "如果你需要扩展 Claude 的功能或学习如何创建自定义技能，这个仓库是一个值得参考的资源。",
       "mechanics": [
-        "技能以文件夹形式组织，包含`SKILL.md`文件，该文件包含Claude使用的指令和元数据",
-        "技能使用YAML格式的frontmatter定义名称和描述",
-        "技能通过Claude Code插件、Claude.ai或API进行加载和使用",
-        "技能采用Apache 2.0开源许可证",
-        "技能设计用于展示Claude技能系统的可能性和模式"
+        "技能是以文件夹形式组织的，每个文件夹包含一个 `SKILL.md` 文件，该文件包含 Claude 使用的指令和元数据",
+        "技能使用 YAML 格式的 frontmatter 来定义技能名称和描述",
+        "技能通过指令、示例和指南来教导 Claude 如何完成特定任务",
+        "技能可以动态加载，以提升 Claude 在特定任务上的性能",
+        "技能支持在 Claude Code、Claude.ai 和通过 API 使用",
+        "技能遵循 Agent Skills 标准，该标准定义了技能的通用架构和接口"
       ],
       "scenarios": [
-        "AI开发者和企业使用此仓库获取技能开发灵感，理解不同模式和方法",
-        "Claude用户通过Claude Code插件、Claude.ai或API使用预构建或自定义技能",
-        "需要Claude完成特定任务（如文档处理、数据分析）的开发者使用相关技能"
+        "开发者和企业可以使用这些技能来扩展 Claude 的功能，使其能够处理更复杂的任务",
+        "教育机构和研究人员可以使用这些技能来展示 AI 技能的应用模式和方法",
+        "个人开发者可以使用这些技能来创建自定义的 AI 应用，以自动化日常任务",
+        "企业可以使用这些技能来提高 Claude 在特定业务流程中的效率"
       ],
       "readmeCN": ""
     },
@@ -165,30 +167,28 @@
       "repo": "meta/astryx",
       "lang": "TypeScript",
       "desc": "An open source design system that's fully customizable and agent ready",
-      "stars": 14605,
+      "stars": 14671,
       "today": "96",
-      "forks": 1196,
+      "forks": 1200,
       "created": "2026-01-09",
       "license": "MIT",
       "topics": [],
       "homepage": "http://astryx.atmeta.com",
       "url": "https://github.com/meta/astryx",
-      "summary": "Astryx 是一个开源的设计系统，它提供了150多个可访问的组件、品牌级别的主题、暗黑模式、现成的模板以及一个CLI工具。用户可以通过导入预构建的CSS和使用类型化的React组件来使用Astryx，无需额外的构建插件或样式库。它支持人类和AI助手使用相同的工具进行开发。",
-      "judgment": "适合需要高度定制化且支持AI辅助开发的大型项目，值得尝试但需注意Beta阶段的不稳定性。",
+      "summary": "Astryx 是一个开源的设计系统，它提供了150多个可访问的组件、品牌级别的主题、暗黑模式、现成的模板和一个CLI工具。用户可以通过导入预构建的CSS和使用类型化的React组件来使用Astryx，无需额外的构建插件或样式库。它支持人类和AI助手使用相同的工具进行开发。",
+      "judgment": "适合需要高度定制化和AI协作的大型项目，但需注意其Beta状态和特定的技术栈要求",
       "mechanics": [
-        "基于 React 19+ 和 StyleX 构建，提供声明式样式解决方案",
-        "组件设计为可组合，支持任意级别的嵌套和自定义",
-        "使用CSS自定义属性进行主题定制，无需修改组件源码",
-        "提供CLI工具进行组件文档生成、模板创建、脚手架搭建等",
-        "遵循指导性原则而非强制性规则，组件提供能力而非限制",
-        "强类型化组件和文档，确保一致性和可预测性",
-        "支持人类和AI助手使用相同API和工具进行开发"
+        "基于 React 19+ 和 StyleX 构建，提供声明式样式和组件抽象",
+        "组件设计为可组合，支持任意级别的嵌套和自定义，通过 swizzle 功能可以深入组件内部进行修改",
+        "使用CSS自定义属性进行主题定制，无需修改组件源码，支持Tailwind、CSS模块等多种样式方案",
+        "提供CLI工具，支持组件文档生成、模板生成、脚手架搭建、主题管理和代码修改等功能",
+        "遵循‘指导而非强制’的原则，组件提供能力而非限制，设计规范文档化，便于人类和AI理解和使用"
       ],
       "scenarios": [
-        "大型科技公司在内部多个产品线和应用中使用",
-        "需要高度定制化且支持AI辅助开发的设计系统",
-        "希望统一设计语言并提高开发效率的团队",
-        "对设计系统组件化和可访问性有较高要求的场景"
+        "大型科技公司在内部多个产品线和项目中实现设计语言统一，如Meta内部已使用于13,000+应用",
+        "需要高度定制化设计系统的企业或团队，特别是需要AI助手辅助开发的场景",
+        "希望减少样式库依赖，简化构建流程的前端开发团队",
+        "对设计系统组件化和可组合性有较高要求的Web应用开发"
       ],
       "readmeCN": ""
     },
@@ -196,9 +196,9 @@
       "repo": "prometheus/prometheus",
       "lang": "Go",
       "desc": "The Prometheus monitoring system and time series database.",
-      "stars": 67456,
+      "stars": 67473,
       "today": "322",
-      "forks": 11006,
+      "forks": 11008,
       "created": "2012-11-24",
       "license": "Apache-2.0",
       "topics": [
@@ -212,23 +212,23 @@
       ],
       "homepage": "https://prometheus.io/",
       "url": "https://github.com/prometheus/prometheus",
-      "summary": "Prometheus 是一个开源的监控系统和时间序列数据库，它通过 HTTP 拉取模型从配置的目标收集指标数据，支持使用 PromQL 查询语言进行数据分析，并能根据规则表达式触发警报。用户可以通过配置文件定义监控目标、规则和警报条件，并通过 Web 界面查看监控数据和警报信息。",
-      "judgment": "适用于需要强大指标收集、查询和告警能力的云原生监控场景，但需要一定的学习成本和配置管理能力。",
+      "summary": "Prometheus 是一个开源的监控系统和时间序列数据库，用于收集、评估和展示系统和服务指标，支持通过 HTTP 拉取模型收集指标，并能在满足特定条件时触发警报，具有多维数据模型和 PromQL 查询语言。",
+      "judgment": "值得在需要强大时间序列监控和警报能力的场景下参考和使用",
       "mechanics": [
-        "多维度数据模型：使用指标名称和键值对维度定义时间序列数据。",
-        "PromQL 查询语言：提供强大的灵活性和功能，用于查询和分析多维时间序列数据。",
-        "单节点自主性：单个服务器节点可以独立运行，不依赖分布式存储。",
-        "HTTP 拉取模型：Prometheus 定期主动从配置的目标拉取指标数据。",
-        "推送门关：支持通过中间件推送时间序列数据，适用于批处理作业。",
-        "服务发现：支持通过服务发现机制或静态配置自动发现监控目标。",
-        "图形化支持：支持多种图形化和仪表盘展示方式，并支持联邦机制进行数据聚合。",
-        "远程写入：支持将时间序列数据写入远程存储系统，如远程 Prometheus 或时间序列数据库。"
+        "多维数据模型：使用指标名称和键值对维度定义时间序列",
+        "PromQL 查询语言：用于查询和操作多维时间序列数据",
+        "HTTP 拉取模型：定期从配置的目标收集时间序列数据",
+        "服务发现：支持通过服务发现插件或静态配置发现目标",
+        "推送门：支持批量任务通过中介推送时间序列数据",
+        "规则表达式：用于评估指标并触发警报",
+        "单节点自主：单个服务器节点可以独立运行",
+        "联邦支持：支持分层和水平联邦"
       ],
       "scenarios": [
-        "云原生环境下的系统和应用监控。",
-        "需要实时监控和告警的分布式系统。",
-        "需要多维数据分析和可视化的监控场景。",
-        "需要与 Kubernetes 等容器编排平台集成的监控环境。"
+        "云原生环境中的系统和服务监控",
+        "需要实时收集和分析时间序列数据的场景",
+        "需要触发警报以应对系统异常的运维场景",
+        "需要与 Kubernetes 等云平台集成的监控场景"
       ],
       "readmeCN": ""
     },
@@ -236,9 +236,9 @@
       "repo": "sherlock-project/sherlock",
       "lang": "Python",
       "desc": "Hunt down social media accounts by username across social networks",
-      "stars": 100645,
+      "stars": 100820,
       "today": "1766",
-      "forks": 11888,
+      "forks": 11916,
       "created": "2018-12-24",
       "license": "MIT",
       "topics": [
@@ -253,21 +253,19 @@
       ],
       "homepage": "https://sherlockproject.xyz",
       "url": "https://github.com/sherlock-project/sherlock",
-      "summary": "Sherlock 是一个开源的 Python 工具，用于通过用户名在 400 多个社交媒体平台上搜索用户账户。用户可以通过命令行输入一个或多个用户名，Sherlock 会自动在各个平台上查找这些用户，并将结果保存为文本文件或其他格式（如 CSV、xlsx）。支持的功能包括指定搜索的平台、使用代理、生成调试信息等。",
-      "judgment": "如果你需要跨平台查找用户账户，Sherlock 是一个值得参考的工具，但需要注意其局限性和潜在的合规风险。",
+      "summary": "打开Sherlock后，可以通过输入用户名来搜索其在400多个社交网络上的账号，结果会保存为文本文件，并支持CSV、Excel等多种格式输出。",
+      "judgment": "适合需要跨平台追踪社交账号的场景，但需注意数据准确性和合规性。",
       "mechanics": [
-        "使用 Python 编写，依赖网络请求库（如 requests）进行数据抓取",
-        "通过解析各个社交媒体平台的 API 或公开页面来查找用户信息",
-        "支持多种输出格式，包括文本、CSV 和 Excel 文件",
-        "可以配置使用代理服务器进行网络请求",
-        "内置了大量的社交媒体平台列表，并可以扩展",
-        "支持调试模式，可以输出详细的日志信息"
+        "使用网络爬虫技术抓取社交网络数据",
+        "通过API接口查询用户信息",
+        "采用多线程技术提高搜索效率",
+        "支持代理服务器和超时设置",
+        "可导出多种格式的搜索结果"
       ],
       "scenarios": [
-        "网络安全分析师用于追踪恶意用户或黑客的社交媒体活动",
-        "社交媒体研究人员用于分析特定用户在多个平台上的影响力",
-        "个人或企业用于查找特定人员的社交媒体账户",
-        "开发者用于测试和扩展社交媒体平台的搜索功能"
+        "网络安全研究员用于追踪恶意账号",
+        "社交媒体分析师用于用户行为研究",
+        "个人用于找回丢失的社交账号"
       ],
       "readmeCN": ""
     },
@@ -275,9 +273,9 @@
       "repo": "milind-soni/OpenMausBot",
       "lang": "TypeScript",
       "desc": "Open-source Grok Bot alternative with a virtual machine that bots can use",
-      "stars": 17085,
+      "stars": 17174,
       "today": "1955",
-      "forks": 2416,
+      "forks": 2425,
       "created": "2026-08-11",
       "license": "Apache-2.0",
       "topics": [
@@ -292,22 +290,20 @@
       ],
       "homepage": "https://www.openmausbot.com/",
       "url": "https://github.com/milind-soni/OpenMausBot",
-      "summary": "OpenMausBot 是一个开源的 Grok Bot 替代品，它允许用户在聊天应用中运行自己的团队 AI 代理。用户可以在应用中创建多个 AI 代理，每个代理都可以使用本地运行的 Claude、Codex 或 Grok 模型，拥有自己的个性、模型、云端计算机和连接的应用。用户可以通过聊天界面与这些代理进行交互，监控它们的工作，并对重要事项进行审批。",
-      "judgment": "如果你需要本地运行多个 AI 代理并希望保持数据和计算资源的控制，OpenMausBot 是一个值得考虑的选择。",
+      "summary": "OpenMausBot 是一个开源的 Grok Bot 替代品，它允许用户在聊天应用中创建和管理自己的 AI 代理团队。每个代理都可以使用本地运行的 Claude、Codex 或 Grok 模型，拥有自己的个性、模型、云端计算机和连接的应用。用户可以通过侧边栏与这些代理进行交互，观察它们的工作过程，并对重要事项进行批准。",
+      "judgment": "如果你需要本地运行的、可定制的 AI 代理团队，并且不介意一定的技术门槛，OpenMausBot 是一个值得考虑的选择。",
       "mechanics": [
-        "本地代理运行：代理使用用户本地机器上安装的 Claude、Codex 或 Grok CLI 运行。",
-        "本地优先架构：所有代理进程由运行在本地机器上的小型 harness 服务器管理，数据存储在本地。",
-        "独立计算环境：每个代理可以配置使用云 Linux 桌面、隔离的本地虚拟机或用户自己的计算机作为计算环境。",
-        "Composio 应用集成：代理可以通过 Composio 连接和使用超过 500 个应用程序。",
-        "代理管理界面：用户可以通过类似 Telegram 的聊天界面与代理交互、监控和审批代理的工作。",
-        "模型和引擎配置：用户可以在设置中指定自定义的 CLI 二进制文件来指定使用的模型和引擎。",
-        "Apache 2.0 许可证：项目采用 Apache 2.0 开源许可证发布。"
+        "本地代理运行：代理使用用户本地机器上安装的 Claude、Codex 或 Grok CLI 运行，无需新的账户或代理。",
+        "本地优先架构：所有代理进程由运行在本地机器上的小型 harness 服务器管理，转录、密钥和事件都存储在本地。",
+        "独立计算环境：每个代理可以访问云 Linux 桌面、隔离的本地虚拟机或用户自己的计算机，并通过 Composio 连接 500 多个应用。",
+        "Apache 2.0 许可：项目采用 Apache 2.0 开源许可证，允许用户自由使用、修改和分发。",
+        "代理管理界面：用户可以通过聊天应用界面与代理交互，包括批准代理的请求和查看代理的工作记录。"
       ],
       "scenarios": [
-        "开发者和研究人员：需要运行多个 AI 代理并希望保持数据本地化的场景。",
-        "企业用户：希望构建和管理内部 AI 代理团队，并保持对数据和计算资源的控制。",
-        "隐私敏感用户：不希望将数据和计算任务外包给第三方云服务的用户。",
-        "AI 实验和原型设计：需要快速搭建和测试多个 AI 代理应用的场景。"
+        "开发者和研究人员：需要使用多种 AI 模型进行实验和开发的用户。",
+        "企业团队：希望创建和管理内部 AI 代理团队以提高工作效率的团队。",
+        "隐私关注者：不希望将数据发送到云端，而是希望在本地处理数据的用户。",
+        "技术爱好者：喜欢尝试新工具和技术的用户，希望在自己的机器上运行 AI 代理。"
       ],
       "readmeCN": ""
     },
@@ -315,7 +311,7 @@
       "repo": "astral-sh/ruff",
       "lang": "Rust",
       "desc": "An extremely fast Python linter and code formatter, written in Rust.",
-      "stars": 50989,
+      "stars": 51008,
       "today": "350",
       "forks": 2633,
       "created": "2022-08-09",
@@ -332,23 +328,22 @@
       ],
       "homepage": "https://docs.astral.sh/ruff",
       "url": "https://github.com/astral-sh/ruff",
-      "summary": "Ruff 是一个用 Rust 编写的极快的 Python 代码检查器和格式化工具，它可以检查 Python 代码中的错误和不规范之处，并自动格式化代码以提高可读性。使用 Ruff，你可以通过命令行运行 `ruff check` 来检查当前目录或指定路径的 Python 代码，或者使用 `ruff format` 来自动格式化代码。Ruff 还支持通过 `pyproject.toml` 文件进行配置，并且可以与 VS Code 等编辑器集成。",
-      "judgment": "Ruff 是一个性能卓越的 Python 代码检查和格式化工具，值得在 Python 项目中推广应用。",
+      "summary": "Ruff 是一个用 Rust 编写的极快的 Python 代码检查器和格式化工具，可以检查语法错误、代码风格问题，并自动格式化代码。使用命令 `ruff check` 可以检查当前目录或指定路径的 Python 代码，使用 `ruff format` 可以自动格式化代码。它支持通过 `pyproject.toml` 文件进行配置，并且可以与编辑器（如 VS Code）集成，提供实时的代码检查和格式化功能。",
+      "judgment": "Ruff 是一个极快的 Python 代码检查器和格式化工具，值得在 Python 项目中尝试使用。",
       "mechanics": [
-        "基于 Rust 的高性能执行引擎，使其比传统的 Python 代码检查器快 10-100 倍",
-        "内置超过 900 条规则，覆盖了常见的代码风格和错误检查需求",
-        "使用内置缓存机制，避免重复分析未更改的文件，提高效率",
-        "支持通过 `pyproject.toml` 文件进行配置，提供灵活的配置选项",
-        "原生实现了许多流行的 Flake8 插件的功能，如 flake8-bugbear",
-        "支持自动修复功能，可以自动纠正一些常见的代码错误，如自动移除未使用的导入",
-        "提供第一方编辑器集成，支持 VS Code 等主流编辑器",
-        "支持单一代码库配置，通过分层和级联配置文件实现代码库级别的配置"
+        "基于 Rust 语言开发，性能极快",
+        "使用多个内置规则进行代码检查，支持自定义规则",
+        "通过 `pyproject.toml` 文件进行配置",
+        "内置缓存机制，避免重复分析未改变的文件",
+        "支持自动修复功能，例如自动移除未使用的导入",
+        "支持与编辑器集成，提供实时代码检查和格式化",
+        "支持单一代码库友好配置，具有层级和级联配置功能"
       ],
       "scenarios": [
-        "Python 开发者用于日常代码检查和格式化，提高代码质量和一致性",
-        "开源项目和大型代码库用于自动化代码检查和格式化，提高开发效率",
-        "在 CI/CD 流程中集成 Ruff，用于自动化代码质量检查",
-        "个人开发者或团队用于提高代码风格的一致性，减少代码审查时间"
+        "Python 开发者用于提高代码质量和一致性",
+        "开源项目和大型代码库用于自动化代码检查和格式化",
+        "本地开发环境用于快速检查和修复代码问题",
+        "与持续集成/持续部署 (CI/CD) 流程集成，用于自动化代码质量检查"
       ],
       "readmeCN": ""
     },
@@ -356,9 +351,9 @@
       "repo": "tailwindlabs/tailwindcss",
       "lang": "TypeScript",
       "desc": "A utility-first CSS framework for rapid UI development.",
-      "stars": 98502,
+      "stars": 98530,
       "today": "122",
-      "forks": 7110,
+      "forks": 7112,
       "created": "2017-10-06",
       "license": "MIT",
       "topics": [
@@ -372,20 +367,22 @@
       ],
       "homepage": "https://tailwindcss.com/",
       "url": "https://github.com/tailwindlabs/tailwindcss",
-      "summary": "Tailwind CSS 是一个实用优先的 CSS 框架，用于快速构建自定义用户界面。它通过提供一系列低级 CSS 类来创建样式，用户可以通过组合这些类来快速设计 UI 元素，无需编写自定义 CSS。主要功能包括快速样式生成、响应式设计、主题定制等，通过命令行工具可以生成和优化 CSS 文件。",
-      "judgment": "适用于需要快速构建自定义 UI 且不介意 CSS 文件体积的开发者，值得尝试",
+      "summary": "Tailwind CSS 是一个实用优先的 CSS 框架，用于快速构建自定义用户界面。它通过提供一系列低级 CSS 类来直接在 HTML 中构建设计，无需编写自定义 CSS。使用 `tailwind.config.js` 配置文件可以自定义设计系统，并通过命令行工具 `tailwindcss` 生成最终的 CSS 文件。工作流程包括安装、配置、在 HTML 中使用实用类、以及使用 `tailwindcss build` 命令生成优化后的 CSS 文件。",
+      "judgment": "如果你需要快速构建高度可定制的 UI，且不介意配置和优化过程，Tailwind CSS 是一个值得考虑的选择。",
       "mechanics": [
-        "实用优先（Utility-first）设计哲学，通过组合低级 CSS 类来构建样式",
-        "基于 JavaScript 的命令行工具（CLI）用于生成和优化 CSS 文件",
-        "响应式设计支持，通过 Tailwind 插件实现不同屏幕尺寸的适配",
-        "主题定制功能，允许用户自定义颜色、字体等样式变量",
-        "JavaScript 框架集成，支持与 React、Vue、Svelte 等框架无缝集成"
+        "实用优先（Utility-first）设计哲学，通过组合低级 CSS 类来构建 UI 元素",
+        "JavaScript 配置文件 `tailwind.config.js`，用于自定义设计系统（如颜色、字体、间距等）",
+        "JavaScript 框架集成（如 React、Vue、Angular），通过插件实现样式注入",
+        "命令行工具 `tailwindcss`，用于生成和优化最终的 CSS 文件",
+        "暗黑模式支持，通过 `prefers-color-scheme` 媒体查询自动切换主题",
+        "按需生成 CSS，通过 PostCSS 和 PurgeCSS 移除未使用的样式，减小文件体积",
+        "响应式设计，通过实用类（如 `sm:`, `md:`, `lg:`）实现不同屏幕尺寸的适配"
       ],
       "scenarios": [
-        "前端开发人员快速构建自定义 UI 界面",
-        "需要快速原型设计和开发的项目",
-        "希望减少自定义 CSS 编写时间的开发者",
-        "需要高度可定制和响应式设计的 Web 应用"
+        "前端开发者和设计师需要快速构建自定义 UI 界面时",
+        "需要高度可定制性且避免编写大量自定义 CSS 的项目",
+        "在 React、Vue、Angular 等现代前端框架中构建响应式界面",
+        "需要快速原型设计和开发 MVP 产品时"
       ],
       "readmeCN": ""
     },
@@ -393,7 +390,7 @@
       "repo": "mbillow/localthings",
       "lang": "Python",
       "desc": "Control your Samsung appliances from Home Assistant over your home network, with no cloud account.",
-      "stars": 1072,
+      "stars": 1087,
       "today": "186",
       "forks": 113,
       "created": "2026-06-30",
@@ -410,21 +407,22 @@
       ],
       "homepage": "",
       "url": "https://github.com/mbillow/localthings",
-      "summary": "LocalThings 是一个 Home Assistant 插件，允许用户通过本地网络控制 Samsung 家电，无需 Samsung 云账户。安装后，用户可以在 Home Assistant 中添加 Samsung 家电设备，并通过 IP 地址进行设置。插件会自动识别设备类型和型号，并创建相应的控制和传感器。用户可以通过 Home Assistant 界面控制家电，如选择模式、设置温度、查看状态等。",
-      "judgment": "如果你的 Samsung 家电支持 OCF 协议且你想本地控制它们，LocalThings 是一个值得尝试的集成方案。",
+      "summary": "LocalThings 是一个 Home Assistant 插件，允许用户通过本地网络控制 Samsung 家电，无需 Samsung 云账户。它通过读取家电的本地网络信息来发现和控制设备，支持多种 Samsung 家电如洗衣机、冰箱、空调等，并提供相应的控制和传感器。用户只需在 Home Assistant 中输入家电的 IP 地址，LocalThings 会自动识别设备类型并创建相应的控制面板和传感器。",
+      "judgment": "如果你希望本地控制 Samsung 家电且不依赖云服务，LocalThings 是一个值得考虑的方案。",
       "mechanics": [
         "OCF (Open Connectivity Foundation) 协议：用于发现和读取 Samsung 家电的资源。",
-        "CoAP over DTLS：使用受限应用协议（CoAP）通过 DTLS 加密会话与家电通信。",
-        "Home Assistant 的配置模式：通过 Home Assistant 的 UI 配置流程进行设置和重新配置。",
-        "DHCP 发现：自动跟随家电到新的 IP 地址。",
-        "数据更新协调器：结合推送和轮询进行数据更新。",
-        "声明式家电映射：将家电报告的资源映射到 Home Assistant 实体。",
-        "诊断下载：当设备设置但无法识别或控制时，提供诊断信息以添加支持。"
+        "CoAP over DTLS：LocalThings 使用受限应用协议（CoAP）通过 DTLS 加密会话与家电通信。",
+        "Home Assistant 的 UI 配置流程：设置、重新配置和重新认证都在 Home Assistant 的 UI 配置流程中运行。",
+        "DHCP 发现：LocalThings 跟踪家电的 IP 地址变化。",
+        "Declarative appliance maps：每个家电类型都有一个映射表，将家电报告的资源映射到 Home Assistant 实体。",
+        "数据更新协调器：结合推送和轮询来更新数据。",
+        "诊断下载：当设备设置但 LocalThings 无法识别或控制缺失时，会提供诊断下载以添加支持。"
       ],
       "scenarios": [
-        "用户希望在没有云账户的情况下控制 Samsung 家电。",
-        "用户希望将 Samsung 家电集成到 Home Assistant 自动化系统中。",
-        "用户希望本地网络中控制家电，并保护数据隐私。"
+        "用户希望在本地网络中控制 Samsung 家电，且不希望使用 Samsung 云服务。",
+        "用户使用 Home Assistant 作为智能家居中心，并希望集成 Samsung 家电。",
+        "用户注重数据隐私，希望避免将数据发送到云端。",
+        "用户拥有 2022 年及以后生产的 Samsung 家电，或部分早期型号的家电。"
       ],
       "readmeCN": ""
     },
@@ -432,7 +430,7 @@
       "repo": "zed-industries/zed",
       "lang": "Rust",
       "desc": "Code at the speed of thought – Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.",
-      "stars": 94304,
+      "stars": 94325,
       "today": "1114",
       "forks": 11557,
       "created": "2021-02-20",
@@ -445,19 +443,19 @@
       ],
       "homepage": "https://zed.dev",
       "url": "https://github.com/zed-industries/zed",
-      "summary": "Zed 是一款高性能的多人代码编辑器，支持实时协作编辑、代码补全、语法高亮等功能，通过命令行启动并使用，工作流程包括安装、启动、编辑和协作。",
-      "judgment": "适合需要实时协作且追求高性能的开发团队，但需注意许可合规性风险。",
+      "summary": "Zed 是一款高性能的多人代码编辑器，支持实时协作编辑、代码补全、语法高亮等功能，打开后可以直接创建、编辑文件，并通过网络与他人共同编辑。",
+      "judgment": "如果你需要高性能且支持多人协作的代码编辑器，值得尝试，但要注意许可证配置问题。",
       "mechanics": [
         "使用 WebSockets 协议实现多人实时协作编辑",
         "基于 Tree-sitter 构建高效的语法解析器",
         "采用 Rust 语言开发，保证高性能和稳定性",
-        "通过 JSON RPC 进行编辑器命令和状态同步",
-        "内置 LSP (Language Server Protocol) 支持"
+        "内置 LSP (Language Server Protocol) 支持，提供代码补全和语义分析",
+        "使用 Tokio 异步运行时处理并发操作"
       ],
       "scenarios": [
-        "开发者团队进行远程协作编码",
-        "教育机构进行实时代码教学和演示",
-        "开源项目维护者进行多人同步编辑"
+        "开发者团队需要实时协作编码的场景",
+        "教育机构用于远程教学和代码共享",
+        "需要高性能代码编辑体验的个人或团队"
       ],
       "readmeCN": ""
     },
@@ -465,9 +463,9 @@
       "repo": "ranxianglei/billion-context",
       "lang": "TypeScript",
       "desc": "A context-compression plugin for month-long single sessions (billions of tokens) ,small context windows (a 100K context is enough) and token savings (5x fewer tokens) .上下文压缩插件，月级长会话会话， 兼顾小窗口(100k上下文足矣)省token(省5倍token) . billion-context is all you need",
-      "stars": 4651,
+      "stars": 4680,
       "today": "191",
-      "forks": 371,
+      "forks": 373,
       "created": "2026-08-06",
       "license": "NOASSERTION",
       "topics": [
@@ -475,21 +473,19 @@
       ],
       "homepage": "",
       "url": "https://github.com/ranxianglei/billion-context",
-      "summary": "billion-context 是一个用于长会话（月级，数十亿 token）的上下文压缩插件，它能在保持高压缩质量的同时，将大上下文窗口（100k 足够）减少 5 倍 token。使用后，你可以通过一个 100k 的上下文窗口运行数天的会话，并将对话内容压缩成多层摘要。",
-      "judgment": "如果你需要长时间使用大语言模型且对 token 成本敏感，billion-context 是一个值得借鉴的解决方案。",
+      "summary": "billion-context 是一个用于长会话（月级，数十亿 token）的上下文压缩插件，它能在保持高压缩质量的同时，将大上下文窗口（100k 足够）压缩到 5 倍更少的 token 数量。使用后，你可以在单个会话中处理大量信息，只需维护一个较小的上下文窗口，显著减少 token 消耗。",
+      "judgment": "如果你的工作流程需要长时间、高 token 消耗的 AI 对话，且对上下文窗口敏感，billion-context 值得尝试。",
       "mechanics": [
-        "基于 acp-kernel 协议进行 Anthropic/OpenAI 流的重写与压缩",
-        "模型驱动增量分层压缩算法，自动决定压缩时机和内容",
-        "生成高保真度的摘要，而非简单的截断",
-        "支持可逆的压缩，允许恢复原始信息",
-        "利用前缀缓存机制，保持 95-97% 的缓存命中率",
-        "支持命令 `/acp` 和 `/acp-cache` 查看压缩和缓存状态"
+        "基于 acp-kernel 协议进行 Anthropic/OpenAI 流的重写和压缩",
+        "采用增量、可逆的分层摘要机制，由模型决定压缩时机和内容",
+        "实现高保真度的摘要生成，避免硬性截断限制",
+        "支持长会话（月级）持续运行，保持 95-97% 的前缀缓存命中率",
+        "压缩本身成本极低，≤2%，主要成本来自缓存维护"
       ],
       "scenarios": [
-        "需要长时间运行代码辅助或大语言模型的场景，如开发者进行复杂任务",
-        "对 token 使用成本敏感，需要降低大语言模型使用费用的用户",
-        "在上下文窗口限制下，需要处理大量对话或代码生成的场景",
-        "使用 Claude、OpenAI Codex、OpenCode 等需要 API 调用的模型时"
+        "需要长时间连续使用 AI 模型进行编码或对话的用户，如开发者、研究人员",
+        "在 token 费用敏感场景下，希望最大化单次会话效率的场景",
+        "使用 Anthropic 或 OpenAI 模型 API，并面临上下文窗口限制的开发者"
       ],
       "readmeCN": ""
     },
@@ -497,9 +493,9 @@
       "repo": "dsx-ai-factory/nvke",
       "lang": "Go",
       "desc": "NVIDIA Kubernetes Engine (NVKE). A management plane for GPU Kubernetes on bare metal.",
-      "stars": 574,
+      "stars": 596,
       "today": "123",
-      "forks": 90,
+      "forks": 91,
       "created": "2026-08-04",
       "license": "Apache-2.0",
       "topics": [
@@ -511,20 +507,23 @@
       ],
       "homepage": "https://docs.nvidia.com/nvke/",
       "url": "https://github.com/dsx-ai-factory/nvke",
-      "summary": "NVIDIA Kubernetes Engine (NVKE) 是一个管理平台，用于在裸金属服务器上的 NVIDIA GPU 硬件上运行托管的 Kubernetes 服务。它允许平台团队创建和操作 Kubernetes 集群，每个工作负载集群都有自己独立的控制平面、etcd 和节点池。用户通过 NVKE 管理平台进行操作，而客户则通过 Kubernetes API 和 `kubectl` 使用他们的集群。",
-      "judgment": "适合需要在自己 NVIDIA GPU 硬件上运行 Kubernetes 但对成熟度和稳定性有要求的场景，谨慎使用于生产环境。",
+      "summary": "NVIDIA Kubernetes Engine (NVKE) 是一个管理平面，用于在裸金属服务器上的 NVIDIA GPU 硬件上运行托管的 Kubernetes 服务。它允许平台团队创建和操作 Kubernetes 集群，每个集群都有自己独立的控制平面、etcd 和节点池。用户通过 NVKE API 或 `nvkectl` 请求集群，NVKE 通过 NVIDIA Infra Controller (NICo) 提供机器并形成 Kubernetes 集群。用户通过 Kubernetes API 和 `kubectl` 使用这些集群。",
+      "judgment": "如果你需要在自己的 NVIDIA GPU 基础设施上运行托管的 Kubernetes 服务，并且不介意其预览阶段的不稳定性，那么 NVKE 值得考虑。",
       "mechanics": [
-        "使用 NVIDIA Infra Controller (NICo) 进行硬件资源管理和节点供应",
+        "使用 NVIDIA Infra Controller (NICo) 来提供和管理 GPU 节点",
         "通过 SPIFFE/SPIRE 使用 TPM 进行节点身份验证",
-        "使用 Cluster API 进行工作负载集群的创建和生命周期管理",
-        "使用 etcd 进行集群状态存储，支持加密",
-        "提供 `nvkectl` 命令行工具进行集群管理操作",
-        "与 NVIDIA Kubernetes Recipes (NVKR) 协同进行节点镜像构建和组件签名"
+        "每个工作负载集群有独立的控制平面、etcd 和节点池",
+        "使用 Cluster API 来创建和管理工作负载集群",
+        "节点代理 (nvke-agent) 在节点上运行以与控制平面通信",
+        "支持 etcd 数据加密",
+        "与 NVIDIA Kubernetes Recipes (NVKR) 协同以构建和签名节点镜像",
+        "管理平面不升级、不扩展、不替换自身"
       ],
       "scenarios": [
-        "需要在自己的 NVIDIA GPU 基础设施上运行托管的 Kubernetes 服务的企业或组织",
-        "平台团队需要为客户创建和操作 Kubernetes 集群的服务提供商",
-        "对 Kubernetes 集群进行高度定制化和隔离管理的场景"
+        "需要在自己的 NVIDIA GPU 基础设施上运行托管的 Kubernetes 服务的平台团队",
+        "希望为他们的客户提供隔离的 Kubernetes 集群的服务提供商",
+        "需要评估 NVKE 功能的开发者和测试人员",
+        "需要使用 NVIDIA GPU 进行高性能计算和机器学习的组织"
       ],
       "readmeCN": ""
     }
@@ -543,21 +542,20 @@
       "homepage": "",
       "url": "https://github.com/anthropics/FlashProve",
       "featured": true,
-      "summary": "FlashProve 是一个研究原型，用于证明 AI 推理过程，允许 AI 提供商在不泄露模型权重的情况下证明是哪个模型回答了请求。它包含提交、证明和验证三个步骤，通过在 GPU 上生成证明，并在普通 CPU 上进行验证来实现。",
-      "judgment": "在需要保护 AI 模型权重隐私且硬件条件允许的情况下，可以考虑使用，但需注意项目不再维护的风险。",
+      "summary": "FlashProve 是一个研究原型，允许 AI 提供商证明是哪个模型回答了请求，同时不泄露模型的权重。它通过三个步骤工作：提供方发布一个承诺 ID，绑定到一组权重；提供方使用 GPU 生成一个证明，证明回复是承诺模型的输出；任何人都可以在普通 CPU 上用 `cp_verify` 命令在几秒钟内验证这个证明，而无需知道权重。",
+      "judgment": "如果你需要保护 AI 模型的知识产权且有足够的硬件和专业知识，值得尝试，但要注意项目已不再维护",
       "mechanics": [
-        "零知识证明（Zero-Knowledge Proofs）",
-        "哈希承诺（Hash Commitments）",
-        "Lean 4 协议验证",
-        "GPU 生成证明",
-        "CPU 验证证明",
-        "合成模型测试",
-        "NVIDIA H100 支持"
+        "零知识证明（Zero-Knowledge Proofs）用于在不泄露模型权重的情况下证明模型输出",
+        "承诺机制（Commitment Scheme）通过发布承诺 ID 将提供方绑定到特定的一组权重",
+        "基于 Lean 4 的协议确保了证明的可靠性，通过形式化验证保证了协议的正确性",
+        "使用 GPU 生成证明，普通 CPU 进行验证，利用了计算资源的差异",
+        "基于哈希查询和概率性攻击防御机制，提高了证明的安全性"
       ],
       "scenarios": [
-        "AI 研究人员需要证明模型推理过程时",
-        "需要保护 AI 模型权重隐私的场景",
-        "需要验证 AI 模型输出合法性的平台"
+        "AI 研究人员和安全专家在需要证明 AI 模型行为而不泄露其内部机制时使用",
+        "在需要保护 AI 模型知识产权和商业机密的情况下使用",
+        "在需要满足监管要求，证明 AI 模型合规性的场景中使用",
+        "用于提高 AI 模型输出的可信度和透明度"
       ],
       "readmeCN": ""
     },
@@ -574,21 +572,21 @@
       "homepage": "",
       "url": "https://github.com/anthropics/single-agent-loop-kit",
       "featured": true,
-      "summary": "这是一个用于将多代理系统（由路由器或协调器在专业子代理前）转变为一个按需加载技能和工具的单代理循环的入门工具包。它通过评估和比较来决定是否将子代理合并或替换为技能，并提供了一个可运行的示例支持代理。",
-      "judgment": "如果你有现成的多代理系统并希望优化，值得参考学习。",
+      "summary": "这是一个用于将多智能体系统（由路由器或协调器前面有专业子智能体组成）转变为一个智能体循环的入门工具包，该循环按需加载技能和工具。它通过测量和评估来决定是否将子智能体折叠到主智能体循环中，并提供了一系列步骤来审计、合并、折叠或作为工具调用子智能体。",
+      "judgment": "如果你有现成的多智能体系统并希望优化为单智能体循环，这个工具包值得尝试。",
       "mechanics": [
-        "评估机制：通过评估来衡量系统性能，并在每次变更前后进行对比，以决定是否保留子代理。",
-        "合并机制：将总是一起运行的子代理合并为一个。",
-        "折叠机制：将剩余的子代理逐个转变为主代理中的技能和工具，并评估效果。",
-        "工具调用机制：将保留的子代理作为工具调用，并使用结构化结果。",
-        "代码分析：读取存储库中的编排代码，不依赖于特定框架。",
-        "持续维护：通过团队协作来维护系统提示和共享评估，以及各领域团队维护其技能。",
-        "成本优化：在设计确定后，使用工具进行成本优化。"
+        "评估机制：通过评估来衡量系统性能，并在每次更改前后进行评分以决定是否保留子智能体。",
+        "智能体折叠：将子智能体逐步转换为主智能体中的技能和工具，并比较其性能。",
+        "子智能体合并：将始终一起运行的子智能体合并。",
+        "按需加载：主智能体根据需要加载技能和工具，而不是一次性加载所有内容。",
+        "持续维护：一个小团队负责系统提示和共享评估，每个领域团队负责其技能。",
+        "Claude Code 集成：使用 Claude Code 命令来构建评估、调整技能描述、审计提示和优化成本。",
+        "成本估算：在每次付费运行之前提供 token 估算，以帮助用户控制成本。"
       ],
       "scenarios": [
-        "适用于已经拥有多代理系统，并希望将其优化为单代理循环的开发者。",
-        "适用于需要评估和比较不同代理或技能性能的场景。",
-        "适用于希望提高系统效率和降低成本的AI应用开发者。"
+        "适用于已经拥有多智能体系统并希望将其优化为更高效的单智能体循环的开发者。",
+        "适用于需要按需加载技能和工具以提高效率和成本效益的场景。",
+        "适用于希望自动化评估和优化智能体系统性能的场景。"
       ],
       "readmeCN": ""
     },
@@ -596,7 +594,7 @@
       "repo": "anthropics/oss-scanner",
       "lang": "Dockerfile",
       "desc": "",
-      "stars": 1741,
+      "stars": 1742,
       "today": "0",
       "forks": 1126,
       "created": "2026-10-08",
@@ -605,20 +603,22 @@
       "homepage": "",
       "url": "https://github.com/anthropics/oss-scanner",
       "featured": true,
-      "summary": "OSS Scanner 是一个由 Anthropic 提供的服务，用于扫描关键的开源代码库中的安全漏洞。用户通过提交一个包含特定目录的 Pull Request 来注册项目，服务会在隔离的虚拟机中构建项目，并在无网络访问的情况下分析代码，然后将发现的安全问题通过邮件发送给项目联系人，并提供复现步骤和补丁建议。",
-      "judgment": "适合对代码安全有较高要求且愿意投入配置资源的项目，值得参考使用",
+      "summary": "OSS Scanner 是一个由 Anthropic 提供的服务，用于扫描开源仓库中的安全漏洞。用户通过提交一个包含特定目录的 Pull Request 来注册项目，服务会在隔离的虚拟机中构建项目，并在无网络访问的情况下分析项目，然后将发现的安全问题通过邮件发送给指定的联系人和抄送列表，并提供复现步骤和修复建议。",
+      "judgment": "适用于需要定期扫描开源项目安全漏洞且符合服务条款的项目，但需注意网络访问和许可限制。",
       "mechanics": [
-        "使用 Dockerfile 构建项目环境，安装依赖并构建项目",
-        "在隔离的虚拟机中进行项目构建，扫描过程中断开网络访问",
-        "通过 `project.yaml` 配置扫描参数，包括仓库地址、联系人邮箱等",
-        "使用 `threat_model.md` 提供项目特定的威胁模型信息",
-        "支持通过邮件和 GitHub 安全公告两种方式输出扫描结果",
-        "扫描结果包含复现步骤和补丁建议，但不经过人工审核"
+        "Dockerfile 构建环境：使用 Dockerfile 设置构建环境、安装依赖并构建项目。",
+        "无网络扫描：安全分析阶段在无网络访问的虚拟机中进行。",
+        "自动化报告：通过邮件自动发送扫描结果，包括复现步骤和修复建议。",
+        "GitHub 安全公告：支持将扫描结果作为私有漏洞报告发送到 GitHub。",
+        "项目配置：通过 `project.yaml` 文件配置扫描参数，如仓库地址、联系邮箱等。",
+        "威胁模型（可选）：通过 `threat_model.md` 文件提供项目特定的安全目标指导。",
+        "PGP 加密邮件：支持对邮件报告进行 PGP 加密。"
       ],
       "scenarios": [
-        "开源项目维护者希望主动发现并修复代码中的安全漏洞",
-        "需要定期进行代码安全审计的项目团队",
-        "对代码安全有较高要求的企业或组织"
+        "开源项目维护者：希望扫描其项目中的安全漏洞并接收报告。",
+        "安全团队：需要定期扫描开源依赖库的安全性。",
+        "企业研发部门：希望在代码提交前进行安全扫描，减少漏洞引入风险。",
+        "个人开发者：希望对其个人开源项目进行安全检查。"
       ],
       "readmeCN": ""
     },
@@ -635,21 +635,22 @@
       "homepage": "",
       "url": "https://github.com/anthropics/claude-code-playground",
       "featured": true,
-      "summary": "这是一个由 Anthropic DevRel 团队维护的 Claude Code 实验室，包含实际设置、技能、演示和端到端工作流程，展示了团队如何使用 Claude Code 以及实现的各种可能性，但并非官方产品，不保证功能正常且不接受外部贡献。",
-      "judgment": "适合想了解 Claude Code 实际应用的开发者参考，但需注意非官方性质和潜在的不稳定性",
+      "summary": "这是一个由 Anthropic DevRel 团队维护的 Claude Code 实验室，包含实际设置、技能、演示和端到端工作流程，展示了团队如何使用 Claude Code 以及实现的各种可能性，但不保证功能始终有效。",
+      "judgment": "适合开发者学习和参考，但需注意其非官方和可能过时的特性",
       "mechanics": [
-        "使用 Claude API 与 Anthropic 的 Claude 模型进行交互",
+        "使用 Claude Code API 进行交互",
         "通过 `CLAUDE.md` 文件定义技能和钩子",
         "利用 `settings.json` 配置工作环境",
-        "提供可复用的技能和自定义插件",
-        "包含详细的构建说明和运行指南",
-        "采用手动发布流程确保内容准确性"
+        "基于公开模型进行开发和演示",
+        "提供端到端的工作流程示例",
+        "包含非官方市场中的可重用技能",
+        "展示模型发布时的演示案例"
       ],
       "scenarios": [
-        "开发者希望了解和学习 Anthropic DevRel 团队的 Claude Code 实践",
-        "需要探索 Claude Code 的实际应用场景和可能性",
-        "希望参考和复现团队分享的端到端工作流程",
-        "对 Claude Code 的钩子和技能开发感兴趣的开发者"
+        "开发者希望了解和学习 Claude Code 的实际应用",
+        "团队需要参考 Anthropic DevRel 的设置和技能实现",
+        "想要探索 Claude Code 的潜力和创新用法的技术人员",
+        "教育机构或个人用于研究和教学目的"
       ],
       "readmeCN": ""
     },
@@ -666,19 +667,21 @@
       "homepage": "",
       "url": "https://github.com/anthropics/uplifting-biomolecular-modeling",
       "featured": true,
-      "summary": "这是一个包含36个优化工具包的Python项目，用于优化开源蛋白质和基因组机器学习工具（如结构预测、协同折叠、结合子和序列设计、蛋白质和基因组语言模型）的推理路径。每个工具包都是一个独立的目录，包含上游工具的固定版本和一个优化包，通过命令行参数可以启用不同的优化模式（如off、exact、fast、big），并打印当前激活的模式。",
-      "judgment": "对于需要优化开源蛋白质和基因组建模工具推理路径的用户，可以考虑使用，但需要注意项目已不再维护",
+      "summary": "这是一个用于优化蛋白质和基因组学机器学习工具（如结构预测、协同折叠、结合体和序列设计、蛋白质和基因组语言模型）推理路径的优化工具包集合。每个工具都有对应的优化工具包，工具包以特定模式运行上游工具，提供不同的优化级别（如关闭、精确、快速、大内存），通过命令行参数进行配置。",
+      "judgment": "特定场景下值得尝试，但需注意其维护状态和潜在的兼容性问题",
       "mechanics": [
-        "每个优化工具包都是一个独立的目录，包含上游工具的固定版本和一个优化包",
-        "通过命令行参数可以启用不同的优化模式，每个模式对应不同的优化策略",
-        "优化工具包可以在上游工具的Python环境中运行，或者在一个独立的解释器中运行",
-        "每个工具包都有一个共同的运行时核心，提供模式解析、确定性辅助、内存和多GPU机制等功能",
-        "工具包的输出和输入文件可以通过宿主机目录进行绑定"
+        "每个优化工具包包含上游工具的固定版本副本和针对特定推理路径的优化代码",
+        "工具包通过命名模式（如off、exact、fast、big）在上游工具启动时激活优化",
+        "大多数工具包在其自身的Python环境中运行优化，而两个特殊工具包（rfdiffusion3、rosettafold3）在第二个解释器中安装覆盖文件",
+        "工具包使用共享的核心库（common/opt_core/）处理模式解析、确定性辅助、内存和多GPU机制",
+        "工具包通过Docker、Apptainer或Python虚拟环境部署，并使用上游工具的下载器获取模型权重",
+        "工具包的输出和输入根据部署方式（容器内或宿主机）进行管理，确保结果不污染容器环境",
+        "每个工具包提供详细的README.md、STOCK.md和CHANGES.md文件说明其功能、配置和优化效果"
       ],
       "scenarios": [
-        "生物信息学研究人员和开发者，在蛋白质和基因组建模领域使用开源机器学习工具时，希望提高工具的推理效率",
-        "需要在不同硬件环境下运行模型，并通过不同的优化模式来调整模型的性能和资源消耗",
-        "需要对开源机器学习工具进行定制化优化，以满足特定的研究需求"
+        "生物信息学研究人员和药物设计师使用这些工具包加速和改进蛋白质结构预测、序列设计和分子对接等任务",
+        "机器学习工程师和数据科学家在开发和部署基因组学和蛋白质组学模型时使用这些工具包优化推理性能",
+        "需要在不同硬件和计算环境中部署和比较不同优化策略的科研团队使用这些工具包进行实验"
       ],
       "readmeCN": ""
     }
