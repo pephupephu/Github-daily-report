@@ -1,5 +1,5 @@
 {
-  "day": "2026-11-07",
+  "day": "2026-11-08",
   "since": "daily",
   "mode": "自备 key（2 个轮换）",
   "repos": [
@@ -7,45 +7,70 @@
       "repo": "vercel-labs/agent-browser",
       "lang": "Rust",
       "desc": "Browser automation CLI for AI agents",
-      "stars": 46568,
-      "today": "180",
-      "forks": 3191,
+      "stars": 46892,
+      "today": "190",
+      "forks": 3214,
       "created": "2026-01-11",
       "license": "Apache-2.0",
       "topics": [],
       "homepage": "https://agent-browser.dev",
       "url": "https://github.com/vercel-labs/agent-browser",
-      "summary": "适用于AI代理的浏览器自动化CLI",
-      "judgment": "适用于AI代理的浏览器自动化CLI",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# agent-browser\n\nBrowser automation for AI agents: open pages, read them as an accessibility tree, and act on elements from the shell.\n\n  \n  \n  \n  \n  \n\nagent-browser is a native Rust CLI that gives an AI agent a browser it can drive one command at a time. `snapshot` returns the page as compact text with a ref such as `@e1` for each element. The agent acts on a ref, reads the page again to check the result, and repeats. The browser stays open between commands, so each step is one short shell call.\n\n## Install\n\n```bash\nnpm install -g agent-browser\nagent-browser install           # download Chrome for Testing (first time only)\n```\n\n- **Homebrew:** `brew install agent-browser`, then `agent-browser install`.\n- **Linux:** `agent-browser install --with-deps` also installs the browser's system libraries.\n- **No install:** `npx agent-browser open example.com`.\n\nProject installs, building from source, `upgrade`, and `doctor` are covered in [Installation](https://agent-browser.dev/installation).\n\n## Quick start\n\n```bash\nagent-browser open example.com\nagent-browser snapshot -i       # interactive elements, each with a ref\nagent-browser click @e1         # act on a ref from that snapshot\nagent-browser get url           # check the result\nagent-browser close\n```\n\nThe snapshot for `example.com`:\n\n```\n- link \"Learn more\" [ref=e1]\n```\n\n- Refs describe the page at the time of the snapshot. After navigation or a DOM change, take a new snapshot before using refs again.\n\n- CSS selectors, text, XPath, and semantic locators also work, for example `agent-browser find role button click --name \"Submit\"`. See [Selectors](https://agent-browser.dev/selectors).\n- A click fails, instead of reporting success, when the target is hidden, disabled, outside the viewport, or covered by another element such as a consent banner. Dismiss the covering element, take a new snapshot, and retry.\n\nThe full walkthrough is in the [quick start](https://agent-browser.dev/quick-start).\n\n## How it works\n\nThe CLI sends each command to a background daemon that starts on the first command and controls the browser over the Chrome DevTools Protocol. Each `--session` gets its own daemon and browser. By default, the daemon closes a headless browser and exits after one hour without commands, saving state first when [session persistence](https://agent-browser.dev/sessions) is configured.\n\nChrome for Testing is the default browser. You can also attach to a running Chrome with `--cdp` or `--auto-connect` ([CDP mode](https://agent-browser.dev/cdp-mode)), select the [Lightpanda](https://agent-browser.dev/engines/lightpanda) or [Obscura](https://agent-browser.dev/engines/obscura) engine with `--engine`, drive Mobile Safari in the [iOS Simulator](https://agent-browser.dev/ios), or use a cloud browser provider such as [Browserbase](https://agent-browser.dev/providers/browserbase), [Browserless](https://agent-browser.dev/providers/browserless), [Browser Use](https://agent-browser.dev/providers/browser-use), [Kernel](https://agent-browser.dev/providers/kernel), or [AgentCore](https://agent-browser.dev/providers/agentcore).\n\n## For AI agents\n\nThe CLI ships skills that match its version:\n\n```bash\nagent-browser skills get core                 # the core loop, refs, waiting, and common workflows\nagent-browser skills get core --ref commands  # one reference, such as the full command list\nagent-browser skills get core --full          # adds the full command reference and templates\nagent-browser skills list                     # specialized skills: electron, slack, dogfood, and more\n```\n\nInstall the discovery skill into an agent harness from [skills.sh](https://skills.sh/vercel-labs/agent-browser):\n\n```bash\nnpx skills add vercel-labs/agent-browser\n```"
+      "summary": "agent-browser 是一个用 Rust 编写的原生 CLI 工具，用于自动化浏览器操作，允许 AI 代理逐条命令控制浏览器，通过 `snapshot` 命令获取页面的紧凑文本表示，并使用引用（如 `@e1`）来操作页面元素，AI 代理可以读取页面检查结果并重复操作，浏览器在命令之间保持打开状态，每个步骤都是一条简短的 shell 调用。",
+      "judgment": "对于需要自动化浏览器操作的 AI 代理，agent-browser 是一个功能强大且灵活的工具，值得尝试。",
+      "mechanics": [
+        "使用 Chrome DevTools Protocol 控制浏览器",
+        "通过 snapshot 命令获取页面的可访问性树结构",
+        "使用引用（ref）来定位和操作页面元素",
+        "支持 CSS 选择器、XPath 和语义定位器",
+        "通过后台守护进程管理浏览器会话",
+        "支持多种浏览器引擎和云浏览器提供商",
+        "提供多种命令用于导航、交互、等待和捕获页面状态"
+      ],
+      "scenarios": [
+        "AI 代理需要自动化浏览器操作的场景，如网页数据抓取、自动化测试、网页交互任务",
+        "需要与网页进行复杂交互的 AI 应用，如填写表单、点击按钮、处理弹窗",
+        "需要实时监控网页变化的场景，如股票行情监控、新闻聚合"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "cloudflare/security-audit-skill",
       "lang": "JavaScript",
       "desc": "A coding-agent skill for multi-phase security audits with independently verified, machine-readable findings",
-      "stars": 65150,
-      "today": "2088",
-      "forks": 4227,
+      "stars": 65823,
+      "today": "2085",
+      "forks": 4276,
       "created": "2026-06-18",
       "license": "MIT",
       "topics": [],
       "homepage": "",
       "url": "https://github.com/cloudflare/security-audit-skill",
-      "summary": "用于多阶段安全审核的编码代理技能，具有经过独立验证的机器可读结果",
-      "judgment": "用于多阶段安全审核的编码代理技能，具有经过独立验证的机器可读结果",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# security-audit\n\nA coding-agent skill that turns your agent into a security auditor. It orchestrates isolated agents through reconnaissance, coverage-led hunting, candidate validation, structured output, independent record verification, and target-neutral reporting.\n\nThis is the skill that seeded Cloudflare's vulnerability discovery harness, described in [Build your own vulnerability harness](https://blog.cloudflare.com/build-your-own-vulnerability-harness). The harness grew into a multi-stage, fleet-wide system; this skill is the single-repo starting point it evolved from.\n\n## What it does\n\nThe skill runs a structured audit in six phases:\n\n1. **Reconnaissance** -- map architecture, trust boundaries, input surfaces, prior evidence, and deterministic coverage in `architecture.md` and `coverage-ledger.json`.\n2. **Coverage-led hunting** -- assign isolated hunters from ledger units, record their checks, and use coverage critics to find gaps.\n3. **Candidate validation** -- give every unique candidate to a fresh verifier that tries to disprove it.\n4. **Structured output** -- write `confirmed`, `needs_validation`, and `rejected` records to `findings.json` and validate them against `report-schema.json`.\n5. **Independent record verification** -- fresh agents verify final source claims. Material replacements receive another independent verifier.\n\n6. **Target-neutral reporting** -- derive `REPORT.md`, `FINDINGS-DETAIL.md`, and `NEEDS-VALIDATION.md` from the verified records and coverage ledger.\n\nThe parent runs `validate-coverage-ledger.cjs` after creating the ledger and after each later ledger update. It runs `validate-findings.cjs` in Phase 4 and again after every Phase 5 replacement.\n\nThe verdicts are distinct: `confirmed` has a complete source trace and bounded observed result, `needs_validation` has an exact unresolved fact and no severity, and `rejected` records a disproved candidate.\n\nMultiple runs against the same repo are additive. The skill uses prior ledgers and findings to target gaps, revalidate changed source, and carry forward current-source evidence without treating stale or unresolved work as covered.\n\n## Files\n\n| File | Purpose |\n\n| `SKILL.md` | Setup, core principles, platform terminology, workflow overview, and audit anti-patterns |\n| `RECONNAISSANCE.md` | Phase 1 reconnaissance prompts and synthesis instructions |\n| `HUNTING.md` | Phase 2 orchestration, hunting methodology, and validation rules |\n| `ATTACK-CLASSES.md` | Core, wildcard, and obvious-things attack prompts |\n| `MEMORY-SAFETY-AND-BINARY.md` | Memory-safety, binary, and kernel hunting classes for native targets |\n| `AI-AND-LLM.md` | Prompt-injection, agent/tool, and output-handling hunting classes for LLM-backed targets |\n\n| `WEB-PROTOCOL-AND-AUTH.md` | HTTP request-framing, cache, and authentication-protocol hunting classes for HTTP-protocol and auth targets |\n| `CLIENT-SIDE.md` | DOM-injection, messaging-trust, UI-redress, and prototype-pollution hunting classes for client-side/browser targets |\n| `SUPPLY-CHAIN-AND-RELEASE.md` | Dependency, CI, release, signing, update, plugin, and extension hunting classes |\n| `CLOUD-AND-DEPLOYMENT.md` | IAM, infrastructure-as-code, container, serverless, ingress, and runtime-configuration hunting classes |\n| `PROTOCOLS-RPC-AND-MESSAGING.md` | RPC, serialization, queue, broker, webhook, and streaming-protocol hunting classes |\n| `RESOURCE-EXHAUSTION-AND-AVAILABILITY.md` | Shared resource, quota, queue, worker, and operator-spend hunting classes |\n| `DATA-ISOLATION-AND-LIFECYCLE.md` | Tenant isolation, cache, search, export, backup, migration, deletion, and restore hunting classes |\n| `DESKTOP-MOBILE-AND-LOCAL-IPC.md` | Native app, deep-link, webview, exported-component, helper, daemon, and local-IPC hunting classes |\n| `VALIDATION-AND-REPORTING.md` | Phases 3–6 candidate validation, structured output, record verification, and reporting |\n| `report-schema.json` | JSON schema for all three `findings.json` verdicts |\n| `validate-findings.cjs` | Zero-dependency validator for `findings.json` in Phases 4 and 5 |\n| `validate-findings.test.cjs` | Findings-validator tests and producer-compatible fixture checks |"
+      "summary": "这是一个用于多阶段安全审计的编码代理技能，能够将代理转变为安全审计员。它通过侦察、覆盖引导的搜索、候选验证、结构化输出、独立记录验证和目标中立报告等六个阶段来运行结构化审计，最终生成机器可读的审计结果。",
+      "judgment": "如果你需要一个自动进行多阶段安全审计的技能，值得抄作业",
+      "mechanics": [
+        "使用独立代理通过六个阶段进行结构化审计",
+        "通过 `architecture.md` 和 `coverage-ledger.json` 映射架构、信任边界、输入表面和确定性覆盖",
+        "使用 `coverage-ledger.json` 中的记录单元分配独立的搜索代理，并记录它们的检查结果",
+        "使用覆盖评论家（coverage critics）来发现覆盖空白",
+        "每个独特的候选都交给一个新的验证器来尝试证伪",
+        "将 `confirmed`、`needs_validation` 和 `rejected` 记录写入 `findings.json` 并根据 `report-schema.json` 进行验证",
+        "使用独立的代理验证最终来源声明",
+        "从验证的记录和覆盖账本中派生 `REPORT.md`、`FINDINGS-DETAIL.md` 和 `NEEDS-VALIDATION.md`"
+      ],
+      "scenarios": [
+        "开源情报分析师在进行代码审计时，可以使用该技能自动进行多阶段安全审计",
+        "软件安全团队在进行漏洞发现和渗透测试时，可以使用该技能来提高审计效率和准确性",
+        "开发者在进行代码审查时，可以使用该技能来发现潜在的安全漏洞"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "google/skills",
       "lang": "Python",
       "desc": "Agent Skills for Google products and technologies",
-      "stars": 23171,
-      "today": "449",
-      "forks": 1943,
+      "stars": 23449,
+      "today": "443",
+      "forks": 1959,
       "created": "2026-03-31",
       "license": "Apache-2.0",
       "topics": [
@@ -55,37 +80,64 @@
       ],
       "homepage": "",
       "url": "https://github.com/google/skills",
-      "summary": "Google产品和技术的代理技能",
-      "judgment": "Google产品和技术的代理技能",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# Agent Skills\n\n[](https://skills.sh/google/skills)\n\nThis repository contains [Agent Skills](https://agentskills.io/home) for Google\nproducts and technologies, including [Google Cloud](https://cloud.google.com).\n\n## Installation\n\n```bash\nnpx skills add google/skills\n```\n\nWhen prompted, select specific skills or all skills, the target agents to\nconfigure, and the installation scope (project or global).\n\nIf `npx` is not available in your environment, install\n[Node.js](https://nodejs.org/en/download), which includes `npm` and `npx`.\n\n## Updating Skills\n\nTo update previously installed skills to the latest versions, run the following\ncommand.\n\n```bash\nnpx skills update\n```\n\nThis command gives you an option to also remove obsolete skills.\n\n## Available Skills\n\n- **Getting started with Google Cloud**\n  - [**Authenticating and Authorizing to Google Cloud (IAM)**](./skills/cloud/google-cloud-recipe-auth)\n  - [**Google Cloud Recipe: Foundation Builder**](./skills/cloud/google-cloud-recipe-foundation-builder)\n  - [**Onboarding to Google Cloud**](./skills/cloud/google-cloud-recipe-onboarding)\n- **Multi-product solution skills**\n  - [**Google Cloud solution-architecture workflow**](./skills/cloud/google-cloud-solution-architecture)\n  - [**Agent Gateway multi-agent security**](./skills/cloud/google-cloud-solution-multi-agent-security)\n  - [**Agentic analytics across cloud providers and data types**](./skills/cloud/google-cloud-solution-agentic-analytics-spark-knowledge-catalog)\n\n- [**Borderless open data lakehouse agentic AI system**](./skills/cloud/google-cloud-solution-agentic-ai-borderless-data-lakehouse)\n  - [**Build and deploy AI agents on Google Cloud**](./skills/cloud/google-cloud-solution-build-deploy-agents)\n  - [**Data science workflow with AI agents solution**](./skills/cloud/google-cloud-solution-agentic-ai-data-science-workflow)\n  - [**Dynamic Hybrid Search using AlloyDB**](./skills/cloud/google-cloud-solution-hybrid-search-alloydb)\n  - [**Google Skill Finder**](./skills/developers/finding-google-skills)\n  - [**Live bidirectional multimodal streaming agentic AI solution**](./skills/cloud/google-cloud-solution-agentic-ai-bidirectional-streaming)\n  - [**Migrate AI Workloads to GKE Inference**](./skills/cloud/google-cloud-solution-guided-gke-ai-migration)\n  - [**RAG for enterprise search using GKE and AlloyDB**](./skills/cloud/google-cloud-solution-rag-enterprise-search-gke-sqldb)\n  - [**Secure n-tier serverless web application with strict private application tiers**](./skills/cloud/google-cloud-solution-n-tier-serverless-web-app)\n- **AI/ML**\n  - [**Agent Access Audit**](./skills/cloud/agent-platform-access-audit)\n  - [**Agent Platform Alert Configuration**](./skills/cloud/agent-platform-alert-configuration)\n  - [**Agent Platform Endpoint Management**](./skills/cloud/agent-platform-endpoint-management)\n  - [**Agent Platform Eval Flywheel Skill**](./skills/cloud/agent-platform-eval-flywheel)\n\n- [**Agent Platform GenAI Inference Skill**](./skills/cloud/agent-platform-inference)\n  - [**Agent Platform Model Garden Deploy Skill**](./skills/cloud/agent-platform-deploy)\n  - [**Agent Platform Model Registry Management**](./skills/cloud/agent-platform-model-registry)\n  - [**Agent Platform Model Tuning**](./skills/cloud/agent-platform-tuning)\n  - [**Agent Platform Prompt Management**](./skills/cloud/agent-platform-prompt-management)\n  - [**Agent Platform RAG Engine Management**](./skills/cloud/agent-platform-rag-engine-management)\n  - [**Agent Platform Troubleshooting**](./skills/cloud/agent-platform-troubleshooting)\n  - [**Agent Platform Tuning Management**](./skills/cloud/agent-platform-tuning-management)\n  - [**API Gateway Remote MCP Server (Public Preview)**](./skills/cloud/api-gateway-mcp-server)\n  - [**Apigee as an Agent Gateway Service Extension**](./skills/cloud/apigee-agent-gateway-governance)\n  - [**BigQuery AI & ML**](./skills/cloud/bigquery-ai-ml)\n  - [**Gemini API in Agent Platform**](./skills/cloud/gemini-api)\n  - [**Gemini Enterprise Agent Platform - Managed Agents API Skill**](./skills/cloud/gemini-agents-api)\n  - [**Gemini Interactions API Skill**](./skills/cloud/gemini-interactions-api)\n  - [**Gemini platform Architecture and Engineering Guide**](./skills/cloud/agent-platform-architecture)\n  - [**Genkit Dart**](./skills/cloud/developing-genkit-dart)\n  - [**Genkit Go**](./skills/cloud/developing-genkit-go)"
+      "summary": "这是一个包含针对 Google 产品和技术的 Agent Skills 仓库，通过 `skills.sh` 或 `npx` 安装后，可以为 Google Cloud 等产品配置特定的技能，如身份认证、架构设计、AI/ML 集成等，支持更新和管理已安装的技能。",
+      "judgment": "对于需要快速集成和配置 Google Cloud 技能的开发者和运维人员，值得尝试使用",
+      "mechanics": [
+        "使用 Node.js 的 `npm` 和 `npx` 工具进行安装和更新",
+        "基于 Google Cloud 的 Agent Skills 框架进行技能配置和管理",
+        "支持多种 Google 产品和技术，如 IAM、BigQuery、GKE 等",
+        "提供技能注册和版本管理机制",
+        "包含多种技能，如身份认证、架构设计、AI/ML 集成等",
+        "支持技能的动态更新和移除",
+        "使用 Genkit 进行技能开发，支持多种语言如 Dart、Go、JS、Python",
+        "提供技能调试和故障排除工具"
+      ],
+      "scenarios": [
+        "Google Cloud 的开发者和运维人员需要快速集成和配置特定技能",
+        "需要为 Google Cloud 产品提供自动化解决方案的企业",
+        "需要利用 Google Cloud 进行 AI/ML 应用的开发者和数据科学家",
+        "需要管理和监控 Google Cloud 资源的系统管理员"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "mattpocock/skills",
       "lang": "Shell",
       "desc": "Skills for Real Engineers. Straight from my .agents directory.",
-      "stars": 317376,
-      "today": "1111",
-      "forks": 26559,
+      "stars": 317782,
+      "today": "1100",
+      "forks": 26585,
       "created": "2026-02-03",
       "license": "MIT",
       "topics": [],
       "homepage": "https://aihero.dev/skills",
       "url": "https://github.com/mattpocock/skills",
-      "summary": "真正工程师的技能。直接来自我的.agents目录。",
-      "judgment": "真正工程师的技能。直接来自我的.agents目录。",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# Skills For Real Engineers\n\n[](https://skills.sh/mattpocock/skills)\n\nMy agent skills that I use every day to do real engineering - not vibe coding.\n\nDeveloping real applications is hard. Approaches like GSD, BMAD, and Spec-Kit try to help by owning the process. But while doing so, they take away your control and make bugs in the process hard to resolve.\n\nThese skills are designed to be small, easy to adapt, and composable. They work with any model. They're based on decades of engineering experience. Hack around with them. Make them your own. Enjoy.\n\nIf you want to keep up with changes to these skills, and any new ones I create, you can join ~60,000 other devs on my newsletter:\n\n[Sign Up To The Newsletter](https://www.aihero.dev/s/skills-newsletter)\n\n## Installation (30-second setup)\n\nA plugin updates itself. [skills.sh](https://skills.sh/mattpocock/skills) copies editable files into your project, and you update them by hand. Pick one per agent, because installing both gives you every skill twice.\n\n### 1. Get the skills\n\nClaude Code\n\n```bash\nclaude plugin install mattpocock-skills@claude-plugins-official\n```\n\nUpdates itself by default.\n\nCodex\n\n```bash\ncodex plugin marketplace add mattpocock/skills\ncodex plugin add mattpocock-skills@mattpocock\n```\n\nUpdates itself at startup.\n\nGitHub Copilot (CLI and VS Code)\n\n```bash\ncopilot plugin marketplace add mattpocock/skills\ncopilot plugin install mattpocock-skills@mattpocock\n```\n\nThen, once, add to `~/.copilot/settings.json`:\n\n```json\n{\n  \"extraKnownMarketplaces\": {\n    \"mattpocock\": { \"source\": { \"source\": \"github\", \"repo\": \"mattpocock/skills\" }, \"autoUpdate\": true }\n  }\n}\n```\n\nIn VS Code, run **Chat: Install Plugin From Source** and enter `https://github.com/mattpocock/skills`. It updates daily.\n\nGemini CLI (manual updates)\n\n```bash\ngemini skills install https://github.com/mattpocock/skills.git --path skills/engineering\ngemini skills install https://github.com/mattpocock/skills.git --path skills/productivity\n```\n\nRe-run both commands to update.\n\nAny other agent, or editable files (manual updates)\n\n```bash\nnpx skills@latest add mattpocock/skills -a   # cursor, opencode, devin, windsurf, amp, pi; omit -a to choose\n```\n\nWhen the installer asks which skills to take, include `setup-matt-pocock-skills`. To update, run `npx skills@latest update`, and re-run `add` to pick up new skills.\n\n### 2. Run `/setup-matt-pocock-skills`\n\nIn your agent, run it once per repo. It will:\n\n- Ask you which issue tracker you want to use (GitHub, GitLab, local files, or anything else you describe)\n- Ask you what labels you apply to tickets when you triage them (`/triage` uses labels)\n- Ask you where you want to save any docs we create\n\n### 3. Bam - you're ready to go.\n\n## Why These Skills Exist\n\nI built these skills as a way to fix common failure modes I see with Claude Code, Codex, and other coding agents.\n\n### #1: The Agent Didn't Do What I Want\n\n> \"No-one knows exactly what they want\"\n>\n> David Thomas & Andrew Hunt, [The Pragmatic Programmer](https://www.amazon.co.uk/Pragmatic-Programmer-Anniversary-Journey-Mastery/dp/B0833F1T3V)\n\n**The Problem**. The most common failure mode in software development is misalignment. You think the dev knows what you want. Then you see what they've built - and you realize it didn't understand you at all.\n\nThis is just the same in the AI age. There is a communication gap between you and the agent. The fix for this is a **grilling session** - getting the agent to ask you detailed questions about what you're building.\n\n**The Fix** is to use:\n\n- [`/grill-me`](./skills/productivity/grill-me/SKILL.md) - for non-code uses\n- [`/grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.md) - same as [`/grill-me`](./skills/productivity/grill-me/SKILL.md), but adds more goodies (see below)\n\nThese are my most popular skills. They help you align with the agent before you get started, and think deeply about the change you're making. Use them _every_ time you want to make a change.\n\n### #2: The Agent Is Way Too Verbose\n\n> With a ubiquitous language, conversations among developers and expressions of the code are all derived from the same domain model.\n>\n> Eric Evans, [Domain-Driven-Design](https://www.amazon.co.uk/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215)\n\n**The Problem**: At the start of a project, devs and the people they're building the software for (the domain experts) are usually speaking different languages."
+      "summary": "这是一个开源项目，提供一系列用于工程实践的Shell脚本技能，旨在帮助开发者与AI编码代理更好地协作。通过安装这些技能，用户可以在项目中使用特定的命令与代理交互，例如进行需求澄清（/grill-me）、创建共享术语表（/grill-with-docs）以及进行测试驱动开发（/tdd）。这些技能通过更新自身并复制可编辑文件到项目目录，实现快速部署和定制。",
+      "judgment": "如果你需要与AI编码代理进行深度协作，这些技能可以帮助你提高效率和代码质量，值得尝试。",
+      "mechanics": [
+        "基于Shell脚本编写的可复用技能模块",
+        "通过插件系统集成到不同的AI代理（如Claude Code、Codex、GitHub Copilot、Gemini CLI等）",
+        "使用命令行接口（CLI）与AI代理进行交互",
+        "通过配置文件和命令参数进行定制化设置",
+        "利用版本控制系统管理技能更新",
+        "提供反馈循环机制（如TDD）以优化代理输出",
+        "鼓励创建共享术语表以减少沟通障碍"
+      ],
+      "scenarios": [
+        "软件工程师希望在项目中使用AI编码代理提高效率",
+        "需要与AI代理进行深度协作以完成复杂任务",
+        "希望优化AI代理的输出质量和准确性",
+        "希望在项目中建立一套标准化的AI代理使用流程"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "anthropics/skills",
       "lang": "Python",
       "desc": "Public repository for Agent Skills",
-      "stars": 188492,
-      "today": "386",
-      "forks": 22227,
+      "stars": 188849,
+      "today": "390",
+      "forks": 22261,
       "created": "2025-09-22",
       "license": "",
       "topics": [
@@ -93,37 +145,60 @@
       ],
       "homepage": "",
       "url": "https://github.com/anthropics/skills",
-      "summary": "座席技能的公共存储库",
-      "judgment": "座席技能的公共存储库",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "> **Note:** This repository contains Anthropic's implementation of skills for Claude. For information about the Agent Skills standard, see [agentskills.io](http://agentskills.io).\n\n[](https://skills.sh/anthropics/skills)\n\n# Skills\nSkills are folders of instructions, scripts, and resources that Claude loads dynamically to improve performance on specialized tasks. Skills teach Claude how to complete specific tasks in a repeatable way, whether that's creating documents with your company's brand guidelines, analyzing data using your organization's specific workflows, or automating personal tasks.\n\nFor more information, check out:\n- [What are skills?](https://support.claude.com/en/articles/12512176-what-are-skills)\n- [Using skills in Claude](https://support.claude.com/en/articles/12512180-using-skills-in-claude)\n- [How to create custom skills](https://support.claude.com/en/articles/12512198-creating-custom-skills)\n- [Equipping agents for the real world with Agent Skills](https://anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)\n\n# About This Repository\n\nThis repository contains skills that demonstrate what's possible with Claude's skills system. These skills range from creative applications (art, music, design) to technical tasks (testing web apps, MCP server generation) to enterprise workflows (communications, branding, etc.).\n\nEach skill is self-contained in its own folder with a `SKILL.md` file containing the instructions and metadata that Claude uses. Browse through these skills to get inspiration for your own skills or to understand different patterns and approaches.\n\nMany skills in this repo are open source (Apache 2.0). We've also included the document creation & editing skills that power [Claude's document capabilities](https://www.anthropic.com/news/create-files) under the hood in the [`skills/docx`](./skills/docx), [`skills/pdf`](./skills/pdf), [`skills/pptx`](./skills/pptx), and [`skills/xlsx`](./skills/xlsx) subfolders. These are also open source (Apache 2.0), and we wanted to share them with developers as a reference for more complex skills that are actively used in a production AI application.\n\n## Disclaimer\n\n**These skills are provided for demonstration and educational purposes only.** While some of these capabilities may be available in Claude, the implementations and behaviors you receive from Claude may differ from what is shown in these skills. These skills are meant to illustrate patterns and possibilities. Always test skills thoroughly in your own environment before relying on them for critical tasks.\n\n# Skill Sets\n- [./skills](./skills): Skill examples for Creative & Design, Development & Technical, Enterprise & Communication, and Document Skills\n- [./spec](./spec): The Agent Skills specification\n- [./template](./template): Skill template\n\n# Try in Claude Code, Claude.ai, and the API\n\n## Claude Code\nYou can register this repository as a Claude Code Plugin marketplace by running the following command in Claude Code:\n```\n/plugin marketplace add anthropics/skills\n```\n\nThen, to install a specific set of skills:\n1. Select `Browse and install plugins`\n2. Select `anthropic-agent-skills`\n3. Select `document-skills` or `example-skills`\n4. Select `Install now`\n\nAlternatively, directly install either Plugin via:\n```\n/plugin install document-skills@anthropic-agent-skills\n/plugin install example-skills@anthropic-agent-skills\n```\n\nAfter installing the plugin, you can use the skill by just mentioning it. For instance, if you install the `document-skills` plugin from the marketplace, you can ask Claude Code to do something like: \"Use the PDF skill to extract the form fields from `path/to/some-file.pdf`\"\n\n## Claude.ai\n\nThese example skills are all already available to paid plans in Claude.ai. \n\nTo use any skill from this repository or upload custom skills, follow the instructions in [Using skills in Claude](https://support.claude.com/en/articles/12512180-using-skills-in-claude#h_a4222fa77b).\n\n## Claude API\n\nYou can use Anthropic's pre-built skills, and upload custom skills, via the Claude API. See the [Skills API Quickstart](https://docs.claude.com/en/api/skills-guide#creating-a-skill) for more.\n\n# Creating a Basic Skill"
+      "summary": "这是一个开源仓库，包含Anthropic为Claude开发的技能（skills），技能是一组指令、脚本和资源，Claude可以动态加载它们以在特定任务上提高性能，例如创建符合公司品牌指南的文档、使用组织特定的工作流程分析数据或自动化个人任务。",
+      "judgment": "值得参考，但需注意实际应用中的差异和测试需求",
+      "mechanics": [
+        "技能以文件夹形式组织，包含`SKILL.md`文件，该文件包含Claude使用的指令和元数据",
+        "技能使用YAML格式的frontmatter定义名称和描述",
+        "技能通过Claude Code插件、Claude.ai或API进行加载和使用",
+        "技能采用Apache 2.0开源许可证",
+        "技能设计用于展示Claude技能系统的可能性和模式"
+      ],
+      "scenarios": [
+        "AI开发者和企业使用此仓库获取技能开发灵感，理解不同模式和方法",
+        "Claude用户通过Claude Code插件、Claude.ai或API使用预构建或自定义技能",
+        "需要Claude完成特定任务（如文档处理、数据分析）的开发者使用相关技能"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "meta/astryx",
       "lang": "TypeScript",
       "desc": "An open source design system that's fully customizable and agent ready",
-      "stars": 14235,
-      "today": "185",
-      "forks": 1173,
+      "stars": 14605,
+      "today": "96",
+      "forks": 1196,
       "created": "2026-01-09",
       "license": "MIT",
       "topics": [],
       "homepage": "http://astryx.atmeta.com",
       "url": "https://github.com/meta/astryx",
-      "summary": "完全可定制和代理就绪的开源设计系统",
-      "judgment": "完全可定制和代理就绪的开源设计系统",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# Astryx\n\nAn open source design system that's fully customizable and built for how we build now:  by people and the agents working alongside them.\n\n**Currently in Beta** · Built on [React 19+](https://react.dev) and [StyleX](https://stylexjs.com)\n\n[](https://www.npmjs.com/package/@astryxdesign/core)\n[](LICENSE)\n[](https://github.com/meta/astryx/wiki/Contributing)\n\n[](https://astryx.atmeta.com)\n[](https://astryx.atmeta.com/storybook/)\n[](https://astryx.atmeta.com/sandbox/)\n\n**[Docs](https://astryx.atmeta.com)** · **[Storybook](https://astryx.atmeta.com/storybook/)** · **[Sandbox](https://astryx.atmeta.com/sandbox/)** · **[Contributing](https://github.com/meta/astryx/wiki/Contributing)** · **[Discord](https://discord.com/invite/XnsUcFykEP)**\n\n## Overview\n\nAstryx is an open source design system that grew inside Meta over the last eight years, where it became the most-used and largest design system in the company — powering 13,000+ apps and shaped by the engineers, designers, and product teams who depend on it every day.\n\nIt ships 150+ accessible components, brand-level theming, dark mode, ready-to-ship templates, and a CLI as one cohesive system. You import pre-built CSS and use typed React components — no build plugin, no styling library to adopt — and both people and AI assistants build with the same tooling.\n\n**What makes Astryx different:**\n\n- **Open internals.** Components are built to be composed at any level, not locked behind a closed top-level API. The building blocks you'd reach for are exported directly, and when you need to go deeper, swizzle ejects a component's full source into your project to own.\n- **No styling lock-in.** Astryx authors its styles with StyleX, but that's invisible to consumers. Override with `className` using Tailwind, CSS modules, or plain CSS — whatever your project already uses.\n- **Customize without wrapping.** A theme is a set of CSS custom property overrides, so a designer can make Astryx unmistakably theirs without forking or wrapping component source.\n- **Built for people and agents.** The API, docs, and CLI are designed together so a person and an AI assistant build the same way, from the same reference.\n\n## Getting Started\n\nAstryx requires **React 19** or later (`react` and `react-dom` are peer dependencies of `@astryxdesign/core`).\n\nInstall Astryx, a theme, and its peer dependencies:\n\n```bash\n# npm\nnpm install @astryxdesign/core @astryxdesign/theme-neutral @stylexjs/stylex\nnpm install -D @astryxdesign/cli\n\n# pnpm\npnpm add @astryxdesign/core @astryxdesign/theme-neutral @stylexjs/stylex\npnpm add -D @astryxdesign/cli\n\n# yarn\nyarn add @astryxdesign/core @astryxdesign/theme-neutral @stylexjs/stylex\nyarn add -D @astryxdesign/cli\n```\n\nYou can also install the CLI once for your computer, so `astryx` works in any folder and every coding agent knows Astryx; in a project, it still runs that project's own version:\n\n```bash\nnpm i -g @astryxdesign/cli\n```\n\nProject install, global install, or both? `astryx docs global/project-global-or-both` compares them (both is recommended), and `astryx docs global` explains how global mode works.\n\nThe simplest setup is a few CSS imports plus a theme provider — no build plugin, no PostCSS or Babel config. See the **[@astryxdesign/core README](packages/core/README.md#quick-start)** for the full guide (Next.js, Tailwind, Vite, and CDN).\n\nFor reliable CLI access, add a script to your `package.json`:\n\n```json\n\"scripts\": {\n  \"astryx\": \"node node_modules/@astryxdesign/cli/clients/cli/bin/astryx.mjs\"\n}\n```\n\nThen use it as `npm run astryx -- component --list`. This avoids path errors when AI assistants or new developers invoke the CLI directly.\n\n## Packages\n\n| Package                                    | Description                                                                                          | README                             |\n\n| [`@astryxdesign/core`](packages/core)      | Components, theme system, and utilities                                                              | [README](packages/core/README.md)  |"
+      "summary": "Astryx 是一个开源的设计系统，它提供了150多个可访问的组件、品牌级别的主题、暗黑模式、现成的模板以及一个CLI工具。用户可以通过导入预构建的CSS和使用类型化的React组件来使用Astryx，无需额外的构建插件或样式库。它支持人类和AI助手使用相同的工具进行开发。",
+      "judgment": "适合需要高度定制化且支持AI辅助开发的大型项目，值得尝试但需注意Beta阶段的不稳定性。",
+      "mechanics": [
+        "基于 React 19+ 和 StyleX 构建，提供声明式样式解决方案",
+        "组件设计为可组合，支持任意级别的嵌套和自定义",
+        "使用CSS自定义属性进行主题定制，无需修改组件源码",
+        "提供CLI工具进行组件文档生成、模板创建、脚手架搭建等",
+        "遵循指导性原则而非强制性规则，组件提供能力而非限制",
+        "强类型化组件和文档，确保一致性和可预测性",
+        "支持人类和AI助手使用相同API和工具进行开发"
+      ],
+      "scenarios": [
+        "大型科技公司在内部多个产品线和应用中使用",
+        "需要高度定制化且支持AI辅助开发的设计系统",
+        "希望统一设计语言并提高开发效率的团队",
+        "对设计系统组件化和可访问性有较高要求的场景"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "prometheus/prometheus",
       "lang": "Go",
       "desc": "The Prometheus monitoring system and time series database.",
-      "stars": 67345,
-      "today": "325",
-      "forks": 10998,
+      "stars": 67456,
+      "today": "322",
+      "forks": 11006,
       "created": "2012-11-24",
       "license": "Apache-2.0",
       "topics": [
@@ -137,19 +212,33 @@
       ],
       "homepage": "https://prometheus.io/",
       "url": "https://github.com/prometheus/prometheus",
-      "summary": "Prometheus监控系统和时间序列数据库。",
-      "judgment": "Prometheus监控系统和时间序列数据库。",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "Prometheus\n\nVisit prometheus.io for the full documentation,\nexamples and guides.\n\n[](https://github.com/prometheus/prometheus/actions/workflows/ci.yml)\n[][quay]\n[][hub]\n[](https://bestpractices.coreinfrastructure.org/projects/486)\n[](https://github.com/prometheus/prometheus/actions/workflows/govulncheck.yml)\n[](https://securityscorecards.dev/viewer/?uri=github.com/prometheus/prometheus)\n[](https://clomonitor.io/projects/cncf/prometheus)\n[](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:prometheus)\n\nPrometheus, a [Cloud Native Computing Foundation](https://cncf.io/) project, is a systems and service monitoring system. It collects metrics\nfrom configured targets at given intervals, evaluates rule expressions,\ndisplays the results, and can trigger alerts when specified conditions are observed.\n\nThe features that distinguish Prometheus from other metrics and monitoring systems are:\n\n* A **multi-dimensional** data model (time series defined by metric name and set of key/value dimensions)\n* PromQL, a **powerful and flexible query language** to leverage this dimensionality\n* No dependency on distributed storage; **single server nodes are autonomous**\n* An HTTP **pull model** for time series collection\n* **Pushing time series** is supported via an intermediary gateway for batch jobs\n* Targets are discovered via **service discovery** or **static configuration**\n* Multiple modes of **graphing and dashboarding support**\n\n* Support for hierarchical and horizontal **federation**\n\n## Architecture overview\n\n## Install\n\nThere are various ways to install Prometheus.\n\n### Precompiled binaries\n\nPrecompiled binaries for released versions are available in the\n[*download* section](https://prometheus.io/download/)\non [prometheus.io](https://prometheus.io). Using the latest production release binary\nis the recommended way to install Prometheus.\nSee the [Installing](https://prometheus.io/docs/introduction/install/)\nchapter in the documentation for all the details.\n\n### Docker images\n\nDocker images are available on [Quay.io](https://quay.io/repository/prometheus/prometheus) or [Docker Hub](https://hub.docker.com/r/prom/prometheus/).\n\nYou can launch a Prometheus container for trying it out with\n\n```bash\ndocker run --name prometheus -d -p 127.0.0.1:9090:9090 prom/prometheus\n```\n\nPrometheus will now be reachable at .\n\n### Building from source\n\nTo build Prometheus from source code, you need:\n\n* Go: Version specified in [go.mod](./go.mod) or greater.\n* NodeJS: Version specified in [.nvmrc](./web/ui/.nvmrc) or greater.\n* npm: Version 10 or greater (check with `npm --version` and [here](https://www.npmjs.com/)).\n\nStart by cloning the repository:\n\n```bash\ngit clone https://github.com/prometheus/prometheus.git\ncd prometheus\n```\n\nYou can use the `go` tool to build and install the `prometheus`\nand `promtool` binaries into your `GOPATH`:\n\n```bash\ngo install github.com/prometheus/prometheus/cmd/...\nprometheus --config.file=your_config.yml\n```\n\n*However*, when using `go install` to build Prometheus, Prometheus will expect to be able to\nread its web assets from local filesystem directories under `web/ui/static`. In order for\nthese assets to be found, you will have to run Prometheus from the root of the cloned\nrepository. Note also that this directory does not include the React UI unless it has been\nbuilt explicitly using `make assets` or `make build`.\n\nAn example of the above configuration file can be found [here.](https://github.com/prometheus/prometheus/blob/main/documentation/examples/prometheus.yml)\n\nYou can also build using `make build`, which will compile in the web assets so that\nPrometheus can be run from anywhere:\n\n```bash\nmake build\n./prometheus --config.file=your_config.yml\n```\n\nThe Makefile provides several targets:\n\n* *build*: build the `prometheus` and `promtool` binaries (includes building and compiling in web assets)\n* *test*: run the tests\n* *test-short*: run the short tests\n* *format*: format the source code\n* *vet*: check the source code for common errors\n* *assets*: build the React UI\n\n### Service discovery plugins\n\nPrometheus is bundled with many service discovery plugins. You can customize\nwhich service discoveries are included in your build using Go build tags.\n\nTo exclude service discoveries when building with `make build`, add the desired\ntags to the `.promu.yml` file under `build.tags.all`:\n\n```yaml\nbuild:\n    tags:\n        all:\n            - netgo\n            - builtinassets\n            - remove_all_sd           # Exclude all optional SDs\n            - enable_kubernetes_sd    # Re-enable only kubernetes\n```"
+      "summary": "Prometheus 是一个开源的监控系统和时间序列数据库，它通过 HTTP 拉取模型从配置的目标收集指标数据，支持使用 PromQL 查询语言进行数据分析，并能根据规则表达式触发警报。用户可以通过配置文件定义监控目标、规则和警报条件，并通过 Web 界面查看监控数据和警报信息。",
+      "judgment": "适用于需要强大指标收集、查询和告警能力的云原生监控场景，但需要一定的学习成本和配置管理能力。",
+      "mechanics": [
+        "多维度数据模型：使用指标名称和键值对维度定义时间序列数据。",
+        "PromQL 查询语言：提供强大的灵活性和功能，用于查询和分析多维时间序列数据。",
+        "单节点自主性：单个服务器节点可以独立运行，不依赖分布式存储。",
+        "HTTP 拉取模型：Prometheus 定期主动从配置的目标拉取指标数据。",
+        "推送门关：支持通过中间件推送时间序列数据，适用于批处理作业。",
+        "服务发现：支持通过服务发现机制或静态配置自动发现监控目标。",
+        "图形化支持：支持多种图形化和仪表盘展示方式，并支持联邦机制进行数据聚合。",
+        "远程写入：支持将时间序列数据写入远程存储系统，如远程 Prometheus 或时间序列数据库。"
+      ],
+      "scenarios": [
+        "云原生环境下的系统和应用监控。",
+        "需要实时监控和告警的分布式系统。",
+        "需要多维数据分析和可视化的监控场景。",
+        "需要与 Kubernetes 等容器编排平台集成的监控环境。"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "sherlock-project/sherlock",
       "lang": "Python",
       "desc": "Hunt down social media accounts by username across social networks",
-      "stars": 99856,
-      "today": "1819",
-      "forks": 11818,
+      "stars": 100645,
+      "today": "1766",
+      "forks": 11888,
       "created": "2018-12-24",
       "license": "MIT",
       "topics": [
@@ -164,19 +253,31 @@
       ],
       "homepage": "https://sherlockproject.xyz",
       "url": "https://github.com/sherlock-project/sherlock",
-      "summary": "通过社交网络中的用户名查找社交媒体帐户",
-      "judgment": "通过社交网络中的用户名查找社交媒体帐户",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "Hunt down social media accounts by username across 400+ social networks\n  \n\n  Installation\n  &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;\n  Usage\n  &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;\n  Contributing\n\n## Installation\n\n  \n\n&#8202;&#8202;\n\n> [!WARNING]  \n> Packages for ParrotOS and Ubuntu 24.04, maintained by a third party, appear to be __broken__.  \n> Users of these systems should defer to [`uv`](https://docs.astral.sh/uv/)/`pipx`/`pip` or Docker.\n\n| Method | Notes |\n\n| `pipx install sherlock-project` | `pip` or [`uv`](https://docs.astral.sh/uv/) may be used in place of `pipx` |\n| `docker run -it --rm sherlock/sherlock` |\n| `dnf install sherlock-project` | |\n\nCommunity-maintained packages are available for Debian (>= 13), Ubuntu (>= 22.10), Homebrew, Kali, and BlackArch. These packages are not directly supported or maintained by the Sherlock Project.\n\nSee all alternative installation methods [here](https://sherlockproject.xyz/installation).\n\n## General usage\n\nTo search for only one user:\n```bash\nsherlock user123\n```\n\nTo search for more than one user:\n```bash\nsherlock user1 user2 user3\n```\n\nAccounts found will be stored in an individual text file with the corresponding username (e.g ```user123.txt```).\n\n```console\n$ sherlock --help\nusage: sherlock [-h] [--version] [--verbose] [--folderoutput FOLDEROUTPUT] [--output OUTPUT] [--csv] [--xlsx] [--site SITE_NAME] [--proxy PROXY_URL] [--dump-response]\n                [--json JSON_FILE] [--timeout TIMEOUT] [--print-all] [--print-found] [--no-color] [--browse] [--local] [--nsfw] [--txt] [--ignore-exclusions]\n                USERNAMES [USERNAMES ...]\n\nSherlock: Find Usernames Across Social Networks (Version 0.16.0)\n\npositional arguments:\n  USERNAMES             One or more usernames to check with social networks. Check similar usernames using {?} (replace to '_', '-', '.').\n\noptions:\n  -h, --help            show this help message and exit\n  --version             Display version information and dependencies.\n  --verbose, -v, -d, --debug\n                        Display extra debugging information and metrics.\n  --folderoutput FOLDEROUTPUT, -fo FOLDEROUTPUT\n                        If using multiple usernames, the output of the results will be saved to this folder.\n  --output OUTPUT, -o OUTPUT\n                        If using single username, the output of the result will be saved to this file.\n  --csv                 Create Comma-Separated Values (CSV) File.\n  --xlsx                Create the standard file for the modern Microsoft Excel spreadsheet (xlsx).\n  --site SITE_NAME      Limit analysis to just the listed sites. Add multiple options to specify more than one site.\n  --proxy PROXY_URL, -p PROXY_URL\n                        Make requests over a proxy. e.g. socks5://127.0.0.1:1080\n  --dump-response       Dump the HTTP response to stdout for targeted debugging.\n  --json JSON_FILE, -j JSON_FILE\n                        Load data from a JSON file or an online, valid, JSON file. Upstream PR numbers also accepted.\n  --timeout TIMEOUT     Time (in seconds) to wait for response to requests (Default: 60)\n\n--print-all           Output sites where the username was not found.\n  --print-found         Output sites where the username was found (also if exported as file).\n  --no-color            Don't color terminal output\n  --browse, -b          Browse to all results on default browser.\n  --local, -l           Force the use of the local data.json file.\n  --nsfw                Include checking of NSFW sites from default list.\n  --txt                 Enable creation of a txt file\n  --ignore-exclusions   Ignore upstream exclusions (may return more false positives)\n```\n\n## Credits\n\nThank you to everyone who has contributed to Sherlock! ❤️\n\n  \n\n## Star History\n\n  \n  \n  \n\n## License\n\nMIT © Sherlock Project\nCreator - [Siddharth Dushantha](https://github.com/sdushantha)\n\n[ext_pypi]: https://pypi.org/project/sherlock-project/\n[ext_brew]: https://formulae.brew.sh/formula/sherlock"
+      "summary": "Sherlock 是一个开源的 Python 工具，用于通过用户名在 400 多个社交媒体平台上搜索用户账户。用户可以通过命令行输入一个或多个用户名，Sherlock 会自动在各个平台上查找这些用户，并将结果保存为文本文件或其他格式（如 CSV、xlsx）。支持的功能包括指定搜索的平台、使用代理、生成调试信息等。",
+      "judgment": "如果你需要跨平台查找用户账户，Sherlock 是一个值得参考的工具，但需要注意其局限性和潜在的合规风险。",
+      "mechanics": [
+        "使用 Python 编写，依赖网络请求库（如 requests）进行数据抓取",
+        "通过解析各个社交媒体平台的 API 或公开页面来查找用户信息",
+        "支持多种输出格式，包括文本、CSV 和 Excel 文件",
+        "可以配置使用代理服务器进行网络请求",
+        "内置了大量的社交媒体平台列表，并可以扩展",
+        "支持调试模式，可以输出详细的日志信息"
+      ],
+      "scenarios": [
+        "网络安全分析师用于追踪恶意用户或黑客的社交媒体活动",
+        "社交媒体研究人员用于分析特定用户在多个平台上的影响力",
+        "个人或企业用于查找特定人员的社交媒体账户",
+        "开发者用于测试和扩展社交媒体平台的搜索功能"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "milind-soni/OpenMausBot",
       "lang": "TypeScript",
       "desc": "Open-source Grok Bot alternative with a virtual machine that bots can use",
-      "stars": 16562,
-      "today": "1986",
-      "forks": 2348,
+      "stars": 17085,
+      "today": "1955",
+      "forks": 2416,
       "created": "2026-08-11",
       "license": "Apache-2.0",
       "topics": [
@@ -191,19 +292,32 @@
       ],
       "homepage": "https://www.openmausbot.com/",
       "url": "https://github.com/milind-soni/OpenMausBot",
-      "summary": "使用机器人可以使用的虚拟机的开源Grok机器人替代方案",
-      "judgment": "使用机器人可以使用的虚拟机的开源Grok机器人替代方案",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# OpenMausBot\n\n**The open-source Grok Bot alternative: your own team of AI bots, in a chat app.**\n\n[**openmausbot.com**](https://www.openmausbot.com) &nbsp;·&nbsp; [Download](https://www.openmausbot.com/download) &nbsp;·&nbsp; [Open source Grok Bot alternative, compared](https://www.openmausbot.com/blog/grok-bot-vs-openmausbot)\n\nOpenMausBot is an open-source Grok Bot alternative: an independent project inspired by **Grok Bot**, and the open-source alternative to **Meta Muse**, **OpenAI dots** and **Cue by Manus** — bring-your-own-agent, local-first, on the models you already have. Also known as **MausBot**; formerly **OpenGrokBot**. Not affiliated with xAI, Meta, OpenAI or Manus.\n\nEvery bot in the sidebar is a real agent — Claude or Codex running locally under the hood — with its own\npersonality, its own model, its own cloud computer, and its own connected apps.\nTalk to them like contacts. Watch them work. Approve what matters.\n\n[](https://github.com/milind-soni/OpenMausBot/releases/latest)\n\n  \n\n&nbsp;\n\n  \n\n&nbsp;\n\n  \n\n&nbsp;\n\n  \n\n[latest release](https://github.com/milind-soni/OpenMausBot/releases/latest) &nbsp;·&nbsp; macOS: Apple silicon & Intel · signed & notarized .dmg &nbsp;·&nbsp; Windows: x64 installer &nbsp;·&nbsp; Ubuntu 24.04 x64: .deb or AppImage beta &nbsp;·&nbsp; [all releases](https://github.com/milind-soni/OpenMausBot/releases)\n\n  \n\nPowered by boat.dev\n\n  \n    \n    \n  \n\n---\n\n> ⚠️ **No affiliation with any cryptocurrency.** OpenMausBot has no token. Any coin using the OpenMausBot, Maus, or SupaMaus name is not created, endorsed, or affiliated with this project or its maintainer. I have received no tokens, payment, or allocation from anyone, and I will not be endorsing any token.\n\n## Why\n\nOne assistant in one box is the wrong shape for agents. OpenMausBot is an independent, open-source project inspired by **Grok Bot** —\nit keeps the idea (AI as a *messaging app*: a roster of bots you chat with, each with its own personality,\nmemory of its thread, model, computer, and apps) and rebuilds it open, local-first, and on the agents you\nalready have:\n\n- **Bring your own agents.** Bots run on the `claude`, `codex`, and `grok` CLIs installed on your own machine\n  — your existing logins and subscriptions, no new accounts, no proxy in the middle. Point any engine at a\n  custom CLI binary (a versioned build or wrapper) in **Settings → Engines**.\n- **Local first.** One small harness server on `127.0.0.1` owns every agent process. Transcripts, keys, and\n  events live in `~/.openmausbot`, not a cloud.\n- **Agents with hands.** Each bot can use a cloud Linux desktop, an isolated Local VM, or—where the platform\n  safety boundary is currently certified—your own computer, plus 500+ apps through Composio. Host control is\n  available on macOS and Ubuntu Xorg after explicit opt-in. Ubuntu Wayland host control remains disabled while\n  issue #345 is resolved.\n\n## The open-source alternative to Grok Bot, Muse, dots and Cue\n\nFour closed personal-agent products shipped in seven weeks of 2026, and each one keeps the model, the\ncomputer and your data on its maker's side of the line. OpenMausBot is the open-source version of that\nshape: a team of agents in a chat app, each with its own model, its own computer and its own connected\napps, running on your machine under Apache 2.0. If you searched for an *open Muse*, *open dots*, an\n*open-source Grok Bot*, an *open Instinct* or an *open Cue*, this is the repository.\n\n| Looking for | What it is | How OpenMausBot differs | Read more |\n\n| **Open source Grok Bot** | xAI's roster of bots on one shared cloud computer, Grok only, from a SuperGrok or Cursor plan | Same roster shape; any model per bot; your own machine; approval cards | [Grok Bot vs OpenMausBot](https://www.openmausbot.com/blog/grok-bot-vs-openmausbot) |\n| **Open Muse** | Meta's single personal agent in a Meta cloud VM, US and Canada only | A team instead of one agent; runs anywhere; data in `~/.openmausbot` | [Meta Muse alternative](https://www.openmausbot.com/blog/open-source-alternative-to-meta-muse) |\n| **Open dots** | OpenAI's always-on agent inside ChatGPT, GPT only, Pro and Business Premium plans | Several agents; your Claude, ChatGPT or Grok login; no plan required | [OpenAI dots alternative](https://www.openmausbot.com/blog/openai-dots-alternative) |"
+      "summary": "OpenMausBot 是一个开源的 Grok Bot 替代品，它允许用户在聊天应用中运行自己的团队 AI 代理。用户可以在应用中创建多个 AI 代理，每个代理都可以使用本地运行的 Claude、Codex 或 Grok 模型，拥有自己的个性、模型、云端计算机和连接的应用。用户可以通过聊天界面与这些代理进行交互，监控它们的工作，并对重要事项进行审批。",
+      "judgment": "如果你需要本地运行多个 AI 代理并希望保持数据和计算资源的控制，OpenMausBot 是一个值得考虑的选择。",
+      "mechanics": [
+        "本地代理运行：代理使用用户本地机器上安装的 Claude、Codex 或 Grok CLI 运行。",
+        "本地优先架构：所有代理进程由运行在本地机器上的小型 harness 服务器管理，数据存储在本地。",
+        "独立计算环境：每个代理可以配置使用云 Linux 桌面、隔离的本地虚拟机或用户自己的计算机作为计算环境。",
+        "Composio 应用集成：代理可以通过 Composio 连接和使用超过 500 个应用程序。",
+        "代理管理界面：用户可以通过类似 Telegram 的聊天界面与代理交互、监控和审批代理的工作。",
+        "模型和引擎配置：用户可以在设置中指定自定义的 CLI 二进制文件来指定使用的模型和引擎。",
+        "Apache 2.0 许可证：项目采用 Apache 2.0 开源许可证发布。"
+      ],
+      "scenarios": [
+        "开发者和研究人员：需要运行多个 AI 代理并希望保持数据本地化的场景。",
+        "企业用户：希望构建和管理内部 AI 代理团队，并保持对数据和计算资源的控制。",
+        "隐私敏感用户：不希望将数据和计算任务外包给第三方云服务的用户。",
+        "AI 实验和原型设计：需要快速搭建和测试多个 AI 代理应用的场景。"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "astral-sh/ruff",
       "lang": "Rust",
       "desc": "An extremely fast Python linter and code formatter, written in Rust.",
-      "stars": 50873,
+      "stars": 50989,
       "today": "350",
-      "forks": 2625,
+      "forks": 2633,
       "created": "2022-08-09",
       "license": "MIT",
       "topics": [
@@ -218,19 +332,33 @@
       ],
       "homepage": "https://docs.astral.sh/ruff",
       "url": "https://github.com/astral-sh/ruff",
-      "summary": "用Rust编写的非常快的Python linter和代码格式化程序。",
-      "judgment": "用Rust编写的非常快的Python linter和代码格式化程序。",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# Ruff\n\n[](https://github.com/astral-sh/ruff)\n[](https://pypi.python.org/pypi/ruff)\n[](https://github.com/astral-sh/ruff/blob/main/LICENSE)\n[](https://pypi.python.org/pypi/ruff)\n[](https://github.com/astral-sh/ruff/actions)\n[](https://discord.com/invite/astral-sh)\n\n[**Docs**](https://docs.astral.sh/ruff/) | [**Playground**](https://play.ruff.rs/)\n\nAn extremely fast Python linter and code formatter, written in Rust.\n\n  \n    \n    \n    \n  \n\n  Linting the CPython codebase from scratch.\n\n- ⚡️ 10-100x faster than existing linters (like Flake8) and formatters (like Black)\n- 🐍 Installable via `pip`\n- 🛠️ `pyproject.toml` support\n- 🤝 Python 3.15 compatibility\n- ⚖️ Drop-in parity with [Flake8](https://docs.astral.sh/ruff/faq/#how-does-ruffs-linter-compare-to-flake8), [isort](https://docs.astral.sh/ruff/faq/#how-does-ruffs-import-sorting-compare-to-isort), and [Black](https://docs.astral.sh/ruff/faq/#how-does-ruffs-formatter-compare-to-black)\n- 📦 Built-in caching, to avoid re-analyzing unchanged files\n- 🔧 Fix support, for automatic error correction (e.g., automatically remove unused imports)\n- 📏 Over [900 built-in rules](https://docs.astral.sh/ruff/rules/), with native re-implementations\n    of popular Flake8 plugins, like flake8-bugbear\n- ⌨️ First-party [editor integrations](https://docs.astral.sh/ruff/editors) for [VS Code](https://github.com/astral-sh/ruff-vscode) and [more](https://docs.astral.sh/ruff/editors/setup)\n\n- 🌎 Monorepo-friendly, with [hierarchical and cascading configuration](https://docs.astral.sh/ruff/configuration/#config-file-discovery)\n\nRuff aims to be orders of magnitude faster than alternative tools while integrating more\nfunctionality behind a single, common interface.\n\nRuff can be used to replace [Flake8](https://pypi.org/project/flake8/) (plus dozens of plugins),\n[Black](https://github.com/psf/black), [isort](https://pypi.org/project/isort/),\n[pydocstyle](https://pypi.org/project/pydocstyle/), [pyupgrade](https://pypi.org/project/pyupgrade/),\n[autoflake](https://pypi.org/project/autoflake/), and more, all while executing tens or hundreds of\ntimes faster than any individual tool.\n\nRuff is actively developed and used in major open-source projects like:\n\n- [Apache Airflow](https://github.com/apache/airflow)\n- [Apache Superset](https://github.com/apache/superset)\n- [FastAPI](https://github.com/tiangolo/fastapi)\n- [Hugging Face](https://github.com/huggingface/transformers)\n- [Pandas](https://github.com/pandas-dev/pandas)\n- [SciPy](https://github.com/scipy/scipy)\n\nRuff is backed by [Astral](https://astral.sh), the creators of\n[uv](https://github.com/astral-sh/uv) and [ty](https://github.com/astral-sh/ty).\n\nRead the [launch\npost](https://astral.sh/blog/announcing-astral-the-company-behind-ruff), or the\noriginal [project\nannouncement](https://notes.crmarsh.com/python-tooling-could-be-much-much-faster).\n\n## Testimonials\n\n[**Sebastián Ramírez**](https://twitter.com/tiangolo/status/1591912354882764802), creator\nof [FastAPI](https://github.com/tiangolo/fastapi):\n\n> Ruff is so fast that sometimes I add an intentional bug in the code just to confirm it's actually\n> running and checking the code.\n\n[**Nick Schrock**](https://twitter.com/schrockn/status/1612615862904827904), founder of [Elementl](https://www.elementl.com/),\nco-creator of [GraphQL](https://graphql.org/):\n\n> Why is Ruff a gamechanger? Primarily because it is nearly 1000x faster. Literally. Not a typo. On\n> our largest module (dagster itself, 250k LOC) pylint takes about 2.5 minutes, parallelized across 4\n> cores on my M1. Running ruff against our _entire_ codebase takes .4 seconds.\n\n[**Bryan Van de Ven**](https://github.com/bokeh/bokeh/pull/12605), co-creator\nof [Bokeh](https://github.com/bokeh/bokeh/), original author\nof [Conda](https://docs.conda.io/en/latest/):\n\n> Ruff is ~150-200x faster than flake8 on my machine, scanning the whole repo takes ~0.2s instead of\n> ~20s. This is an enormous quality of life improvement for local dev. It's fast enough that I added\n> it as an actual commit hook, which is terrific.\n\n[**Timothy Crosley**](https://twitter.com/timothycrosley/status/1606420868514877440),\ncreator of [isort](https://github.com/PyCQA/isort):\n\n> Just switched my first project to Ruff. Only one downside so far: it's so fast I couldn't believe\n> it was working till I intentionally introduced some errors."
+      "summary": "Ruff 是一个用 Rust 编写的极快的 Python 代码检查器和格式化工具，它可以检查 Python 代码中的错误和不规范之处，并自动格式化代码以提高可读性。使用 Ruff，你可以通过命令行运行 `ruff check` 来检查当前目录或指定路径的 Python 代码，或者使用 `ruff format` 来自动格式化代码。Ruff 还支持通过 `pyproject.toml` 文件进行配置，并且可以与 VS Code 等编辑器集成。",
+      "judgment": "Ruff 是一个性能卓越的 Python 代码检查和格式化工具，值得在 Python 项目中推广应用。",
+      "mechanics": [
+        "基于 Rust 的高性能执行引擎，使其比传统的 Python 代码检查器快 10-100 倍",
+        "内置超过 900 条规则，覆盖了常见的代码风格和错误检查需求",
+        "使用内置缓存机制，避免重复分析未更改的文件，提高效率",
+        "支持通过 `pyproject.toml` 文件进行配置，提供灵活的配置选项",
+        "原生实现了许多流行的 Flake8 插件的功能，如 flake8-bugbear",
+        "支持自动修复功能，可以自动纠正一些常见的代码错误，如自动移除未使用的导入",
+        "提供第一方编辑器集成，支持 VS Code 等主流编辑器",
+        "支持单一代码库配置，通过分层和级联配置文件实现代码库级别的配置"
+      ],
+      "scenarios": [
+        "Python 开发者用于日常代码检查和格式化，提高代码质量和一致性",
+        "开源项目和大型代码库用于自动化代码检查和格式化，提高开发效率",
+        "在 CI/CD 流程中集成 Ruff，用于自动化代码质量检查",
+        "个人开发者或团队用于提高代码风格的一致性，减少代码审查时间"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "tailwindlabs/tailwindcss",
       "lang": "TypeScript",
       "desc": "A utility-first CSS framework for rapid UI development.",
-      "stars": 98287,
-      "today": "181",
-      "forks": 7099,
+      "stars": 98502,
+      "today": "122",
+      "forks": 7110,
       "created": "2017-10-06",
       "license": "MIT",
       "topics": [
@@ -244,19 +372,30 @@
       ],
       "homepage": "https://tailwindcss.com/",
       "url": "https://github.com/tailwindlabs/tailwindcss",
-      "summary": "实用程序优先的CSS框架，用于快速UI开发。",
-      "judgment": "实用程序优先的CSS框架，用于快速UI开发。",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "A utility-first CSS framework for rapidly building custom user interfaces.\n\n    \n    \n    \n    \n\n---\n\n## Documentation\n\nFor full documentation, visit [tailwindcss.com](https://tailwindcss.com).\n\n## Community\n\nFor help, discussion about best practices, or feature ideas:\n\n[Discuss Tailwind CSS on GitHub](https://github.com/tailwindlabs/tailwindcss/discussions)\n\n## Contributing\n\nIf you're interested in contributing to Tailwind CSS, please read our [contributing docs](https://github.com/tailwindlabs/tailwindcss/blob/main/.github/CONTRIBUTING.md) **before submitting a pull request**."
+      "summary": "Tailwind CSS 是一个实用优先的 CSS 框架，用于快速构建自定义用户界面。它通过提供一系列低级 CSS 类来创建样式，用户可以通过组合这些类来快速设计 UI 元素，无需编写自定义 CSS。主要功能包括快速样式生成、响应式设计、主题定制等，通过命令行工具可以生成和优化 CSS 文件。",
+      "judgment": "适用于需要快速构建自定义 UI 且不介意 CSS 文件体积的开发者，值得尝试",
+      "mechanics": [
+        "实用优先（Utility-first）设计哲学，通过组合低级 CSS 类来构建样式",
+        "基于 JavaScript 的命令行工具（CLI）用于生成和优化 CSS 文件",
+        "响应式设计支持，通过 Tailwind 插件实现不同屏幕尺寸的适配",
+        "主题定制功能，允许用户自定义颜色、字体等样式变量",
+        "JavaScript 框架集成，支持与 React、Vue、Svelte 等框架无缝集成"
+      ],
+      "scenarios": [
+        "前端开发人员快速构建自定义 UI 界面",
+        "需要快速原型设计和开发的项目",
+        "希望减少自定义 CSS 编写时间的开发者",
+        "需要高度可定制和响应式设计的 Web 应用"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "mbillow/localthings",
       "lang": "Python",
       "desc": "Control your Samsung appliances from Home Assistant over your home network, with no cloud account.",
-      "stars": 981,
-      "today": "184",
-      "forks": 103,
+      "stars": 1072,
+      "today": "186",
+      "forks": 113,
       "created": "2026-06-30",
       "license": "MIT",
       "topics": [
@@ -271,19 +410,31 @@
       ],
       "homepage": "",
       "url": "https://github.com/mbillow/localthings",
-      "summary": "通过家庭网络从家庭助理控制您的三星设备，无需云帐户。",
-      "judgment": "通过家庭网络从家庭助理控制您的三星设备，无需云帐户。",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# LocalThings\n\n**Control your Samsung appliances from Home Assistant over your home network, with no cloud account.**\n\nLocalThings connects Home Assistant to Samsung washers, dryers, refrigerators, air conditioners, ovens and other appliances that work with the SmartThings app. It talks to each appliance on your local network.\n\n- **Updates are fast.** Appliances that support push send changes as they happen. LocalThings checks the rest every 30 seconds.\n- **It works without the internet.** After setup, LocalThings never contacts Samsung's servers.\n- **Your data stays home.** LocalThings sends nothing to Samsung. The appliance itself still keeps its own connection to Samsung, and LocalThings doesn't change that.\n- **Setup needs an IP address.** For most appliances, you enter the address and LocalThings works out the type and model, then creates matching controls and sensors.\n\n## What it supports\n\n| Appliance | Appliance |\n\n| Air conditioner, including multi-unit systems | Microwave |\n| Air dresser | Oven |\n| Air monitor | Range and range hood |\n| Air purifier | Refrigerator, kimchi refrigerator, wine cellar |\n| Cooktop, gas, radiant electric and induction; some models read-only | Robot vacuum, early support |\n| Dehumidifier | Soundbar, settings and status |\n| Dishwasher | Vacuum clean station |\n| Dryer | Washer and washer-dryer |\n| EHS heat pump | Water purifier |\n\nWhat you see depends on what each appliance reports. Typical controls and sensors include power, program or mode selection, start, pause and stop, temperatures and setpoints, time remaining and finish time, door and child-lock state, energy use, filter status and alarms.\n\nMost Samsung appliances from about 2022 onward work, and so do some earlier washers, air conditioners and wall ovens that use an older local interface. See [Older appliances on TCP 8888](#older-appliances-on-tcp-8888). Setup detects which interface an appliance has, and tells you if it finds none.\n\nIf an appliance sets up but LocalThings doesn't recognize it, or a control is missing, Home Assistant shows a notice asking for a diagnostics download. That download is usually all the maintainers need to add support. See [Reporting a capability gap](#reporting-a-capability-gap).\n\n## Built on open standards\n\nLocalThings uses the standards the appliances implement:\n\n- **OCF, the [Open Connectivity Foundation](https://openconnectivity.org/) specification.** Samsung's connected appliances are OCF devices. LocalThings discovers each appliance's resources through `/oic/res` and reads its device type, such as `oic.d.washer`, from `/oic/d`. Where an appliance offers both a standard OCF resource and a Samsung extension for the same state, LocalThings uses the standard one.\n\n- **CoAP over DTLS.** LocalThings sends Constrained Application Protocol requests, defined in [RFC 7252](https://www.rfc-editor.org/rfc/rfc7252), over an encrypted DTLS session with an X.509 client certificate. It uses CoAP Observe, [RFC 7641](https://www.rfc-editor.org/rfc/rfc7641), for push updates, and block-wise transfer, [RFC 7959](https://www.rfc-editor.org/rfc/rfc7959), for large responses. The [`smartthings-local`](https://github.com/QuiteYellow/SmartThings-Local) library implements the protocol layer.\n- **Home Assistant's own patterns.** Setup, reconfigure and reauthentication run in the UI config flow. A data-update coordinator combines push and polling. DHCP discovery follows an appliance to a new IP address. Repairs notices report gaps. LocalThings redacts diagnostics downloads and translates entity names into ten languages.\n- **Declarative appliance maps.** Each appliance type is a table that maps the resources an appliance reports to Home Assistant entities. Tests check the tables against 90+ captures from real appliances, so a new model usually needs a table entry and no protocol code.\n\n---\n\n## Install\n\n1. In [HACS](https://hacs.xyz/), go to **Integrations**, search for **LocalThings**, and select **Download**. LocalThings is in HACS's default list, so you don't need to add a custom repository.\n\n   [](https://my.home-assistant.io/redirect/hacs_repository/?owner=mbillow&repository=localthings&category=integration)"
+      "summary": "LocalThings 是一个 Home Assistant 插件，允许用户通过本地网络控制 Samsung 家电，无需 Samsung 云账户。安装后，用户可以在 Home Assistant 中添加 Samsung 家电设备，并通过 IP 地址进行设置。插件会自动识别设备类型和型号，并创建相应的控制和传感器。用户可以通过 Home Assistant 界面控制家电，如选择模式、设置温度、查看状态等。",
+      "judgment": "如果你的 Samsung 家电支持 OCF 协议且你想本地控制它们，LocalThings 是一个值得尝试的集成方案。",
+      "mechanics": [
+        "OCF (Open Connectivity Foundation) 协议：用于发现和读取 Samsung 家电的资源。",
+        "CoAP over DTLS：使用受限应用协议（CoAP）通过 DTLS 加密会话与家电通信。",
+        "Home Assistant 的配置模式：通过 Home Assistant 的 UI 配置流程进行设置和重新配置。",
+        "DHCP 发现：自动跟随家电到新的 IP 地址。",
+        "数据更新协调器：结合推送和轮询进行数据更新。",
+        "声明式家电映射：将家电报告的资源映射到 Home Assistant 实体。",
+        "诊断下载：当设备设置但无法识别或控制时，提供诊断信息以添加支持。"
+      ],
+      "scenarios": [
+        "用户希望在没有云账户的情况下控制 Samsung 家电。",
+        "用户希望将 Samsung 家电集成到 Home Assistant 自动化系统中。",
+        "用户希望本地网络中控制家电，并保护数据隐私。"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "zed-industries/zed",
       "lang": "Rust",
       "desc": "Code at the speed of thought – Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.",
-      "stars": 94129,
-      "today": "1119",
-      "forks": 11544,
+      "stars": 94304,
+      "today": "1114",
+      "forks": 11557,
       "created": "2021-02-20",
       "license": "NOASSERTION",
       "topics": [
@@ -294,19 +445,29 @@
       ],
       "homepage": "https://zed.dev",
       "url": "https://github.com/zed-industries/zed",
-      "summary": "以思维速度编写代码– Zed是Atom和Tree-sitter创建者的高性能多人代码编辑器。",
-      "judgment": "以思维速度编写代码– Zed是Atom和Tree-sitter创建者的高性能多人代码编辑器。",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# Zed\n\n[](https://zed.dev)\n[](https://github.com/zed-industries/zed/actions/workflows/run_tests.yml)\n\nWelcome to Zed, a high-performance, multiplayer code editor from the creators of [Atom](https://github.com/atom/atom) and [Tree-sitter](https://github.com/tree-sitter/tree-sitter).\n\n---\n\n### Installation\n\nOn macOS, Linux, and Windows you can [download Zed directly](https://zed.dev/download) or install Zed via your local package manager ([macOS](https://zed.dev/docs/installation#macos)/[Linux](https://zed.dev/docs/linux#installing-via-a-package-manager)/[Windows](https://zed.dev/docs/windows#package-managers)).\n\nOther platforms are not yet available:\n\n- Web ([tracking discussion](https://github.com/zed-industries/zed/discussions/26195))\n\n### Developing Zed\n\n- [Building Zed for macOS](./docs/src/development/macos.md)\n- [Building Zed for Linux](./docs/src/development/linux.md)\n- [Building Zed for Windows](./docs/src/development/windows.md)\n\n### Contributing\n\nSee [CONTRIBUTING.md](./CONTRIBUTING.md) for ways you can contribute to Zed.\n\nAlso... we're hiring! Check out our [jobs](https://zed.dev/jobs) page for open roles.\n\n### Licensing\n\nZed source code is licensed primarily under GPL-3.0-or-later, with Apache-2.0 components where marked.\n\nLicense information for third party dependencies must be correctly provided for CI to pass.\n\nWe use [`cargo-about`](https://github.com/EmbarkStudios/cargo-about) to automatically comply with open source licenses. If CI is failing, check the following:\n\n- Is it showing a `no license specified` error for a crate you've created? If so, add `publish = false` under `[package]` in your crate's Cargo.toml.\n- Is the error `failed to satisfy license requirements` for a dependency? If so, first determine what license the project has and whether this system is sufficient to comply with this license's requirements. If you're unsure, ask a lawyer. Once you've verified that this system is acceptable add the license's SPDX identifier to the `accepted` array in `script/licenses/zed-licenses.toml`.\n- Is `cargo-about` unable to find the license for a dependency? If so, add a clarification field at the end of `script/licenses/zed-licenses.toml`, as specified in the [cargo-about book](https://embarkstudios.github.io/cargo-about/cli/generate/config.html#crate-configuration).\n\n## Sponsorship\n\nZed is developed by **Zed Industries, Inc.**, a for-profit company.\n\nIf you’d like to financially support the project, you can do so via GitHub Sponsors.\nSponsorships go directly to Zed Industries and are used as general company revenue.\nThere are no perks or entitlements associated with sponsorship."
+      "summary": "Zed 是一款高性能的多人代码编辑器，支持实时协作编辑、代码补全、语法高亮等功能，通过命令行启动并使用，工作流程包括安装、启动、编辑和协作。",
+      "judgment": "适合需要实时协作且追求高性能的开发团队，但需注意许可合规性风险。",
+      "mechanics": [
+        "使用 WebSockets 协议实现多人实时协作编辑",
+        "基于 Tree-sitter 构建高效的语法解析器",
+        "采用 Rust 语言开发，保证高性能和稳定性",
+        "通过 JSON RPC 进行编辑器命令和状态同步",
+        "内置 LSP (Language Server Protocol) 支持"
+      ],
+      "scenarios": [
+        "开发者团队进行远程协作编码",
+        "教育机构进行实时代码教学和演示",
+        "开源项目维护者进行多人同步编辑"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "ranxianglei/billion-context",
       "lang": "TypeScript",
       "desc": "A context-compression plugin for month-long single sessions (billions of tokens) ,small context windows (a 100K context is enough) and token savings (5x fewer tokens) .上下文压缩插件，月级长会话会话， 兼顾小窗口(100k上下文足矣)省token(省5倍token) . billion-context is all you need",
-      "stars": 4488,
-      "today": "185",
-      "forks": 361,
+      "stars": 4651,
+      "today": "191",
+      "forks": 371,
       "created": "2026-08-06",
       "license": "NOASSERTION",
       "topics": [
@@ -314,19 +475,31 @@
       ],
       "homepage": "",
       "url": "https://github.com/ranxianglei/billion-context",
-      "summary": "一个上下文压缩插件，用于长达一个月的单个会话（数十亿令牌） ，小上下文窗口（ 100K上下文就足够了）和令牌节省（令牌减少5倍）。上下文压缩插件月级长会话会话， ， 兼顾小窗口（ 100K上下文足矣 ）省令牌（省 5个倍令牌）。十亿上下文是您所需要的全部",
-      "judgment": "一个上下文压缩插件，用于长达一个月的单个会话（数十亿令牌） ，小上下文窗口（ 100K上下文就足够了）和令牌节省（令牌减少5倍）。上下文压缩插件月级长会话会话， ， 兼顾小窗口（ 100K上下文足矣 ）省令牌（省 5个倍令牌）。十亿上下文是您所需要的全部",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# billion-context\n\nEnglish | 中文\n\nContext-compression plugin — billion-context is all you need.\n\nsmall context windows (100K is enough) · 5× fewer tokens · month-long single sessions (billions of tokens) · high compression quality\n\nnpm install -g billion-context --prefix=~/.local\n\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n&nbsp;\n\n---\n\n> **Cache health at a glance:** a healthy session keeps a **95–97%** prefix-cache hit rate — compression itself costs ≤2%. Sustained lower? Check attribution with `/acp` or `/acp-cache` (see [FAQ](#faq)); usual causes, in order: upstream cache TTL expiry · model switch · a bili bug (please report) · other/unknown.\n\n## Community\n\nQQ Group:\n1056132097 (full)\n1108730198 (full)\n1129868472 (open)\n\n---\n\n## 📄 Paper / Preprint\n\n- **[Model-Driven Incremental Hierarchical Compression: Training-Free Multi-Generational Context Management for Long-Lived Coding Agents](./paper/model-driven-incremental-hierarchical-compression-training-free-multi-generational-context-management-for-long-lived-coding-agents.md)** (English, v0.2)\n\n> 📝 **The paper itself is open-sourced under the MIT License as part of the codebase (`paper/`). It is a living document — anyone may edit it; improvements are welcome via pull request.**\n\nA production-scale longitudinal study: 4.5 months, three hosts, 174,327 model calls, 18.76B cumulative input tokens (~24.7B across all hosts), zero window violations on 204,800-token models, marathon sessions of 8,584–12,049 calls.\n\n### 📊 Independent Third-Party Benchmarks\n\n- **[1,500-Item Cross-Benchmark Evaluation (`LongMemEval-S` · `ContextBench` · `MemoryAgentBench`)](./benchmarks/third-party-1500/README.md)** ([中文版](./benchmarks/third-party-1500/README.zh-CN.md)) — head-to-head comparison of `billion-context` (`v0.1.202`) against `full` context and 3 RAG arms (`bm25`, `embedding`, `embedding-rerank`) with `DeepSeek V4.1 Flash`, `Qwen3-Embedding-8B`, `Qwen3-Reranker-4B`, and `Pi Agent`: **#1 on ContextBench** (`0.3097` Utilized F1, `-58.3%` cost vs `full`), **+16.6% over best RAG on LongMemEval-S** (`79.20%` vs `62.60%`, `-71.1%` independent-session cost vs `full`), and **100% survival on 1.48M-token MemoryAgentBench TTL** (`30×` steady-state compression where `full` fails `199/199`).\n\n---\n\n`billion-context` sits between **any** agent and its model API, rewriting Anthropic/OpenAI streams with [acp-kernel](https://github.com/ranxianglei/acp-kernel) compression. The model decides **when** and **what** to compress into high-fidelity summaries — not a hard truncation limit.\n\n## Why\n\n长时间的编码会话会破坏上下文。 每个提供程序按令牌收费，一旦通过上下文窗口，会话就会降级或死亡。“十亿上下文”将消耗的对话压缩为分层摘要，因此您可以在几天内运行单个会话—通过一个上下文窗口运行数十亿个令牌。\n\n与房东的内置汇总器不同，这里的压缩是* *增量、可逆和偏好"
+      "summary": "billion-context 是一个用于长会话（月级，数十亿 token）的上下文压缩插件，它能在保持高压缩质量的同时，将大上下文窗口（100k 足够）减少 5 倍 token。使用后，你可以通过一个 100k 的上下文窗口运行数天的会话，并将对话内容压缩成多层摘要。",
+      "judgment": "如果你需要长时间使用大语言模型且对 token 成本敏感，billion-context 是一个值得借鉴的解决方案。",
+      "mechanics": [
+        "基于 acp-kernel 协议进行 Anthropic/OpenAI 流的重写与压缩",
+        "模型驱动增量分层压缩算法，自动决定压缩时机和内容",
+        "生成高保真度的摘要，而非简单的截断",
+        "支持可逆的压缩，允许恢复原始信息",
+        "利用前缀缓存机制，保持 95-97% 的缓存命中率",
+        "支持命令 `/acp` 和 `/acp-cache` 查看压缩和缓存状态"
+      ],
+      "scenarios": [
+        "需要长时间运行代码辅助或大语言模型的场景，如开发者进行复杂任务",
+        "对 token 使用成本敏感，需要降低大语言模型使用费用的用户",
+        "在上下文窗口限制下，需要处理大量对话或代码生成的场景",
+        "使用 Claude、OpenAI Codex、OpenCode 等需要 API 调用的模型时"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "dsx-ai-factory/nvke",
       "lang": "Go",
       "desc": "NVIDIA Kubernetes Engine (NVKE). A management plane for GPU Kubernetes on bare metal.",
-      "stars": 421,
-      "today": "125",
-      "forks": 81,
+      "stars": 574,
+      "today": "123",
+      "forks": 90,
       "created": "2026-08-04",
       "license": "Apache-2.0",
       "topics": [
@@ -338,11 +511,22 @@
       ],
       "homepage": "https://docs.nvidia.com/nvke/",
       "url": "https://github.com/dsx-ai-factory/nvke",
-      "summary": "NVIDIA Kubernetes引擎(NVKE)。裸机上GPU Kubernetes的管理平面。",
-      "judgment": "NVIDIA Kubernetes引擎(NVKE)。裸机上GPU Kubernetes的管理平面。",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# NVIDIA Kubernetes Engine (NVKE)\n\n[](LICENSE)\n[](go.work)\n\n**Run a managed Kubernetes service on your own NVIDIA GPU infrastructure.**\nNVIDIA Kubernetes® Engine (NVKE) provides the management plane that platform teams install to create and\noperate Kubernetes clusters for their customers. Each workload cluster has its\nown Kubernetes control plane, etcd and node pools. You operate the NVKE management\nplane; your customers use their clusters through the Kubernetes API and `kubectl`.\n\n> **Preview:** NVKE is available as a preview. APIs, configuration and behavior\n> can change between releases, and we do not recommend NVKE for production\n> workloads. See [Preview status and known limitations](docs/overview/preview-status.md).\n\n[Get started](#getting-started) · [Documentation](docs/README.md) ·\n[Contribute](CONTRIBUTING.md) · [Get help](SUPPORT.md)\n\n## Getting started\n\n| Your goal | Start here | What you get |\n\n| **Evaluate without GPU hardware** | [Local quickstart](docs/get-started/quickstart-local.md) | A development management plane and a workload cluster on simulated machines. No NVIDIA account is required. |\n| **Install on your infrastructure** | [Plan your installation](docs/operate/plan-installation.md) | The prerequisites and sequence for preparing nodes, bootstrapping a management cluster and installing its services. |\n| **Build or contribute** | [Build from source](#build-from-source) | The NVKE binaries and the contributor development loop. |\n\nThe local quickstart runs on a **Linux host or VM, amd64 or arm64**, with at least\n**6 CPUs, 12 GiB of free memory and 100 GiB of free disk**. It requires Docker,\nvirtual TPM support and the tools listed in the guide. Follow its setup through\nworkload-cluster creation and confirm the cluster's nodes report `Ready`.\nOn macOS, use the [local site guide](docs/get-started/local-site.md), which runs\nthe evaluation inside a Colima virtual machine.\n\nFor a real installation, you supply the machines, networking, node images and\nregistries, and configure access to **NVIDIA Infra Controller (NICo)**. NICo is\nthe sole compatible infrastructure provider at preview. The\n[platform and version reference](docs/overview/supported-platforms.md) lists\nvalidated combinations and pinned dependencies.\n\n## What NVKE does\n\n- **Creates independent workload clusters.** Request clusters through the NVKE\n  API or `nvkectl`; NVKE provisions machines through NICo and forms Kubernetes\n  clusters with their own control planes.\n- **Manages workload cluster lifecycle.** Create, scale and delete node pools,\n  upgrade Kubernetes and replace nodes. See the [node pool guide](docs/workload-clusters/node-pools.md)\n  for the manual steps and preview limits on replacement and upgrades.\n- **Establishes node identity.** Nodes attest through SPIFFE/SPIRE using their\n  TPM before receiving join credentials. Encryption of etcd data is available\n  per cluster.\n- **Connects builds to deployment.** Its companion project,\n\n[NVIDIA Kubernetes Recipes (NVKR)](https://github.com/dsx-ai-factory/nvkr),\n  builds node images and NVKE components from pinned inputs. NVKE deploys those\n  artifacts; NVKR owns their build and release evidence.\n\nThe preview needs explicit operator configuration: API authentication is off\nand the API uses plain HTTP after installation. Configure\n[API authentication and protected access](docs/operate/api-authentication.md)\nbefore admitting callers. The management cluster does not upgrade, scale or\nreplace itself, and there is no management-plane upgrade or backup/restore\nprocedure. FDE node images are for evaluation and provide no data-at-rest\nconfidentiality. Read the [known limitations](docs/overview/preview-status.md)\nbefore choosing an evaluation or installation path.\n\n## Overview\n\nThe diagram shows the NVKE product family, how it sits on NICo and your GPU machines, and which components talk to each other.\n\nNVKE is not a Kubernetes distribution and not a Cluster API flavour. It is a\n**self-hosting factory for Kubernetes clusters**: a throwaway seed cluster\nstands up a management cluster, and the management plane on\nit then provisions and lifecycle-manages many isolated workload clusters\non demand.\n\nAn installation has two kinds of Kubernetes cluster:\n\n- The **management cluster** runs the NVKE management plane and infrastructure\n  controllers. `nvkectl` forms it using a temporary seed cluster; installing the\n  management-plane services is a separate step."
+      "summary": "NVIDIA Kubernetes Engine (NVKE) 是一个管理平台，用于在裸金属服务器上的 NVIDIA GPU 硬件上运行托管的 Kubernetes 服务。它允许平台团队创建和操作 Kubernetes 集群，每个工作负载集群都有自己独立的控制平面、etcd 和节点池。用户通过 NVKE 管理平台进行操作，而客户则通过 Kubernetes API 和 `kubectl` 使用他们的集群。",
+      "judgment": "适合需要在自己 NVIDIA GPU 硬件上运行 Kubernetes 但对成熟度和稳定性有要求的场景，谨慎使用于生产环境。",
+      "mechanics": [
+        "使用 NVIDIA Infra Controller (NICo) 进行硬件资源管理和节点供应",
+        "通过 SPIFFE/SPIRE 使用 TPM 进行节点身份验证",
+        "使用 Cluster API 进行工作负载集群的创建和生命周期管理",
+        "使用 etcd 进行集群状态存储，支持加密",
+        "提供 `nvkectl` 命令行工具进行集群管理操作",
+        "与 NVIDIA Kubernetes Recipes (NVKR) 协同进行节点镜像构建和组件签名"
+      ],
+      "scenarios": [
+        "需要在自己的 NVIDIA GPU 基础设施上运行托管的 Kubernetes 服务的企业或组织",
+        "平台团队需要为客户创建和操作 Kubernetes 集群的服务提供商",
+        "对 Kubernetes 集群进行高度定制化和隔离管理的场景"
+      ],
+      "readmeCN": ""
     }
   ],
   "featured": [
@@ -350,20 +534,32 @@
       "repo": "anthropics/FlashProve",
       "lang": "Lean",
       "desc": "A research prototype for zero-knowledge proofs of AI inference. Not maintained.",
-      "stars": 951,
+      "stars": 957,
       "today": "0",
-      "forks": 91,
+      "forks": 92,
       "created": "2026-10-30",
       "license": "Apache-2.0",
       "topics": [],
       "homepage": "",
       "url": "https://github.com/anthropics/FlashProve",
       "featured": true,
-      "summary": "人工智能推断零知识证明的研究原型。未维护。",
-      "judgment": "人工智能推断零知识证明的研究原型。未维护。",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# FlashProve\n\nVersion 0.16.0 · A research artifact: not maintained, not accepting contributions. · Apache 2.0\n\n## What it is\n\nFlashProve lets an AI provider prove which model answered a request, without revealing the model's\nweights.\n\n- **Commit.** The provider publishes a commitment ID, which [binds](guide/what-is-proved.md) it to\n  one set of weights. The weights themselves stay secret: every published value that depends on them\n  is masked, except a [declared list](docs/what-is-not-hidden.md).\n- **Prove.** For each reply, the provider's GPU produces a proof that the reply is the committed\n  model's output.\n- **Verify.** Anyone can check the proof on an ordinary CPU in seconds with `cp_verify`, without the\n  weights.\n\n## What model it runs\n\nFlashProve runs Llama 4 Maverick at full size, with a 1,024-token context window, on a single NVIDIA\nH100. The prover reaches about 110 tokens/second of prefill at 24 requests per batch\n([Performance](guide/performance.md)).\n\n## What is proved\n\nThe protocol's soundness is proved in Lean 4. A provider that tries to pass off output that is not\nthe committed model's is caught, except with probability about q/2^124 + 2^-101 after q hash\nqueries. [lean/THEOREM.md](lean/THEOREM.md) has the theorem and how to check it.\n\n## Built to be run by an agent\n\nBuilding FlashProve, running it and checking its output take long builds and many exact comparisons.\nThat work is meant for a coding agent. Point yours at this repository with:\n\n```text\nRead README.md in the FlashProve repository, starting at \"For agents\", and AGENTS.md. Working from\nthe repository root as an ordinary (non-root) user, build the verifier, check the stored example\nproof, and report the exit code and last line. Then tell me which other routes (toy proofs on CPU,\nsmall model on an H100, full size) this machine can run, and ask me before starting any of them.\n```\n\n---\n\n## For agents\n\nRun everything from the repository root as an ordinary user, never as root or under `sudo`. Only\ninstalling system packages needs root, so ask your user to do that. If root is the only account,\ncreate one first ([how](docs/quickstart.md#install)). Also read [AGENTS.md](AGENTS.md) for the\nrules on reporting results.\n\n### Hardware and software\n\n| Route | What it does | Needs | Time |\n\n| 1. Verify a stored proof | Builds `cp_verify`, checks an example proof | Linux, bash, g++ 13+; under 2 GB RAM | build 1–2 min, check > verifier-build.log; nohup bash -c 'verifier/build.sh; echo \"exit code $?\"' >> verifier-build.log 2>&1 &\n```\n\nThen poll `tail -n 2 verifier-build.log` until the last line starts `exit code`. Don't start a\nsecond build meanwhile.\n\n```\nbin/cp_verify examples/accepted-proof/config examples/accepted-proof/ivk examples/accepted-proof/example.req examples/accepted-proof/example.y examples/accepted-proof/example.proof -id \"$(cat examples/accepted-proof/ID.txt)\"\n```\n\nExpect last line `YES`, exit code 0. This example is a small model with synthetic weights, so it\nshows only that the verifier works, not anything about a served model.\n\n### 2. Toy proofs (CPU)\n\n```\nW=$(mktemp -d) && LOOK=\"$W/look\" && echo \"LOOK=$LOOK\"\nblocks/first_look.sh \"${LOOK:?first run the line with mktemp}\"\n```\n\nExpect exit code 0, and the third line from the end starts `AS EXPECTED: the honest copy was\naccepted`.\n\n### 3. Prove on a GPU\n\n```\nexamples/quickstart-gpu.sh\n```\n\nThis builds `cp_verify`, `cp_commit` and `cp_prove`, then commits, proves one 64-token request and\nverifies it.\n- It can be silent for over 15 minutes. It logs to `quickstart-gpu.log` in a directory it names\n  first.\n- Success is exit code 0 and a line starting `quickstart-gpu: all steps ended as expected`.\n- Also check that every `Compiled by` line ends in `release 13.2, V13.2.86`. A newer nvcc does not\n  stop the build, but it is not supported.\n\nFull size, after that build:\n\n```"
+      "summary": "FlashProve 是一个研究原型，用于证明 AI 推理过程，允许 AI 提供商在不泄露模型权重的情况下证明是哪个模型回答了请求。它包含提交、证明和验证三个步骤，通过在 GPU 上生成证明，并在普通 CPU 上进行验证来实现。",
+      "judgment": "在需要保护 AI 模型权重隐私且硬件条件允许的情况下，可以考虑使用，但需注意项目不再维护的风险。",
+      "mechanics": [
+        "零知识证明（Zero-Knowledge Proofs）",
+        "哈希承诺（Hash Commitments）",
+        "Lean 4 协议验证",
+        "GPU 生成证明",
+        "CPU 验证证明",
+        "合成模型测试",
+        "NVIDIA H100 支持"
+      ],
+      "scenarios": [
+        "AI 研究人员需要证明模型推理过程时",
+        "需要保护 AI 模型权重隐私的场景",
+        "需要验证 AI 模型输出合法性的平台"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "anthropics/single-agent-loop-kit",
@@ -378,49 +574,84 @@
       "homepage": "",
       "url": "https://github.com/anthropics/single-agent-loop-kit",
       "featured": true,
-      "summary": "",
-      "judgment": "",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# Single agent loop kit\n\nA starter kit for moving a multi-agent system (a router or orchestrator in front of\nspecialist subagents) toward one agent loop that loads skills and tools on demand. It is\nthe companion to the article\n[Building agents: When to fold subagents into your main agent loop](https://claude.com/resources/articles/building-agents-when-to-fold-subagents-into-your-main-agent-loop).\n\n> **Reference implementation. Not maintained and not accepting contributions.**\n\nThe kit does not assume a single loop always wins. It measures. Every change is scored on\nthe same eval before and after, and a subagent only goes away when the numbers say its\nreplacement holds.\n\n## The idea\n\n1. **Measure.** Find the evals you already have, fill the gaps, and score the system as it\n   is today. If you have none, the kit builds one with you.\n2. **Combine.** Merge the subagents that always run together.\n3. **Fold.** Turn each remaining subagent into a skill and tools in the main agent, one at\n   a time, and compare. Keep the ones that earn their own context, and call them as tools.\n\nThen keep it healthy: one small team owns the system prompt and the shared eval, and each\ndomain team owns its skills.\n\n## Try it in ten minutes\n\n`examples/support-desk` is a small, runnable support agent with a router and six subagents,\nbuilt so that each subagent has a known right answer. Follow\n[`examples/support-desk/RUNBOOK.md`](examples/support-desk/RUNBOOK.md) to watch Claude Code\n\naudit it, fold one subagent and print the before and after numbers.\n\nStart with the free check. It needs no API key and spends nothing. From wherever you put\nthe kit (downloaded as a zip, unzip it first):\n\n```bash\ncd single-agent-loop-kit/examples/support-desk\nKIT_MODEL=fake python3 evals/run_eval.py --variant smoke\n```\n\nYou should see nineteen lines ending in `19 tasks ran on the offline stand-in model, 0 harness\nerrors. The plumbing works.` The stand-in follows keyword rules, so that run is not scored.\nScores come from the real run in the runbook.\n\n## Use it on your own system\n\n1. Copy the skill into your agent repo:\n\n   ```bash\n   git clone https://github.com/anthropics/single-agent-loop-kit\n   cp -r single-agent-loop-kit/skill /.claude/skills/single-agent-loop\n   ```\n\n2. Open Claude Code in your agent repo and say: `Run the single-agent-loop skill.`\n3. It audits first and stops to show you a verdict for each subagent: fold, merge, call as\n   a tool, or keep. Correct anything it got wrong.\n4. It then works the plan one change at a time. Each change gets its own eval run and a\n   comparison, and you decide whether it stays.\n\nIt stops at the same points every time: after the audit, before any paid run, after the\nbaseline, and after each change. Each stop is a short check-in with what it found, what it\nrecommends and one question for you. Before a paid run, that includes a token estimate.\n\nYou do not need an eval to start. If you have none, or none that tests the whole system,\nit asks for a safe way to run your system on a test request and for some real requests,\ndrafts about ten tasks, and has you correct what done means for each before it runs them.\n\nThe skill reads whatever orchestration code is in the repo, so it is not tied to a\nframework. It keeps its notes in `single-loop/` in your repo.\n\n## What's in the box\n\n| Path | What it is |\n\n| [`skill/SKILL.md`](skill/SKILL.md) | The front door. Short, and points at one step file at a time |\n| [`skill/steps/00-audit.md`](skill/steps/00-audit.md) | Inventory every subagent and give each a verdict |\n| [`skill/steps/01-baseline.md`](skill/steps/01-baseline.md) | Reuse your evals, fill gaps or build one if you have none, score today's system |\n| [`skill/steps/02-merge.md`](skill/steps/02-merge.md) | Merge two subagents that always run together |\n| [`skill/steps/03-fold.md`](skill/steps/03-fold.md) | Fold a subagent into a skill and tools |\n| [`skill/steps/04-as-tool.md`](skill/steps/04-as-tool.md) | Keep a subagent, but call it as a tool with a structured result |\n| [`skill/steps/05-upkeep.md`](skill/steps/05-upkeep.md) | Shrink the prompt, prune skills, settle ownership |\n| [`skill/scripts/coupling_map.py`](skill/scripts/coupling_map.py) | From a trace export: which subagents carry the traffic and which run together |"
+      "summary": "这是一个用于将多代理系统（由路由器或协调器在专业子代理前）转变为一个按需加载技能和工具的单代理循环的入门工具包。它通过评估和比较来决定是否将子代理合并或替换为技能，并提供了一个可运行的示例支持代理。",
+      "judgment": "如果你有现成的多代理系统并希望优化，值得参考学习。",
+      "mechanics": [
+        "评估机制：通过评估来衡量系统性能，并在每次变更前后进行对比，以决定是否保留子代理。",
+        "合并机制：将总是一起运行的子代理合并为一个。",
+        "折叠机制：将剩余的子代理逐个转变为主代理中的技能和工具，并评估效果。",
+        "工具调用机制：将保留的子代理作为工具调用，并使用结构化结果。",
+        "代码分析：读取存储库中的编排代码，不依赖于特定框架。",
+        "持续维护：通过团队协作来维护系统提示和共享评估，以及各领域团队维护其技能。",
+        "成本优化：在设计确定后，使用工具进行成本优化。"
+      ],
+      "scenarios": [
+        "适用于已经拥有多代理系统，并希望将其优化为单代理循环的开发者。",
+        "适用于需要评估和比较不同代理或技能性能的场景。",
+        "适用于希望提高系统效率和降低成本的AI应用开发者。"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "anthropics/oss-scanner",
       "lang": "Dockerfile",
       "desc": "",
-      "stars": 1739,
+      "stars": 1741,
       "today": "0",
-      "forks": 1125,
+      "forks": 1126,
       "created": "2026-10-08",
       "license": "Apache-2.0",
       "topics": [],
       "homepage": "",
       "url": "https://github.com/anthropics/oss-scanner",
       "featured": true,
-      "summary": "",
-      "judgment": "",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# OSS Scanner\n\nOSS Scanner is a service by Anthropic to scan critical open-source repositories for security vulnerabilities. Learn more about the service at [red.anthropic.com/oss-scanner](https://red.anthropic.com/oss-scanner).\n\nNote, use of this tool is subject to the terms and conditions outlined in the [OSS Scanner terms](https://red.anthropic.com/oss-scanner/terms).\n\n## How to sign up\n\nEnroll an open-source project by opening a pull request that adds one directory:\n\n```\nprojects/\n```\n\nOur security scanner builds your project in an isolated VM, then analyses it with no Internet access and emails what it finds to `primary_contact` (and any CCs), each with a reproducer and a proposed patch where available. Reports are model-generated and are not reviewed by a human. Because of this we do not place a 90-day disclosure period on these findings and will not make them public. Project owners should provide `project.yaml` (to configure the scanner), a `Dockerfile` (stating how to build the project), and optionally a `threat_model.md` (providing project-specific threat modeling).\n\n### project.yaml\n\nStart from `templates/project.yaml`:\n\n```\nrepo: https://github.com/example/project    # required: the git repository to scan; add #branch to pin one\nprimary_contact: security@example.org       # required: reports and build problems go here (one address)\nauto_ccs:                                   # optional: more addresses on every mail\n  - maintainer@example.org\nhomepage: https://example.org               # optional\ndisabled: false                             # optional: true pauses reports without removing the enrolment\ndockerfile: .oss-scanner/Dockerfile         # required unless a Dockerfile sits in this repo next to your project.yaml\nthreat_model: .oss-scanner/threat_model.md  # optional; also supports placing the file in this repository\n```\n\n`repo` and `primary_contact` are always required. `dockerfile` is required unless you keep your Dockerfile next to `project.yaml` (see below). Others are optional.\n\nThe email addresses in `project.yaml` are public. Use addresses you are happy to see published, such as a security alias.\n\nTo receive email reports encrypted, add your armored OpenPGP public key. They then go to `primary_contact` only; pgp cannot be combined with `auto_ccs`:\n```\npgp: |\n  -----BEGIN PGP PUBLIC KEY BLOCK-----\n  mQINBF...\n  -----END PGP PUBLIC KEY BLOCK-----\n```\n\nTo choose where reports go, set the lowest severity each channel receives: `low`, `medium`, `high`, `critical`, or `none` to turn the channel off. A channel you leave out uses the default shown here, and a report at or above both minimums goes to both channels. `pgp` only applies to email, so GitHub reports are not encrypted to your key:\n```\noutput_format:\n  email:\n    min_severity: low\n  github_security_advisory:          # GitHub private vulnerability reporting\n    min_severity: none\n```\n\nTo turn on GitHub reports, first enable private vulnerability reporting on your repository and [add `oss-scanner` as a trusted reporter](https://docs.github.com/en/code-security/security-advisories/working-with-repository-security-advisories/configuring-private-vulnerability-reporting-for-a-repository). Anthropic operates the [`oss-scanner`](https://github.com/oss-scanner) account, which our reports come from; without this, GitHub limits how many it can send you. We ask you to confirm it on your pull request before we merge.\n\nYou must provide a Dockerfile, in exactly one of two places:\n\n* **in your own repository**: set `dockerfile:` to its path (we suggest at some location like `.oss-scanner/Dockerfile`). This is the preferred option because it allows you to update the build without a pull request here; or,  \n* **here**, next to `project.yaml`, as `projects//Dockerfile`, with no `Dockerfile:` key set in the `project.yaml`. If you would rather not add files to your repository, put it here and the scanner builds it exactly as it would an in-repo copy.\n\n(The threat model works the same way. Set the `threat_model` field for its location in your repository, or place it here at `projects//threat_model.md`.)"
+      "summary": "OSS Scanner 是一个由 Anthropic 提供的服务，用于扫描关键的开源代码库中的安全漏洞。用户通过提交一个包含特定目录的 Pull Request 来注册项目，服务会在隔离的虚拟机中构建项目，并在无网络访问的情况下分析代码，然后将发现的安全问题通过邮件发送给项目联系人，并提供复现步骤和补丁建议。",
+      "judgment": "适合对代码安全有较高要求且愿意投入配置资源的项目，值得参考使用",
+      "mechanics": [
+        "使用 Dockerfile 构建项目环境，安装依赖并构建项目",
+        "在隔离的虚拟机中进行项目构建，扫描过程中断开网络访问",
+        "通过 `project.yaml` 配置扫描参数，包括仓库地址、联系人邮箱等",
+        "使用 `threat_model.md` 提供项目特定的威胁模型信息",
+        "支持通过邮件和 GitHub 安全公告两种方式输出扫描结果",
+        "扫描结果包含复现步骤和补丁建议，但不经过人工审核"
+      ],
+      "scenarios": [
+        "开源项目维护者希望主动发现并修复代码中的安全漏洞",
+        "需要定期进行代码安全审计的项目团队",
+        "对代码安全有较高要求的企业或组织"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "anthropics/claude-code-playground",
       "lang": "JavaScript",
       "desc": "",
-      "stars": 344,
+      "stars": 345,
       "today": "0",
-      "forks": 46,
+      "forks": 47,
       "created": "2026-09-25",
       "license": "Apache-2.0",
       "topics": [],
       "homepage": "",
       "url": "https://github.com/anthropics/claude-code-playground",
       "featured": true,
-      "summary": "",
-      "judgment": "",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# claude-code-playground\n\nA playground of Claude Code setups, skills and demos from Anthropic DevRel. Maintained by the Anthropic DevRel team; not accepting external contributions.\n\n> **Please read before using anything here**\n>\n> - This is not an official Anthropic product. It is a playground: things the Anthropic DevRel team found useful or fun and wanted to share.\n> - Entries are provided as-is, with no support and no guarantee they still work. The DevRel team maintains the repository, but examples may break as Claude Code, the Claude API and the models change.\n> - We're not accepting outside contributions yet. Issues and pull requests from outside Anthropic may be closed without review. See [CONTRIBUTING.md](CONTRIBUTING.md).\n> - Nothing here is best-practice canon. Treat it as \"here is what we did\", not \"here is what you should do\".\n\n## What this is\n\nA collection of things the DevRel team is excited to share:\n\n- **How we actually set up Claude Code** — real hooks, `CLAUDE.md` files, `settings.json` examples and end-to-end personal workflows, with commentary on why.\n- **Demos of what is possible** — the result plus the story of how it was made, rather than a template to fork.\n- **Reusable skills** we use ourselves that are not part of the official plugin marketplace.\n- **Launch demos** — demos shown at model launches, with the exact prompt and setup so you can try them yourself.\n\n## Directory map\n\n| Directory | What lives there |\n\n| [`claude-code/hooks/`](claude-code/hooks/) | Hook examples, one folder per hook |\n| [`claude-code/claude-md/`](claude-code/claude-md/) | Real `CLAUDE.md` files with commentary |\n| [`claude-code/settings/`](claude-code/settings/) | `settings.json` examples |\n| [`claude-code/workflows/`](claude-code/workflows/) | End-to-end personal setups, one folder per person or workflow |\n| [`claude-code/mods/`](claude-code/mods/) | Mods: plugins that change what Claude Code does or draw their own UI, one folder per mod |\n| [`skills/`](skills/) | Reusable skills that are not in the official marketplace |\n| [`demos/`](demos/) | Art-of-the-possible demos, each with how it was built |\n| [`launch-demos/`](launch-demos/) | Demos shown at model launches, with the exact prompt and setup |\n| [`_template/`](_template/) | The entry template and pre-flight checklist every entry follows |\n\n## How to use\n\nEach entry is self-contained: open its folder and follow the \"Run it\" section of its README. Nothing is installed or configured at the repository root.\n\n## Every entry explains how it was built\n\nEach entry has its own `README.md` based on [`_template/README.md`](_template/README.md): what it shows, a demo, how it was built (which publicly available model, the prompts, what did not work), how to run it, and its limitations. Before an entry is added it goes through the [pre-flight checklist](_template/PREFLIGHT.md).\n\n## Looking for something else?\n\n| If you want | Go to |\n\n| Agent Skills examples and the skills spec | [anthropics/skills](https://github.com/anthropics/skills) |\n| Deployable starter apps to clone | [anthropics/claude-quickstarts](https://github.com/anthropics/claude-quickstarts) |\n| Claude Agent SDK demo apps | [anthropics/claude-agent-sdk-demos](https://github.com/anthropics/claude-agent-sdk-demos) |\n| API notebooks and tutorials | [anthropics/claude-cookbooks](https://github.com/anthropics/claude-cookbooks) |\n| Installable Claude Code plugins | [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) |\n| Documentation | [docs.claude.com](https://docs.claude.com) and the [Claude Code docs](https://docs.claude.com/en/docs/claude-code) |\n\n## How this repo is published\n\nEntries are staged in a private source repository, which is the source of truth, and exported to the public repository by hand. For each export a maintainer starts from a clean, up-to-date checkout of the private `main`, reviews the full diff of the export against a checkout of the public repository, and commits and pushes the result themselves. No CI job, bot, webhook or scheduled task ever publishes entries to the public repository; the only automation there is Dependabot, which keeps the pinned GitHub Actions current, and the CLA check. CI only checks; it never publishes.\n\n## Security\n\nSee [SECURITY.md](SECURITY.md).\n\n## License"
+      "summary": "这是一个由 Anthropic DevRel 团队维护的 Claude Code 实验室，包含实际设置、技能、演示和端到端工作流程，展示了团队如何使用 Claude Code 以及实现的各种可能性，但并非官方产品，不保证功能正常且不接受外部贡献。",
+      "judgment": "适合想了解 Claude Code 实际应用的开发者参考，但需注意非官方性质和潜在的不稳定性",
+      "mechanics": [
+        "使用 Claude API 与 Anthropic 的 Claude 模型进行交互",
+        "通过 `CLAUDE.md` 文件定义技能和钩子",
+        "利用 `settings.json` 配置工作环境",
+        "提供可复用的技能和自定义插件",
+        "包含详细的构建说明和运行指南",
+        "采用手动发布流程确保内容准确性"
+      ],
+      "scenarios": [
+        "开发者希望了解和学习 Anthropic DevRel 团队的 Claude Code 实践",
+        "需要探索 Claude Code 的实际应用场景和可能性",
+        "希望参考和复现团队分享的端到端工作流程",
+        "对 Claude Code 的钩子和技能开发感兴趣的开发者"
+      ],
+      "readmeCN": ""
     },
     {
       "repo": "anthropics/uplifting-biomolecular-modeling",
@@ -435,11 +666,21 @@
       "homepage": "",
       "url": "https://github.com/anthropics/uplifting-biomolecular-modeling",
       "featured": true,
-      "summary": "",
-      "judgment": "",
-      "mechanics": [],
-      "scenarios": [],
-      "readmeCN": "# Inference optimization kits\n\n36 drop-in optimization kits for the inference paths of open protein- and genomics-ML tools: structure prediction and\ncofolding, binder and sequence design, protein and genomic language models. One kit per upstream tool.\n\n- Each kit lives in its own directory, next to a copy of the upstream release at a pinned version ('stock'), carried as\n  released; the few declared exceptions are listed in `NOTICE` and the kit's `STOCK.md`.\n- A kit engages its optimizations under a named **mode** when the tool starts. How you call the upstream tool does not change.\n- In 34 kits this happens inside upstream's own Python environment. The two foundry kits (`rfdiffusion3`, `rosettafold3`)\n  instead install a small file overlay into a second interpreter and keep a pristine interpreter for `off`.\n- This page describes the common case. Where a kit differs — a declared bug-fix patch applied in every mode, no container\n  route, no shared core, an extra `run.sh` command — its own `README.md` and `STOCK.md` say so.\n- Run a kit from its own `README.md`. Every kit README has the same shape: title block with the At-a-glance line, then\n  Setup, Run, Modes, Notes.\n\nLicence: `LICENSE` (Apache License 2.0, for the original code) and `NOTICE` at the top of this tree; each kit's own\n`LICENSE` sets `stock/` (the upstream project, under its own licence) apart.\n\n**Status: not maintained and not accepting contributions.** This is a reference release that accompanies the\n\n\"How Claude is uplifting biomolecular modeling\" blog post. The code is provided as-is at the upstream versions pinned\nin each kit's `STOCK.md`; Anthropic does not plan further updates and does not accept pull requests. Issues may be\nfiled for the record but might not receive a response. Forks are welcome under the terms of `LICENSE`.\n\n## Modes\n\nOne vocabulary across all kits. Each kit ships the subset listed in the table below and in its README; any other mode\nname is an error.\n\n- `off` — stock: the pinned upstream release exactly as published, with nothing of the kit engaged. In the `run.sh` kits\n  this is a clean subprocess; in the library-style kits it is simply your own process with the kit's variable unset.\n- `exact` — outputs identical to `off`, faster.\n- `fast` — small, documented numeric differences (within the tool's own seed-to-seed variation), faster still. Usually the\n  default where a kit ships it.\n- `big` — lowest peak GPU memory, for inputs the other modes cannot hold. Where a kit ships it, `--n_gpu P` splits one\n  `big` prediction across P GPUs of one host.\n\nDefault mode (what runs when no `--mode` is given):\n\n- usually `fast`;\n- `exact` in the kits that ship no `fast`, and in `evo2`;\n- `off` in `atlasfold`;\n- none in `proteinmpnn` — every call names its mode;\n- none in the library-style kits (`enformer`, `enformer_deepmind`, `esmc`, `gpnstar`; `flashzoi` too when driven from your\n\nown script): `_OPT=exact`, or an `enable()` call in your script, engages the kit; with the variable unset the process runs stock.\n\nWhat every kit prints (the `ACTIVE` line):\n\n- A run in a kit mode prints one `[-opt] ACTIVE mode=…` line (on stderr in most kits) naming what is engaged.\n- A mode that cannot engage on this machine prints `[-opt] NOT ACTIVE: ` and exits 3. A kit never falls back\n  to stock silently.\n\n## Layout\n\nEach kit directory has the same layout:\n\n| path | what it is |\n\n| `stock/` | the upstream release at its pinned version (wheel, source archive or commit; weights pinned by digest); carried as released, never edited in place (declared exceptions: `NOTICE`, `STOCK.md`) |\n| `opt/` | the kit's own Python package |\n| `environment/` | the pinned software stack: `Dockerfile`, `apptainer.def`, `requirements.lock` (most kits) |\n| `configs/.env` | per-GPU-card settings (most kits) |\n| `run.sh` | the entry point: `install`, `check` and the kit's run commands |\n| `README.md` | how to run the kit |\n| `STOCK.md` | exact upstream version and pins, the software stack, environment variables |\n| `CHANGES.md` | what each optimization changes, by mode |\n| `upstream_issues/` | opt-in fixes for upstream defects, off by default (only where a kit has any) |\n\n`common/opt_core/` is the shared runtime nearly every kit imports: mode resolution and the `ACTIVE` line, determinism"
+      "summary": "这是一个包含36个优化工具包的Python项目，用于优化开源蛋白质和基因组机器学习工具（如结构预测、协同折叠、结合子和序列设计、蛋白质和基因组语言模型）的推理路径。每个工具包都是一个独立的目录，包含上游工具的固定版本和一个优化包，通过命令行参数可以启用不同的优化模式（如off、exact、fast、big），并打印当前激活的模式。",
+      "judgment": "对于需要优化开源蛋白质和基因组建模工具推理路径的用户，可以考虑使用，但需要注意项目已不再维护",
+      "mechanics": [
+        "每个优化工具包都是一个独立的目录，包含上游工具的固定版本和一个优化包",
+        "通过命令行参数可以启用不同的优化模式，每个模式对应不同的优化策略",
+        "优化工具包可以在上游工具的Python环境中运行，或者在一个独立的解释器中运行",
+        "每个工具包都有一个共同的运行时核心，提供模式解析、确定性辅助、内存和多GPU机制等功能",
+        "工具包的输出和输入文件可以通过宿主机目录进行绑定"
+      ],
+      "scenarios": [
+        "生物信息学研究人员和开发者，在蛋白质和基因组建模领域使用开源机器学习工具时，希望提高工具的推理效率",
+        "需要在不同硬件环境下运行模型，并通过不同的优化模式来调整模型的性能和资源消耗",
+        "需要对开源机器学习工具进行定制化优化，以满足特定的研究需求"
+      ],
+      "readmeCN": ""
     }
   ]
 }
