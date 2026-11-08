@@ -4,7 +4,7 @@
 // 定位：AI 出文章骨架 + 链接 + 部署命令，“真实体验/多媒体”留占位给人填
 // 用法: node article.mjs
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createTransport } from "nodemailer";
@@ -12,6 +12,24 @@ import { Document, Packer, Paragraph, TextRun, ImageRun } from "docx";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const UA = { "user-agent": "gh-daily-article" };
+
+// 二次元挂件：从 assets/mascots/ 随机挑一张缩小图，转 base64 内联，做成一个小挂件
+let _mascotUsed = [];
+function mascot(size = 84) {
+  const dir = join(ROOT, "assets", "mascots");
+  let files = [];
+  try { files = readdirSync(dir).filter((f) => /\.(png|jpe?g)$/i.test(f)); } catch { return ""; }
+  if (!files.length) return "";
+  const avail = files.filter((f) => !_mascotUsed.includes(f));
+  const pool = avail.length ? avail : (files.forEach((f) => _mascotUsed = []), files);
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  _mascotUsed.push(pick);
+  try {
+    const b64 = readFileSync(join(dir, pick)).toString("base64");
+    const mime = /\.png$/i.test(pick) ? "image/png" : "image/jpeg";
+    return `<img src="data:${mime};base64,${b64}" width="${size}" style="border-radius:14px;box-shadow:0 3px 12px rgba(199,125,255,.25);vertical-align:middle;border:2px solid #ffe0f3" alt="二次元挂件" />`;
+  } catch { return ""; }
+}
 
 // ---------- 大模型逐个深度分析（OpenAI 兼容协议；默认智谱 glm-4-flash 免费档）----------
 
@@ -527,9 +545,13 @@ function buildHTML(data, cidMap) {
 <div style="margin:0 -20px;padding:32px 20px 28px;background:linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%);color:#fff;position:relative;overflow:hidden">
   <div style="position:absolute;right:-30px;top:-40px;font-size:120px;opacity:.25;transform:rotate(-12deg)">✨</div>
   <div style="position:absolute;left:-16px;bottom:-36px;font-size:100px;opacity:.18;transform:rotate(8deg)">🎀</div>
-  <p style="margin:0 0 10px;font-size:13px;font-weight:700;letter-spacing:3px;opacity:.95;position:relative">✦ 二次元情报局 · 每日精选 ✦</p>
-  <h1 style="margin:0 0 12px;font-size:30px;font-weight:900;line-height:1.3;position:relative;letter-spacing:1px">最新开源AI仓库热榜</h1>
-  <p style="margin:0;font-size:13.5px;line-height:1.8;opacity:.95;position:relative">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
+  <div style="display:flex;align-items:center;gap:14px;position:relative">
+    <div style="flex:1">
+      <h1 style="margin:0 0 8px;font-size:30px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI仓库热榜</h1>
+      <p style="margin:0;font-size:13.5px;line-height:1.8;opacity:.95">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
+    </div>
+    ${mascot(96)}
+  </div>
 </div>
 
 <p style="margin:16px 0 0;font-size:13px;color:#b08ccd;font-weight:700;text-align:center">🌸 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 🌸</p>
@@ -563,6 +585,7 @@ ${(data.featured && data.featured.length) ? `
 </section>` : ""}
 
 <section style="margin:6px 0 22px;padding:22px 20px;background:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;box-shadow:0 8px 26px rgba(199,125,255,.25);border:2px solid #ffe0f3">
+  <div style="margin:0 0 12px">${mascot(64)}</div>
   <p style="margin:0 0 8px;font-size:18px;font-weight:900;letter-spacing:1px">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</p>
   <p style="margin:0;font-size:12.5px;opacity:.92">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </section>
