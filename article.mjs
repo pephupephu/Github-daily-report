@@ -512,10 +512,10 @@ function buildHTML(data, cidMap) {
   <p style="margin:0 0 8px;font-size:12px;opacity:.85;letter-spacing:1px">GitHub DAILY DIGEST · ${CN_DATE(day)}</p>
   <h1 style="margin:0 0 10px;font-size:26px;font-weight:800;line-height:1.35">GitHub 今日热榜</h1>
   <p style="margin:0;font-size:13px;line-height:1.8;opacity:.95">今天 ${repos.length} 个项目上榜，累计新增 ${total.toLocaleString()} ★。
-  ${cn ? `其中 ${cn} 个有 <b>中文体验入口</b>` : ""}。点击链接交给你的 Agent 部署即可。</p>
+  ${cn ? `其中 ${cn} 个有 <b>中文体验入口</b>` : ""}。</p>
 </div>
 
-<p style="margin:14px 0 0;font-size:12px;color:#b2b2b2">${LLM ? "AI 深度初稿，内容基于各仓库 README 生成，发稿前请人工核对事实与链接。" : "⚠️ 未配置 OPENAI_API_KEY，本次为简版初稿。"}</p>
+<p style="margin:14px 0 0;font-size:12px;color:#b2b2b2">分享最新开源免费 AI 技术，帮普通人提效工作、改变生活。</p>
 
 ${overview}
 
@@ -546,13 +546,13 @@ ${(data.featured && data.featured.length) ? `
 </section>` : ""}
 
 <section style="margin:6px 0 22px;padding:20px;background:linear-gradient(135deg,#07c160,#0aa8a0);border-radius:12px;color:#fff;text-align:center;box-shadow:0 6px 20px rgba(7,193,96,.22)">
-  <p style="margin:0 0 6px;font-size:18px;font-weight:800">每天 9:17 · 顶级 AI 开源，说人话</p>
+  <p style="margin:0 0 6px;font-size:18px;font-weight:800">分享最新开源免费 AI 技术，帮普通人提效工作、改变生活</p>
   <p style="margin:0;font-size:12.5px;opacity:.92">GitHub 热榜里的新东西，先帮你读懂，再决定要不要动手</p>
 </section>
 
 <section style="margin-top:12px;padding:14px 16px;background:#f7f8fa;border-radius:8px;font-size:12.5px;color:#9a9a9a;line-height:1.85">
-  链接全部来自各项目 GitHub 仓库元数据与 README，已自动核对可访问性未做人工验证。中文体验入口靠浏览器渲染 demo 站抓取，可能有漏判，发稿前请点开确认。<br>
-  生成时间：${new Date().toLocaleString("zh-CN")} · <a href="https://github.com/pephupephu/Github-daily-report" style="color:#576b95">订阅每日推送</a>
+  链接全部来自各项目 GitHub 仓库元数据与 README，未做人工验证。<br>
+  <a href="https://github.com/pephupephu/Github-daily-report" style="color:#576b95">订阅每日推送</a>
 </section>
 
 </div></body></html>`;
@@ -611,8 +611,8 @@ function buildDocx(data, cidMap) {
     children.push(para(`交给 Agent 安装：帮我克隆 https://github.com/${r.repo}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用`, { size: 19, after: 220 }));
   });
 
-  children.push(para("每天 9:17 · 顶级 AI 开源，说人话", { bold: true, size: 22, before: 300, after: 60 }));
-  children.push(para(`生成时间：${new Date().toLocaleString("zh-CN")}`, { color: "9A9A9A", size: 18 }));
+  children.push(para("分享最新开源免费 AI 技术，帮普通人提效工作、改变生活", { bold: true, size: 22, before: 300, after: 60 }));
+  children.push(para("订阅每日推送：https://github.com/pephupephu/Github-daily-report", { color: "9A9A9A", size: 18 }));
 
   // 「值得关注」板块也进 Word（和 HTML 对齐）
   const feat = (data.featured || []).filter((r) => r && r.repo);
