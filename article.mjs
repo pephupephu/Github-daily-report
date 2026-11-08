@@ -20,8 +20,8 @@ const LLM_KEYS = [process.env.OPENAI_API_KEY, process.env.OPENAI_API_KEY_2, proc
 const LLM = LLM_KEYS.length
   ? {
       keys: LLM_KEYS,
-      base: (process.env.OPENAI_BASE_URL || "https://api.deepseek.com/v1").replace(/\/+$/, ""),
-      model: process.env.OPENAI_MODEL || "deepseek-flash",
+      base: (process.env.OPENAI_BASE_URL || "https://open.bigmodel.cn/api/paas/v4").replace(/\/+$/, ""),
+      model: process.env.OPENAI_MODEL || "glm-4-flash-250414",
     }
   : null;
 let LLM_KEY_IDX = 0; // 轮换指针：摊平多账号限流

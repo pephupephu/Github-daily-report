@@ -15,7 +15,7 @@ const since = process.argv[2] || "daily";
 const LLM_KEYS = [process.env.OPENAI_API_KEY, process.env.OPENAI_API_KEY_2, process.env.OPENAI_API_KEY_3, process.env.OPENAI_API_KEY_4, process.env.OPENAI_API_KEY_5]
   .filter(Boolean);
 const LLM = LLM_KEYS.length
-  ? { keys: LLM_KEYS, base: process.env.OPENAI_BASE_URL || "https://api.deepseek.com/v1", model: process.env.OPENAI_MODEL || "deepseek-flash", how: `自备 key（${LLM_KEYS.length} 个轮换）` }
+  ? { keys: LLM_KEYS, base: process.env.OPENAI_BASE_URL || "https://open.bigmodel.cn/api/paas/v4", model: process.env.OPENAI_MODEL || "glm-4-flash-250414", how: `自备 key（${LLM_KEYS.length} 个轮换）` }
   : null;
 const HAS_LLM = !!LLM;
 let LLM_KEY_IDX = 0; // 轮换指针

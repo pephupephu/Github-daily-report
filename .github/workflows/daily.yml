@@ -41,8 +41,8 @@ jobs:
           OPENAI_API_KEY_3: ${{ secrets.OPENAI_API_KEY_3 }}
           OPENAI_API_KEY_4: ${{ secrets.OPENAI_API_KEY_4 }}
           OPENAI_API_KEY_5: ${{ secrets.OPENAI_API_KEY_5 }}
-          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL || 'https://api.deepseek.com/v1' }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'deepseek-flash' }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4' }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'glm-4-flash-250414' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node trending.mjs daily
 
@@ -53,8 +53,8 @@ jobs:
           OPENAI_API_KEY_3: ${{ secrets.OPENAI_API_KEY_3 }}
           OPENAI_API_KEY_4: ${{ secrets.OPENAI_API_KEY_4 }}
           OPENAI_API_KEY_5: ${{ secrets.OPENAI_API_KEY_5 }}
-          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL || 'https://api.deepseek.com/v1' }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'deepseek-flash' }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4' }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'glm-4-flash-250414' }}
           MAIL_USER: ${{ secrets.MAIL_USER }}
           MAIL_PASS: ${{ secrets.MAIL_PASS }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
