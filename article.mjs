@@ -551,7 +551,6 @@ ${(data.featured && data.featured.length) ? `
 </section>
 
 <section style="margin-top:12px;padding:14px 16px;background:#f7f8fa;border-radius:8px;font-size:12.5px;color:#9a9a9a;line-height:1.85">
-  链接全部来自各项目 GitHub 仓库元数据与 README，未做人工验证。<br>
   <a href="https://github.com/pephupephu/Github-daily-report" style="color:#576b95">订阅每日推送</a>
 </section>
 
