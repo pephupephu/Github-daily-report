@@ -40,12 +40,14 @@ async function scrape(sinceOverride = since) {
     }
   }
   if (!html) throw new Error(`无法访问 github.com/trending：${lastErr?.cause?.code || lastErr?.message}`);
-  return html.split('<article class="Box-row"').slice(1).map((a) => ({
+  const rows = html.split('<article class="Box-row"').slice(1).map((a) => ({
     repo: (a.match(/<h2[\s\S]*?href="\/([^"]+)"/) || [])[1],
     lang: (a.match(/itemprop="programmingLanguage">([^<]+)</) || [])[1] || "—",
     desc: strip((a.match(/<p class="col-9[^"]*"[\s\S]*?>([\s\S]*?)<\/p>/) || [])[1] || ""),
     today: cn((a.match(/([\d,]+)\s*stars today/) || [])[1]),
   })).filter((r) => r.repo);
+  if (!rows.length) throw new Error("页面里没解析出任何仓库（可能被反爬或改版）");
+  return rows;
 }
 
 async function meta(repo) {
