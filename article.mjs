@@ -453,10 +453,11 @@ function section(r, i, shotCid) {
 </div>`;
 
   return `
-<section style="margin:0 0 34px;padding:0 2px 26px;border-bottom:1px solid #eceef1">
+<section style="margin:0 0 34px;padding:0 2px 26px;border-bottom:1px solid #eceef1${r.weekly ? ";border-left:4px solid #fa5151;padding-left:12px" : ""}">
   <h2 style="margin:0 0 12px;display:flex;align-items:center;font-size:19px;font-weight:700;color:#1a1a1a;line-height:1.4">
     <span style="display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border-radius:8px;background:linear-gradient(135deg,#07c160,#0aa8a0);color:#fff;font-size:15px;font-weight:800;margin-right:10px">${String(i + 1).padStart(2, "0")}</span>
     <span style="margin-right:10px">${esc(repoShort(r.repo))}</span>
+    ${r.weekly ? `<span style="background:#fde8e8;color:#fa5151;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:700;margin-right:8px">本周也在榜</span>` : ""}
     <small style="color:#9a9a9a;font-weight:400;font-size:12px">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</small>
   </h2>
   <p ${p}"><b style="color:#1a1a1a">${md(hook)}</b></p>
@@ -473,11 +474,26 @@ function section(r, i, shotCid) {
 }
 
 function buildHTML(data, cidMap) {
-  const { day, repos } = data;
+  const { day, repos: allRepos } = data;
+  // 周榜去重：weekly=true 的仓库这周也在榜（日榜常客），沉到末尾并标红，优先讲新面孔
+  const repos = [...allRepos].sort((a, b) => (!!a.weekly - !!b.weekly));
   const top = repos[0];
   const cn = repos.filter((r) => r.links.cnDemo.length).length;
   const total = repos.reduce((s, r) => s + (+String(r.today || 0).replace(/,/g, "") || 0), 0);
-  const sections = repos.map((r, i) => section(r, i, cidMap[r.repo] || "")).join("");
+  const sections = (() => {
+    const fresh = repos.filter((r) => !r.weekly);
+    const repeat = repos.filter((r) => r.weekly);
+    const parts = [];
+    fresh.forEach((r, i) => parts.push(section(r, i, cidMap[r.repo] || "")));
+    if (repeat.length) {
+      parts.push(`<section style="margin:0 0 14px;padding:0 0 6px;border-bottom:2px solid #fa5151">
+  <h2 style="margin:0;font-size:17px;font-weight:800;color:#fa5151">🔄 周榜常客 · 本周也在榜（若已看过可略过）</h2>
+  <p style="margin:8px 0 0;font-size:13px;color:#9a9a9a;line-height:1.7">以下 ${repeat.length} 个仓库今天也在热榜、但本周已多次出现，内容可能和之前推过的高度重合，快速扫一眼即可。</p>
+</section>`);
+      repeat.forEach((r, j) => parts.push(section(r, fresh.length + j, cidMap[r.repo] || "")));
+    }
+    return parts.join("");
+  })();
 
   // 文首总览表：一chart表把今天的推荐直接铺开，oneliner 缺了就退回 trending 摘要/官方简介
   const ths = `padding:10px 8px;background:#f7f8fa;color:#5a6472;font-size:12px;font-weight:600;letter-spacing:.5px`;
@@ -560,7 +576,9 @@ ${(data.featured && data.featured.length) ? `
 // ---------- Word 文稿（.docx）----------
 
 function buildDocx(data, cidMap) {
-  const { day, repos } = data;
+  const { day, repos: allRepos } = data;
+  // 周榜去重：weekly=true 的沉到末尾（与 HTML 对齐），新面孔在前
+  const repos = [...allRepos].sort((a, b) => (!!a.weekly - !!b.weekly));
   const total = repos.reduce((s, r) => s + (+String(r.today || 0).replace(/,/g, "") || 0), 0);
   const clean = (s) => deAI(String(s ?? "")).replace(/\*\*/g, "").trim();
   const para = (text, { bold = false, size = 21, color, before = 0, after = 140 } = {}) =>
@@ -586,8 +604,10 @@ function buildDocx(data, cidMap) {
     para(`今日 ${repos.length} 个项目，累计新增 ${total.toLocaleString()} ★`, { color: "8A8A8A", size: 20, after: 240 }),
   ];
 
-  repos.forEach((r, i) => {
+  let num = 0;
+  const writeRepo = (r) => {
     const ai = r.ai;
+    const i = num++;
     children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 28, color: "07A050", before: 240, after: 60 }));
     children.push(para(`${r.lang || ""} · ${(r.stars || 0).toLocaleString()} ★ · 今日 +${r.today || 0}`, { color: "9A9A9A", size: 18, after: 120 }));
     children.push(para(clean(ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo))), { bold: true }));
@@ -608,7 +628,15 @@ function buildDocx(data, cidMap) {
     }
     children.push(para(`仓库地址：https://github.com/${r.repo}`, { color: "576B95", size: 19, after: 60 }));
     children.push(para(`交给 Agent 安装：帮我克隆 https://github.com/${r.repo}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用`, { size: 19, after: 220 }));
-  });
+  };
+  // 周榜常客沉到最后：先讲新面孔，再单独一段标红提示可略过
+  const repeatRepo = repos.filter((r) => r.weekly);
+  const freshRepo = repos.filter((r) => !r.weekly);
+  freshRepo.forEach(writeRepo);
+  if (repeatRepo.length) {
+    children.push(para(`🔄 周榜常客 · 本周也在榜（若已看过可略过，共 ${repeatRepo.length} 个）`, { bold: true, size: 24, color: "FA5151", before: 320, after: 100 }));
+    repeatRepo.forEach(writeRepo);
+  }
 
   children.push(para("分享最新开源免费 AI 技术，帮普通人提效工作、改变生活", { bold: true, size: 22, before: 300, after: 60 }));
   children.push(para("订阅每日推送：https://github.com/pephupephu/Github-daily-report", { color: "9A9A9A", size: 18 }));

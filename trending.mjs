@@ -23,12 +23,12 @@ const UA = { "user-agent": "gh-trending-daily", "accept-language": "en-US,en" };
 const strip = (s) => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 const cn = (n) => (n == null ? "" : String(n).replace(/,/g, ""));
 
-async function scrape() {
+async function scrape(sinceOverride = since) {
   // github.com 的 HTML 页面偶发连接超时，重试 3 次
   let html, lastErr;
   for (let i = 0; i < 3; i++) {
     try {
-      html = await (await fetch(`https://github.com/trending?since=${since}`, {
+      html = await (await fetch(`https://github.com/trending?since=${sinceOverride}`, {
         headers: UA,
         signal: AbortSignal.timeout(30000),
       })).text();
@@ -323,6 +323,17 @@ async function themes(repos, notes) {
 const repos = await scrape();
 for (const r of repos) Object.assign(r, await meta(r.repo).catch(() => ({})));
 
+// 周榜去重：抓一次周榜，标记哪些仓库这周也在榜（= 日榜重复项），文章里标红放最后
+const weeklySet = new Set();
+try {
+  const weekly = await scrape("weekly");
+  weekly.forEach((r) => r.repo && weeklySet.add(r.repo));
+  process.stderr.write(`[周榜] 抓到 ${weekly.length} 个仓库，日榜重复 ${repos.filter((r) => weeklySet.has(r.repo)).length} 个\n`);
+} catch (e) {
+  process.stderr.write(`[周榜] 抓取失败，本次不做去重：${e.cause?.code || e.message}\n`);
+}
+for (const r of repos) r.weekly = weeklySet.has(r.repo);
+
 const notes = [];
 if (!HAS_LLM) process.stderr.write("未配置 OPENAI_API_KEY —— 走全文机翻模式\n");
 for (const [i, r] of repos.entries()) {
@@ -429,6 +440,7 @@ writeFileSync(join(ROOT, "reports", "latest.json"), JSON.stringify({
     stars: r.stars ?? 0, today: r.today, forks: r.forks ?? 0,
     created: r.created, license: r.license, topics: r.topics, homepage: r.homepage,
     url: `https://github.com/${r.repo}`,
+    weekly: !!r.weekly,
     summary: notes[i]?.是什么 || "",
     judgment: notes[i]?.一句话判断 || "",
     mechanics: notes[i]?.核心机制 || [],
