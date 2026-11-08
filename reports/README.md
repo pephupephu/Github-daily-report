@@ -55,3 +55,4 @@
 - [daily-2026-11-08](./daily-2026-11-08.md) — 榜首 vercel-labs/agent-browser (+190)
 - [daily-2026-11-08](./daily-2026-11-08.md) — 榜首 vercel-labs/agent-browser (+190)
 - [daily-2026-11-08](./daily-2026-11-08.md) — 榜首 vercel-labs/agent-browser (+190)
+- [daily-2026-11-08](./daily-2026-11-08.md) — 榜首 vercel-labs/agent-browser (+190)
