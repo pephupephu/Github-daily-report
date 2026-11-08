@@ -50,6 +50,23 @@ async function scrape(sinceOverride = since) {
   return rows;
 }
 
+// GitHub 反爬时 HTML 页会超时/空，回退到官方搜索 API 按活跃度拉榜，保证每天有榜可发
+async function searchFallback() {
+  const h = { ...UA, accept: "application/vnd.github+json" };
+  if (process.env.GITHUB_TOKEN) h.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+  const sinceDays = since === "weekly" ? 14 : 2; // 周榜放宽到近两周
+  const from = new Date(Date.now() - sinceDays * 864e5).toISOString().slice(0, 10);
+  const q = encodeURIComponent(`pushed:>${from} stars:>50`);
+  const url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=25`;
+  const res = await fetch(url, { headers: h, signal: AbortSignal.timeout(30000) });
+  if (!res.ok) throw new Error(`搜索 API HTTP ${res.status}`);
+  const j = await res.json();
+  return (j.items || []).map((it) => ({
+    repo: it.full_name, lang: it.language || "—",
+    desc: it.description || "", today: "0",
+  })).filter((r) => r.repo);
+}
+
 async function meta(repo) {
   const h = { ...UA, accept: "application/vnd.github+json" };
   if (process.env.GITHUB_TOKEN) h.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
@@ -322,13 +339,24 @@ async function themes(repos, notes) {
   }
 }
 
-const repos = await scrape();
+const repos = await (async () => {
+  try {
+    return await scrape();
+  } catch (e) {
+    process.stderr.write(`[日榜] HTML 抓取失败，改用搜索 API 兜底：${e.message.slice(0, 80)}\n`);
+    const fallback = await searchFallback();
+    fallback.forEach((r) => { r.fromFallback = true; });
+    return fallback;
+  }
+})();
 for (const r of repos) Object.assign(r, await meta(r.repo).catch(() => ({})));
 
 // 周榜去重：抓一次周榜，标记哪些仓库这周也在榜（= 日榜重复项），文章里标红放最后
 const weeklySet = new Set();
 try {
-  const weekly = await scrape("weekly");
+  let weekly;
+  try { weekly = await scrape("weekly"); }
+  catch (e) { process.stderr.write(`[周榜] HTML 抓取失败，走搜索兜底：${e.message.slice(0, 60)}\n`); weekly = await searchFallback(); }
   weekly.forEach((r) => r.repo && weeklySet.add(r.repo));
   process.stderr.write(`[周榜] 抓到 ${weekly.length} 个仓库，日榜重复 ${repos.filter((r) => weeklySet.has(r.repo)).length} 个\n`);
 } catch (e) {
