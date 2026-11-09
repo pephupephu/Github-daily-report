@@ -13,17 +13,13 @@ import { Document, Packer, Paragraph, TextRun, ImageRun } from "docx";
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const UA = { "user-agent": "gh-daily-article" };
 
-// 二次元挂件：从 assets/mascots/ 随机挑一张缩小图，转 base64 内联，做成一个小挂件
-let _mascotUsed = [];
-function mascot(size = 84) {
+// 二次元挂件：按固定索引取 assets/mascots/ 里排序后的一张图（每次邮件同位置固定同图），转 base64 内联
+function mascot(idx = 0, size = 84) {
   const dir = join(ROOT, "assets", "mascots");
   let files = [];
-  try { files = readdirSync(dir).filter((f) => /\.(png|jpe?g)$/i.test(f)); } catch { return ""; }
+  try { files = readdirSync(dir).filter((f) => /\.(png|jpe?g)$/i.test(f)).sort(); } catch { return ""; }
   if (!files.length) return "";
-  const avail = files.filter((f) => !_mascotUsed.includes(f));
-  const pool = avail.length ? avail : (files.forEach((f) => _mascotUsed = []), files);
-  const pick = pool[Math.floor(Math.random() * pool.length)];
-  _mascotUsed.push(pick);
+  const pick = files[idx % files.length];
   try {
     const b64 = readFileSync(join(dir, pick)).toString("base64");
     const mime = /\.png$/i.test(pick) ? "image/png" : "image/jpeg";
@@ -416,7 +412,7 @@ const md = (s) => esc(deAI(s)).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
 // 中文哨兵：兜底数据里宁可不显示，也不放英文让读者出戏
 const CN = (s) => (/[\u4e00-\u9fa5]/.test(s) ? s : "");
 const CN_DATE = (d) => `${d.slice(0, 4)}年${d.slice(5, 7)}月${d.slice(8)}日`;
-const fmtStars = (n) => `+${String(n || 0).replace(/,/g, "")}`;
+const fmtStars = (n) => { const v = +String(n || 0).replace(/,/g, ""); return v ? `+${v}` : "—"; };
 const repoShort = (repo) => repo.split("/")[1];
 
 // 无 LLM 时的最后保障：用 topics 词表拼一句中文，绝不让表格/正文出现"详情见下"这种空壳
@@ -471,11 +467,10 @@ function section(r, i, shotCid) {
 </div>`;
 
   return `
-<section style="margin:0 0 34px;padding:0 2px 26px;border-bottom:1px solid #f3e0f0${r.weekly ? ";border-left:4px solid #ff7ba9;padding-left:12px" : ""}">
+<section style="margin:0 0 34px;padding:0 2px 26px;border-bottom:1px solid #f3e0f0">
   <h2 style="margin:0 0 12px;display:flex;align-items:center;font-size:19px;font-weight:800;color:#1a1a1a;line-height:1.4">
     <span style="display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border-radius:9px;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;font-size:15px;font-weight:900;margin-right:10px">${String(i + 1).padStart(2, "0")}</span>
     <span style="margin-right:10px">${esc(repoShort(r.repo))}</span>
-    ${r.weekly ? `<span style="background:#ffe3ee;color:#ff5c8a;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:700;margin-right:8px">本周也在榜</span>` : ""}
     <small style="color:#c9a0d6;font-weight:500;font-size:12px">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</small>
   </h2>
   <p ${p}"><b style="color:#1a1a1a">${md(hook)}</b></p>
@@ -493,23 +488,14 @@ function section(r, i, shotCid) {
 
 function buildHTML(data, cidMap) {
   const { day, repos: allRepos } = data;
-  // 周榜去重：weekly=true 的仓库这周也在榜（日榜常客），沉到末尾并标红，优先讲新面孔
-  const repos = [...allRepos].sort((a, b) => (!!a.weekly - !!b.weekly));
+  // 日榜按原顺序罗列，不做周榜沉底/去重
+  const repos = allRepos;
   const top = repos[0];
   const cn = repos.filter((r) => r.links.cnDemo.length).length;
   const total = repos.reduce((s, r) => s + (+String(r.today || 0).replace(/,/g, "") || 0), 0);
   const sections = (() => {
-    const fresh = repos.filter((r) => !r.weekly);
-    const repeat = repos.filter((r) => r.weekly);
     const parts = [];
-    fresh.forEach((r, i) => parts.push(section(r, i, cidMap[r.repo] || "")));
-    if (repeat.length) {
-      parts.push(`<section style="margin:0 0 14px;padding:0 0 6px;border-bottom:2px solid #ff7ba9">
-  <h2 style="margin:0;font-size:17px;font-weight:900;color:#ff5c8a">🔄 周榜常客 · 本周也在榜（若已看过可略过）</h2>
-  <p style="margin:8px 0 0;font-size:13px;color:#c99a6b;line-height:1.7">以下 ${repeat.length} 个仓库今天也在热榜、但本周已多次出现，内容可能和之前推过的高度重合，快速扫一眼即可。</p>
-</section>`);
-      repeat.forEach((r, j) => parts.push(section(r, fresh.length + j, cidMap[r.repo] || "")));
-    }
+    repos.forEach((r, i) => parts.push(section(r, i, cidMap[r.repo] || "")));
     return parts.join("");
   })();
 
@@ -521,7 +507,7 @@ function buildHTML(data, cidMap) {
     <td style="padding:10px 8px 10px 12px;color:#c77dff;font-weight:800;vertical-align:top;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
     <td style="padding:10px 8px;white-space:nowrap;vertical-align:top;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
     <td style="padding:10px 8px;color:#3a3a3a;line-height:1.7;border-top:1px solid #f7e9f5">${esc(line)}</td>
-    <td style="padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:12px;font-weight:700;border-top:1px solid #f7e9f5">+${fmtStars(r.today)}</td>
+    <td style="padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:12px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
   </tr>`;
   }).join("");
   const overview = repos.length ? `
@@ -538,7 +524,7 @@ function buildHTML(data, cidMap) {
 </table>
 </div>` : "";
 
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>最新开源AI仓库热榜 ${day}</title></head>
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>最新开源AI技术分享 ${day}</title></head>
 <body style="margin:0;background:#fdf3fb">
 <div style="max-width:677px;margin:0 auto;background:#fffdfd;padding:0 20px 40px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
 
@@ -547,10 +533,10 @@ function buildHTML(data, cidMap) {
   <div style="position:absolute;left:-16px;bottom:-36px;font-size:100px;opacity:.18;transform:rotate(8deg)">🎀</div>
   <div style="display:flex;align-items:center;gap:14px;position:relative">
     <div style="flex:1">
-      <h1 style="margin:0 0 8px;font-size:30px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI仓库热榜</h1>
+      <h1 style="margin:0 0 8px;font-size:30px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</h1>
       <p style="margin:0;font-size:13.5px;line-height:1.8;opacity:.95">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
     </div>
-    ${mascot(96)}
+    ${mascot(0, 96)}
   </div>
 </div>
 
@@ -562,15 +548,16 @@ ${top ? `<section style="background:linear-gradient(135deg,#ff9ad5,#c77dff);colo
   <p style="margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:2px;opacity:.95">🌟 今日最闪耀</p>
   <p style="margin:0 0 10px;font-size:24px;font-weight:900;line-height:1.35">${esc(repoShort(top.repo))}</p>
   <p style="margin:0 0 14px;font-size:14px;line-height:1.8;opacity:.97">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
-  <div style="display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:13px;font-weight:700">今日 +${fmtStars(top.today)} ★ · 总 ${(top.stars || 0).toLocaleString()} ★</div>
+  <div style="display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:13px;font-weight:700">今日 ${fmtStars(top.today)} ★ · 总 ${(top.stars || 0).toLocaleString()} ★</div>
 </section>` : ""}
 
 ${sections}
 
 ${(data.featured && data.featured.length) ? `
 <section style="margin:0 0 34px;padding:22px 20px;background:linear-gradient(135deg,#fdf3fb,#eef6ff);border-radius:18px;border:2px solid #f3d9ff">
-  <h2 style="margin:0 0 8px;font-size:18px;font-weight:900;color:#9b6cff">🌸 本周值得关注 · 还没上热榜的好东西</h2>
-  <p style="margin:0 0 16px;font-size:13px;color:#b08ccd;line-height:1.7">热门榜只盯短期★涨速，下面这些是权威机构最近开源、质量在线、但可能还没被捧上热榜的仓库——真正想抄作业的先看这里。</p>
+  <div style="text-align:center;margin:0 0 10px">${mascot(2, 68)}</div>
+  <h2 style="margin:0 0 8px;font-size:18px;font-weight:900;color:#9b6cff">🚀 新晋潜力 · 从 0 快速增长的黑马</h2>
+  <p style="margin:0 0 16px;font-size:13px;color:#b08ccd;line-height:1.7">这些是最近新建立、还没上日榜，但星数涨得飞快的仓库——真正值得早关注的黑马。</p>
   ${data.featured.map((r, i) => {
     const ai = r.ai;
     const hook = ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} ★，值得放进收藏。`;
@@ -585,7 +572,7 @@ ${(data.featured && data.featured.length) ? `
 </section>` : ""}
 
 <section style="margin:6px 0 22px;padding:22px 20px;background:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;box-shadow:0 8px 26px rgba(199,125,255,.25);border:2px solid #ffe0f3">
-  <div style="margin:0 0 12px">${mascot(64)}</div>
+  <div style="margin:0 0 12px">${mascot(1, 64)}</div>
   <p style="margin:0 0 8px;font-size:18px;font-weight:900;letter-spacing:1px">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</p>
   <p style="margin:0;font-size:12.5px;opacity:.92">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </section>
@@ -602,8 +589,8 @@ ${(data.featured && data.featured.length) ? `
 
 function buildDocx(data, cidMap) {
   const { day, repos: allRepos } = data;
-  // 周榜去重：weekly=true 的沉到末尾（与 HTML 对齐），新面孔在前
-  const repos = [...allRepos].sort((a, b) => (!!a.weekly - !!b.weekly));
+  // 日榜按原顺序罗列，不做周榜沉底/去重
+  const repos = allRepos;
   const total = repos.reduce((s, r) => s + (+String(r.today || 0).replace(/,/g, "") || 0), 0);
   const clean = (s) => deAI(String(s ?? "")).replace(/\*\*/g, "").trim();
   const para = (text, { bold = false, size = 21, color, before = 0, after = 140 } = {}) =>
@@ -625,7 +612,7 @@ function buildDocx(data, cidMap) {
   };
 
   const children = [
-    para("🌸 最新开源AI仓库热榜", { bold: true, size: 36, color: "C77DFF", after: 60 }),
+    para("🌸 最新开源AI技术分享", { bold: true, size: 36, color: "C77DFF", after: 60 }),
     para("把今天最值得动手的 AI 开源仓库，用大白话讲给你听", { color: "9B6CFF", size: 20, after: 260 }),
   ];
 
@@ -654,14 +641,8 @@ function buildDocx(data, cidMap) {
     children.push(para(`仓库地址：https://github.com/${r.repo}`, { color: "576B95", size: 19, after: 60 }));
     children.push(para(`交给 Agent 安装：帮我克隆 https://github.com/${r.repo}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用`, { size: 19, after: 220 }));
   };
-  // 周榜常客沉到最后：先讲新面孔，再单独一段标红提示可略过
-  const repeatRepo = repos.filter((r) => r.weekly);
-  const freshRepo = repos.filter((r) => !r.weekly);
-  freshRepo.forEach(writeRepo);
-  if (repeatRepo.length) {
-    children.push(para(`🔄 周榜常客 · 本周也在榜（若已看过可略过，共 ${repeatRepo.length} 个）`, { bold: true, size: 24, color: "FA5151", before: 320, after: 100 }));
-    repeatRepo.forEach(writeRepo);
-  }
+  // 日榜按原顺序罗列
+  repos.forEach(writeRepo);
 
   children.push(para("🌸 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 🌸", { bold: true, size: 22, color: "C77DFF", before: 320, after: 40 }));
   children.push(para("订阅每日推送：https://github.com/pephupephu/Github-daily-report", { color: "9B6CFF", size: 18, after: 60 }));
@@ -670,7 +651,7 @@ function buildDocx(data, cidMap) {
   // 「值得关注」板块也进 Word（和 HTML 对齐）
   const feat = (data.featured || []).filter((r) => r && r.repo);
   if (feat.length) {
-    children.push(para("🌸 本周值得关注 · 还没上热榜的好东西", { bold: true, size: 26, color: "9B6CFF", before: 360, after: 100 }));
+    children.push(para("🚀 新晋潜力 · 从 0 快速增长的黑马", { bold: true, size: 26, color: "9B6CFF", before: 360, after: 100 }));
     feat.forEach((r, i) => {
       const ai = r.ai;
       children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 26, color: "C77DFF", before: 220, after: 60 }));

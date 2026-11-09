@@ -240,41 +240,31 @@ const ANALYST = "你是开源情报分析师。读项目的 README 后用**中�
 
 const EMPTY = { 是什么: "", 核心机制: [], 使用场景: [], 坑: [], 一句话判断: "", readmeCN: "" };
 
-// 抓「好但没上榜」的优质新仓库：盯权威发布源账号，拉它们新建的仓库（质量高）
-// 用 star 门槛过滤垃圾，排除已在今日榜上的，返回前 N 个，供 article.mjs 渲染「值得关注」板块
-const AUTHORITY_ORGS = [
-  "anthropics", "openai", "google-deepmind", "meta", "MistralAI",
-  "karpathy", "xai", "microsoft", "huggingface", "togethercomputer",
-];
-async function authorityRepos(max = 5) {
+// 新晋潜力仓库：近期新建、从0涨起来的（还没上日榜），放文章最后单独展示
+async function risingRepos(max = 5) {
   const h = { ...UA, accept: "application/vnd.github+json" };
   if (process.env.GITHUB_TOKEN) h.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   const onBoard = new Set(repos.map((r) => r.repo));
+  const from = new Date(Date.now() - 90e9).toISOString().slice(0, 10);
+  const q = encodeURIComponent(`created:>${from} stars:50..800`);
+  const url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=${max * 3}`;
+  const res = await fetch(url, { headers: h, signal: AbortSignal.timeout(30000) });
+  if (!res.ok) throw new Error(`搜索 API HTTP ${res.status}`);
+  const j = await res.json();
   const out = [];
-  const seen = new Set();
-  for (const org of AUTHORITY_ORGS) {
-    try {
-      const url = `https://api.github.com/users/${org}/repos?sort=created&direction=desc&per_page=15`;
-      const j = await (await fetch(url, { headers: h })).json();
-      for (const it of j) {
-        if (!it || !it.full_name) continue;
-        if (seen.has(it.full_name)) continue;
-        seen.add(it.full_name);
-        if (onBoard.has(it.full_name)) continue;               // 已在今日榜，跳过
-        if ((it.stargazers_count || 0) < 150) continue;        // 质量门槛：star 太少的不够重磅
-        if ((it.pushed_at || "") < new Date(Date.now() - 40e9).toISOString()) continue; // 很久没维护的不要
-        out.push({
-          repo: it.full_name, lang: it.language || "—",
-          desc: it.description || "", stars: it.stargazers_count ?? 0,
-          today: "0", forks: it.forks_count ?? 0,
-          created: (it.created_at || "").slice(0, 10), license: it.license?.spdx_id || "",
-          topics: (it.topics || []).slice(0, 8), homepage: it.homepage || "",
-          url: `https://github.com/${it.full_name}`,
-          featured: true,
-        });
-        if (out.length >= max) return out;
-      }
-    } catch { /* 单个 org 失败不影响整体 */ }
+  for (const it of (j.items || [])) {
+    if (!it || !it.full_name || onBoard.has(it.full_name)) continue;
+    if ((it.pushed_at || "") < new Date(Date.now() - 40e9).toISOString()) continue;
+    out.push({
+      repo: it.full_name, lang: it.language || "—",
+      desc: it.description || "", stars: it.stargazers_count ?? 0,
+      today: "0", forks: it.forks_count ?? 0,
+      created: (it.created_at || "").slice(0, 10), license: it.license?.spdx_id || "",
+      topics: (it.topics || []).slice(0, 8), homepage: it.homepage || "",
+      url: `https://github.com/${it.full_name}`,
+      featured: true,
+    });
+    if (out.length >= max) break;
   }
   return out;
 }
@@ -351,19 +341,6 @@ const repos = await (async () => {
 })();
 for (const r of repos) Object.assign(r, await meta(r.repo).catch(() => ({})));
 
-// 周榜去重：抓一次周榜，标记哪些仓库这周也在榜（= 日榜重复项），文章里标红放最后
-const weeklySet = new Set();
-try {
-  let weekly;
-  try { weekly = await scrape("weekly"); }
-  catch (e) { process.stderr.write(`[周榜] HTML 抓取失败，走搜索兜底：${e.message.slice(0, 60)}\n`); weekly = await searchFallback(); }
-  weekly.forEach((r) => r.repo && weeklySet.add(r.repo));
-  process.stderr.write(`[周榜] 抓到 ${weekly.length} 个仓库，日榜重复 ${repos.filter((r) => weeklySet.has(r.repo)).length} 个\n`);
-} catch (e) {
-  process.stderr.write(`[周榜] 抓取失败，本次不做去重：${e.cause?.code || e.message}\n`);
-}
-for (const r of repos) r.weekly = weeklySet.has(r.repo);
-
 const notes = [];
 if (!HAS_LLM) process.stderr.write("未配置 OPENAI_API_KEY —— 走全文机翻模式\n");
 for (const [i, r] of repos.entries()) {
@@ -373,8 +350,8 @@ for (const [i, r] of repos.entries()) {
 }
 const sum = HAS_LLM ? await themes(repos, notes).catch(() => null) : null;
 
-// 「值得关注」板块：权威发布源的新仓库（质量高但可能没进日榜）
-const featured = await authorityRepos(5);
+// 「新晋潜力」板块：从0快速增长、还没上日榜的新仓库（放文章最后）
+const featured = await risingRepos(5);
 const featNotes = [];
 for (const [i, r] of featured.entries()) {
   process.stderr.write(`值得关注 ${i + 1}/${featured.length} ${r.repo}\n`);
@@ -470,14 +447,13 @@ writeFileSync(join(ROOT, "reports", "latest.json"), JSON.stringify({
     stars: r.stars ?? 0, today: r.today, forks: r.forks ?? 0,
     created: r.created, license: r.license, topics: r.topics, homepage: r.homepage,
     url: `https://github.com/${r.repo}`,
-    weekly: !!r.weekly,
     summary: notes[i]?.是什么 || "",
     judgment: notes[i]?.一句话判断 || "",
     mechanics: notes[i]?.核心机制 || [],
     scenarios: notes[i]?.使用场景 || [],
     readmeCN: notes[i]?.readmeCN || "",
   })),
-  // 「值得关注」板块：权威发布源的新仓库，质量高但可能没进日榜
+  // 「新晋潜力」板块：从0快速增长、还没上日榜的新仓库（放文章最后）
   featured: featured.map((r, i) => ({
     ...r,
     summary: featNotes[i]?.是什么 || "",
