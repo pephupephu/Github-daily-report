@@ -495,7 +495,11 @@ function buildHTML(data, cidMap) {
   const total = repos.reduce((s, r) => s + (+String(r.today || 0).replace(/,/g, "") || 0), 0);
   const sections = (() => {
     const parts = [];
-    repos.forEach((r, i) => parts.push(section(r, i, cidMap[r.repo] || "")));
+    // 每 3 个仓库后面插一张二次元挂件，idx 从 3 递增，覆盖 5/6/7.png 三张
+    repos.forEach((r, i) => {
+      parts.push(section(r, i, cidMap[r.repo] || ""));
+      if ((i + 1) % 3 === 0) parts.push(`<div style="text-align:center;margin:6px 0 34px">${mascot(3 + ((i + 1) / 3 - 1) % 3, 62)}</div>`);
+    });
     return parts.join("");
   })();
 
@@ -543,6 +547,8 @@ function buildHTML(data, cidMap) {
 <p style="margin:16px 0 0;font-size:13px;color:#b08ccd;font-weight:700;text-align:center">🌸 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 🌸</p>
 
 ${overview}
+
+<div style="text-align:center;margin:4px 0 30px">${mascot(6, 60)}</div>
 
 ${top ? `<section style="background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
   <p style="margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:2px;opacity:.95">🌟 今日最闪耀</p>
