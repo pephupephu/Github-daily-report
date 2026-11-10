@@ -488,6 +488,10 @@ function section(r, i, shotCid) {
 
 function buildHTML(data, cidMap) {
   const { day, repos: allRepos } = data;
+  // 每天轮换 2 张挂件（7 张循环）：头部 1 张、文末 1 张
+  const _m = parseInt(String(day).replace(/\D/g, ""), 10) || 0;
+  const mHead = _m % 7;
+  const mTail = (_m + 1) % 7;
   // 日榜按原顺序罗列，不做周榜沉底/去重
   const repos = allRepos;
   const top = repos[0];
@@ -495,10 +499,8 @@ function buildHTML(data, cidMap) {
   const total = repos.reduce((s, r) => s + (+String(r.today || 0).replace(/,/g, "") || 0), 0);
   const sections = (() => {
     const parts = [];
-    // 每 3 个仓库后面插一张二次元挂件，idx 从 3 递增，覆盖 5/6/7.png 三张
     repos.forEach((r, i) => {
       parts.push(section(r, i, cidMap[r.repo] || ""));
-      if ((i + 1) % 3 === 0) parts.push(`<div style="text-align:center;line-height:0;margin:2px 0 26px">${mascot(3 + ((i + 1) / 3 - 1) % 3, 34)}</div>`);
     });
     return parts.join("");
   })();
@@ -543,7 +545,7 @@ function buildHTML(data, cidMap) {
       <h1 style="margin:0 0 8px;font-size:30px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</h1>
       <p style="margin:0;font-size:13.5px;line-height:1.8;opacity:.95">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
     </div>
-    ${mascot(0, 56)}
+    ${mascot(mHead, 48)}
   </div>
 </div>
 
@@ -562,7 +564,7 @@ ${sections}
 
 ${(data.featured && data.featured.length) ? `
 <section style="margin:0 0 34px;padding:22px 20px;background:linear-gradient(135deg,#fdf3fb,#eef6ff);border-radius:18px;border:2px solid #f3d9ff">
-  <h2 style="margin:0 0 8px;font-size:18px;font-weight:900;color:#9b6cff;display:flex;align-items:center;gap:10px">${mascot(2, 34)}<span>🚀 新晋潜力 · 从 0 快速增长的黑马</span></h2>
+  <h2 style="margin:0 0 8px;font-size:18px;font-weight:900;color:#9b6cff">🚀 新晋潜力 · 从 0 快速增长的黑马</h2>
   <p style="margin:0 0 16px;font-size:13px;color:#b08ccd;line-height:1.7">这些是最近新建立、还没上日榜，但星数涨得飞快的仓库——真正值得早关注的黑马。</p>
   ${data.featured.map((r, i) => {
     const ai = r.ai;
@@ -578,7 +580,7 @@ ${(data.featured && data.featured.length) ? `
 </section>` : ""}
 
 <section style="margin:6px 0 22px;padding:22px 20px;background:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;box-shadow:0 8px 26px rgba(199,125,255,.25);border:2px solid #ffe0f3">
-  <p style="margin:0 0 8px;font-size:18px;font-weight:900;letter-spacing:1px;display:inline-flex;align-items:center;gap:10px">${mascot(1, 30)}<span>✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</span></p>
+  <p style="margin:0 0 8px;font-size:18px;font-weight:900;letter-spacing:1px;display:inline-flex;align-items:center;gap:10px">${mascot(mTail, 28)}<span>✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</span></p>
   <p style="margin:0;font-size:12.5px;opacity:.92">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </section>
 
