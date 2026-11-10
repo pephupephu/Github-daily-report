@@ -17,7 +17,8 @@ const UA = { "user-agent": "gh-daily-article" };
 function mascot(idx = 0, size = 84) {
   const dir = join(ROOT, "assets", "mascots");
   let files = [];
-  try { files = readdirSync(dir).filter((f) => /\.(png|jpe?g)$/i.test(f)).sort(); } catch { return ""; }
+  // 排除 1.png（用户不要这张）；其余 6 张排序后轮换
+  try { files = readdirSync(dir).filter((f) => /\.(png|jpe?g)$/i.test(f) && !/^1\.png$/i.test(f)).sort(); } catch { return ""; }
   if (!files.length) return "";
   const pick = files[idx % files.length];
   try {
