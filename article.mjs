@@ -498,7 +498,7 @@ function buildHTML(data, cidMap) {
     // 每 3 个仓库后面插一张二次元挂件，idx 从 3 递增，覆盖 5/6/7.png 三张
     repos.forEach((r, i) => {
       parts.push(section(r, i, cidMap[r.repo] || ""));
-      if ((i + 1) % 3 === 0) parts.push(`<div style="text-align:center;margin:6px 0 34px">${mascot(3 + ((i + 1) / 3 - 1) % 3, 62)}</div>`);
+      if ((i + 1) % 3 === 0) parts.push(`<div style="text-align:center;margin:4px 0 28px">${mascot(3 + ((i + 1) / 3 - 1) % 3, 44)}</div>`);
     });
     return parts.join("");
   })();
@@ -543,7 +543,7 @@ function buildHTML(data, cidMap) {
       <h1 style="margin:0 0 8px;font-size:30px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</h1>
       <p style="margin:0;font-size:13.5px;line-height:1.8;opacity:.95">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
     </div>
-    ${mascot(0, 96)}
+    ${mascot(0, 72)}
   </div>
 </div>
 
@@ -551,7 +551,7 @@ function buildHTML(data, cidMap) {
 
 ${overview}
 
-<div style="text-align:center;margin:4px 0 30px">${mascot(6, 60)}</div>
+<div style="text-align:center;margin:2px 0 24px">${mascot(6, 44)}</div>
 
 ${top ? `<section style="background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
   <p style="margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:2px;opacity:.95">🌟 今日最闪耀</p>
@@ -564,7 +564,7 @@ ${sections}
 
 ${(data.featured && data.featured.length) ? `
 <section style="margin:0 0 34px;padding:22px 20px;background:linear-gradient(135deg,#fdf3fb,#eef6ff);border-radius:18px;border:2px solid #f3d9ff">
-  <div style="text-align:center;margin:0 0 10px">${mascot(2, 68)}</div>
+  <div style="text-align:center;margin:0 0 10px">${mascot(2, 50)}</div>
   <h2 style="margin:0 0 8px;font-size:18px;font-weight:900;color:#9b6cff">🚀 新晋潜力 · 从 0 快速增长的黑马</h2>
   <p style="margin:0 0 16px;font-size:13px;color:#b08ccd;line-height:1.7">这些是最近新建立、还没上日榜，但星数涨得飞快的仓库——真正值得早关注的黑马。</p>
   ${data.featured.map((r, i) => {
@@ -581,14 +581,13 @@ ${(data.featured && data.featured.length) ? `
 </section>` : ""}
 
 <section style="margin:6px 0 22px;padding:22px 20px;background:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;box-shadow:0 8px 26px rgba(199,125,255,.25);border:2px solid #ffe0f3">
-  <div style="margin:0 0 12px">${mascot(1, 64)}</div>
+  <div style="margin:0 0 12px">${mascot(1, 52)}</div>
   <p style="margin:0 0 8px;font-size:18px;font-weight:900;letter-spacing:1px">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</p>
   <p style="margin:0;font-size:12.5px;opacity:.92">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </section>
 
 <section style="margin-top:14px;padding:16px 18px;background:#fbf3ff;border-radius:12px;font-size:12.5px;color:#b08ccd;line-height:1.85;text-align:center">
-  <p style="margin:0 0 6px">本文内容仅作参考，具体以各仓库官方说明为准。</p>
-  <a href="https://github.com/pephupephu/Github-daily-report" style="color:#9b6cff;font-weight:700;text-decoration:none">🌸 订阅每日推送 →</a>
+  <p style="margin:0">本文内容仅作参考，具体以各仓库官方说明为准。</p>
 </section>
 
 </div></body></html>`;
@@ -654,7 +653,6 @@ function buildDocx(data, cidMap) {
   repos.forEach(writeRepo);
 
   children.push(para("🌸 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 🌸", { bold: true, size: 22, color: "C77DFF", before: 320, after: 40 }));
-  children.push(para("订阅每日推送：https://github.com/pephupephu/Github-daily-report", { color: "9B6CFF", size: 18, after: 60 }));
   children.push(para("本文内容仅作参考，具体以各仓库官方说明为准。", { color: "B08CCD", size: 18, before: 40, after: 80 }));
 
   // 「值得关注」板块也进 Word（和 HTML 对齐）
