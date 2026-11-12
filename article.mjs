@@ -816,15 +816,15 @@ const attachments = Object.entries(cidMap)
   .filter(([k]) => k.startsWith("shot-"))
   .map(([k, v]) => ({ filename: `${k}.${(v.path.split(".").pop() || "png").toLowerCase()}`, path: v.path, cid: k }));
 attachments.push({ filename: `GitHub日报-${data.day}.docx`, content: docxBuf });
-// 文章 html 作为附件：收邮件即拿到内联图片的 html，直接 Chrome 打开复制进公众号即可
-attachments.push({ filename: `公众号直发-${data.day}.html`, content: readFileSync(file) });
 
 try {
   await transport.sendMail({
     from: `"GitHub 日报" <${user}>`,
     to: process.env.MAIL_TO || user,
     subject: `【公众号初稿】GitHub 热榜 ${data.day} · ${data.repos.length} 个项目 · ${new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false })}`,
-    html,
+    // 正文直接用公众号版（外链图 + 图片底色）：在邮箱里看到的就是粘进公众号的样子，全选复制即可
+    // 不再发 html 附件——邮箱的附件预览器会重写样式，和真实文件不一致，容易误判
+    html: wechatHtml,
     attachments,
   });
   console.error(`[文章] 已发送 ${data.repos.length} 个项目到邮箱，附件截图 ${attachments.length} 张`);
