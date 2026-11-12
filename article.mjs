@@ -786,6 +786,17 @@ function toWechat(src, map) {
     const rel = v.path.replace(ROOT, "").replace(/\\/g, "/").replace(/^\/+/, "");
     return `src="${REPO_CDN}${rel}"`;
   });
+  // 渐变：微信剥 linear-gradient，换成同款渐变的图片底（100% 100% 拉伸，线性渐变拉伸不变形）
+  const grads = [
+    ["linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%)", "header.png"],
+    ["linear-gradient(135deg,#ff9ad5,#c77dff)", "card.png"],
+    ["linear-gradient(135deg,#fdf3fb,#eef6ff)", "soft.png"],
+  ];
+  for (const [grad, file] of grads) {
+    out = out.split(`background-image:${grad}`).join(
+      `background-image:url(${REPO_CDN}assets/bg/${file});background-size:100% 100%;background-repeat:no-repeat`
+    );
+  }
   return out;
 }
 const wechatHtml = toWechat(html, cidMap);
