@@ -13,17 +13,24 @@ import { Document, Packer, Paragraph, TextRun, ImageRun } from "docx";
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const UA = { "user-agent": "gh-daily-article" };
 
-// 二次元挂件：按固定索引取 assets/mascots/ 里排序后的一张图（每次邮件同位置固定同图），转 base64 内联
-function mascot(idx = 0, size = 84) {
+// 二次元挂件：pick 传文件名则用该图，传数字则从池子里按索引取（可 exclude 排除某张），转 base64 内联
+function mascot(pick = 0, size = 84, exclude = "") {
   const dir = join(ROOT, "assets", "mascots");
   let files = [];
-  // 排除 1.png（用户不要这张）；其余 6 张排序后轮换
+  // 排除 1.png（用户不要这张）
   try { files = readdirSync(dir).filter((f) => /\.(png|jpe?g)$/i.test(f) && !/^1\.png$/i.test(f)).sort(); } catch { return ""; }
   if (!files.length) return "";
-  const pick = files[idx % files.length];
+  let file;
+  if (typeof pick === "string") {
+    file = files.includes(pick) ? pick : files[0];
+  } else {
+    const pool = exclude ? files.filter((f) => f !== exclude) : files;
+    const use = pool.length ? pool : files;
+    file = use[Math.abs(pick) % use.length];
+  }
   try {
-    const b64 = readFileSync(join(dir, pick)).toString("base64");
-    const mime = /\.png$/i.test(pick) ? "image/png" : "image/jpeg";
+    const b64 = readFileSync(join(dir, file)).toString("base64");
+    const mime = /\.png$/i.test(file) ? "image/png" : "image/jpeg";
     return `<img src="data:${mime};base64,${b64}" width="${size}" style="border-radius:14px;box-shadow:0 3px 12px rgba(199,125,255,.25);vertical-align:middle;border:2px solid #ffe0f3" alt="二次元挂件" />`;
   } catch { return ""; }
 }
@@ -489,10 +496,7 @@ function section(r, i, shotCid) {
 
 function buildHTML(data, cidMap) {
   const { day, repos: allRepos } = data;
-  // 每天轮换 2 张挂件（7 张循环）：头部 1 张、文末 1 张
-  const _m = parseInt(String(day).replace(/\D/g, ""), 10) || 0;
-  const mHead = _m % 7;
-  const mTail = (_m + 1) % 7;
+  // 挂件：头部固定 5.png，文末每次从其余几张随机
   // 日榜按原顺序罗列，不做周榜沉底/去重
   const repos = allRepos;
   const top = repos[0];
@@ -553,7 +557,7 @@ function buildHTML(data, cidMap) {
       <h1 style="margin:0 0 8px;font-size:30px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</h1>
       <p style="margin:0;font-size:13.5px;line-height:1.8;opacity:.95">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
     </div>
-    ${mascot(mHead, 112)}
+    ${mascot("5.png", 112)}
   </div>
 </div>
 
@@ -588,7 +592,7 @@ ${(data.featured && data.featured.length) ? `
 </section>` : ""}
 
 <section style="margin:6px 0 22px;padding:22px 20px;background:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;box-shadow:0 8px 26px rgba(199,125,255,.25);border:2px solid #ffe0f3">
-  <p style="margin:0 0 8px;font-size:16px;font-weight:900;letter-spacing:1px;display:flex;align-items:center;gap:12px;text-align:left">${mascot(mTail, 112)}<span style="flex:1">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活</span></p>
+  <p style="margin:0 0 8px;font-size:16px;font-weight:900;letter-spacing:1px;display:flex;align-items:center;gap:12px;text-align:left">${mascot(Math.floor(Math.random() * 1000), 112, "5.png")}<span style="flex:1">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活</span></p>
   <p style="margin:0;font-size:12.5px;opacity:.92">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </section>
 
