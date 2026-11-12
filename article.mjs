@@ -546,7 +546,7 @@ function buildHTML(data, cidMap) {
       <h1 style="margin:0 0 8px;font-size:30px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</h1>
       <p style="margin:0;font-size:13.5px;line-height:1.8;opacity:.95">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
     </div>
-    ${mascot(mHead, 96)}
+    ${mascot(mHead, 112)}
   </div>
 </div>
 
@@ -581,7 +581,7 @@ ${(data.featured && data.featured.length) ? `
 </section>` : ""}
 
 <section style="margin:6px 0 22px;padding:22px 20px;background:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;box-shadow:0 8px 26px rgba(199,125,255,.25);border:2px solid #ffe0f3">
-  <p style="margin:0 0 8px;font-size:18px;font-weight:900;letter-spacing:1px;display:inline-flex;align-items:center;gap:10px">${mascot(mTail, 68)}<span>✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</span></p>
+  <p style="margin:0 0 8px;font-size:16px;font-weight:900;letter-spacing:1px;display:flex;align-items:center;gap:12px;text-align:left">${mascot(mTail, 96)}<span style="flex:1">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活</span></p>
   <p style="margin:0;font-size:12.5px;opacity:.92">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </section>
 
