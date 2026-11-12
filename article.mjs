@@ -816,6 +816,7 @@ const attachments = Object.entries(cidMap)
   .filter(([k]) => k.startsWith("shot-"))
   .map(([k, v]) => ({ filename: `${k}.${(v.path.split(".").pop() || "png").toLowerCase()}`, path: v.path, cid: k }));
 attachments.push({ filename: `GitHub日报-${data.day}.docx`, content: docxBuf });
+attachments.push({ filename: `公众号直发-${data.day}.html`, content: readFileSync(file) });
 
 try {
   await transport.sendMail({
