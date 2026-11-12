@@ -455,7 +455,7 @@ function section(r, i, shotCid) {
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r));
-  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("真实场景")}${md(ai?.case || r.scenarios[0])}</div>` : "";
+  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("案例举例")}${md(ai?.case || r.scenarios[0])}</div>` : "";
   const coreHtml = (ai?.core || r.mechanics?.length) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#f6f2ff;border:1px solid #e6dbff;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
   const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#fff4f2;border:1px solid #ffded8;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
   const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:12px 14px;background:#fbf3ff;border-radius:12px;font-size:13px;color:#b08ccd;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
@@ -639,7 +639,7 @@ function buildDocx(data, cidMap) {
     // 演示截图直接嵌进 Word，方便打开即看图
     children.push(...imgPara(r));
     const cs = ai?.case || r.scenarios?.[0];
-    if (cs) children.push(para(`放进一个真实场景：${clean(cs)}`));
+    if (cs) children.push(para(`案例举例：${clean(cs)}`));
     const core = ai?.core || (r.mechanics?.length ? r.mechanics.join("；") : "");
     if (core) children.push(para(`它是怎么做到的：${clean(core)}`));
     const who = ai?.who || r.scenarios?.[1];
