@@ -523,10 +523,10 @@ function buildHTML(data, cidMap) {
     const line = String(ol || CN(r.judgment) || CN(r.summary) || CN(r.desc) || metaLine(r)).replace(/\*\*/g, "").replace(/\s+/g, " ");
     // 智能截断：到最近标点/空格，避免把词截一半
     const cut = (s, n) => { if (s.length <= n) return s; const t = s.slice(0, n); const m = Math.max(t.lastIndexOf("，"), t.lastIndexOf("。"), t.lastIndexOf("、"), t.lastIndexOf("；"), t.lastIndexOf("："), t.lastIndexOf(" ")); return (m > n / 2 ? t.slice(0, m + 1) : t) + "…"; };
-    const line2 = cut(line, 26);
+    const line2 = cut(line, 60);
     return `<tr style="background:${i % 2 ? "#fdf5fc" : "#fff"}">
     <td style="padding:10px 8px 10px 12px;color:#c77dff;font-weight:800;vertical-align:top;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
-    <td style="padding:10px 8px;white-space:nowrap;vertical-align:top;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
+    <td style="padding:10px 8px;word-break:break-all;vertical-align:top;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
     <td style="padding:10px 8px;color:#3a3a3a;line-height:1.7;border-top:1px solid #f7e9f5">${esc(line2)}</td>
     <td style="padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:12px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
   </tr>`;
@@ -534,12 +534,12 @@ function buildHTML(data, cidMap) {
   const overview = repos.length ? `
 <p style="margin:0 0 14px;font-size:18px;font-weight:900;color:#c77dff">🌸 热榜总览表</p>
 <div style="border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(159,108,255,.12);border:2px solid #f3d9ff;margin:0 0 34px">
-<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff">
+<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;table-layout:fixed">
   <tr>
-    <th align="left" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">#</th>
-    <th align="left" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">仓库</th>
+    <th align="left" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:30px">#</th>
+    <th align="left" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:26%">仓库</th>
     <th align="left" style="${ths};padding-left:12px;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">一眼看懂</th>
-    <th align="right" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">今日</th>
+    <th align="right" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:58px">今日</th>
   </tr>
   ${rows}
 </table>
@@ -780,13 +780,8 @@ if (data.featured) data.featured = data.featured.filter(substantive);
 
 mkdirSync(join(ROOT, "out"), { recursive: true });
 const html = buildHTML(data, cidMap);
-const file = join(ROOT, "out", `article-${data.day}.html`);
-writeFileSync(file, html);
-const docxBuf = await Packer.toBuffer(buildDocx(data, cidMap));
-writeFileSync(join(ROOT, "out", `article-${data.day}.docx`), docxBuf);
-console.error(`[文章] 已生成 ${file} 与 article-${data.day}.docx`);
 
-// 微信直发版：把 cid 图片内联成 base64（浏览器复制时图片随剪贴板一起走），贴进公众号编辑器图就自动进来
+// 把 cid 图片内联成 base64（浏览器复制时图片随剪贴板一起走），贴进公众号编辑器图就自动进来
 const wechatHtml = html.replace(/src="cid:([^"]+)"/g, (m, cid) => {
   const v = cidMap[cid];
   if (!v?.path) return m;
@@ -797,8 +792,12 @@ const wechatHtml = html.replace(/src="cid:([^"]+)"/g, (m, cid) => {
     return `src="data:image/${mime};base64,${b64}"`;
   } catch { return m; }
 });
-writeFileSync(join(ROOT, "out", `article-${data.day}.wechat.html`), wechatHtml);
-console.error(`[文章] 已生成微信直发版 out/article-${data.day}.wechat.html（图片已内联 base64，浏览器全选复制直接粘进公众号）`);
+// 落盘两份都写 base64 版：仓库里那份直接打开就有图、复制即可用（cid 引用在浏览器里是空图，两份内容会不一致）
+const file = join(ROOT, "out", `article-${data.day}.html`);
+writeFileSync(file, wechatHtml);
+const docxBuf = await Packer.toBuffer(buildDocx(data, cidMap));
+writeFileSync(join(ROOT, "out", `article-${data.day}.docx`), docxBuf);
+console.error(`[文章] 已生成 ${file}（图片已内联 base64，浏览器全选复制直接粘进公众号）与 article-${data.day}.docx`);
 
 const user = process.env.MAIL_USER, pass = process.env.MAIL_PASS;
 if (!user || !pass) { console.error("[文章] 未配置 MAIL_USER/MAIL_PASS，跳过发信"); process.exit(0); }
@@ -809,9 +808,8 @@ const attachments = Object.entries(cidMap)
   .filter(([k]) => k.startsWith("shot-"))
   .map(([k, v]) => ({ filename: `${k}.${(v.path.split(".").pop() || "png").toLowerCase()}`, path: v.path, cid: k }));
 attachments.push({ filename: `GitHub日报-${data.day}.docx`, content: docxBuf });
-// 微信直发版也作为附件：收邮件即拿到内联图片的 html，直接 Chrome 打开复制进公众号即可
-const wechatFile = join(ROOT, "out", `article-${data.day}.wechat.html`);
-attachments.push({ filename: `公众号直发-${data.day}.wechat.html`, content: readFileSync(wechatFile) });
+// 文章 html 作为附件：收邮件即拿到内联图片的 html，直接 Chrome 打开复制进公众号即可
+attachments.push({ filename: `公众号直发-${data.day}.html`, content: readFileSync(file) });
 
 try {
   await transport.sendMail({
