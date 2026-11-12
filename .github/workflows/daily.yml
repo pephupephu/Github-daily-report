@@ -64,7 +64,7 @@ jobs:
         run: |
           git config user.name  "report-bot"
           git config user.email "actions@github.com"
-          git add reports out
+          git add reports out shots
           # 内容和上次一样就跳过，别让空提交把整个 job 变成失败
           if git diff --staged --quiet; then echo "报告无变化，跳过提交"; exit 0; fi
           git commit -q -m "report: $(date -u +%F)"

@@ -31,7 +31,7 @@ function mascot(pick = 0, size = 84, exclude = "") {
   try {
     const b64 = readFileSync(join(dir, file)).toString("base64");
     const mime = /\.png$/i.test(file) ? "image/png" : "image/jpeg";
-    return `<img src="data:${mime};base64,${b64}" width="${size}" style="border-radius:14px;box-shadow:0 3px 12px rgba(199,125,255,.25);vertical-align:middle;border:2px solid #ffe0f3" alt="二次元挂件" />`;
+    return `<img src="data:${mime};base64,${b64}" data-file="${file}" width="${size}" style="border-radius:14px;box-shadow:0 3px 12px rgba(199,125,255,.25);vertical-align:middle;border:2px solid #ffe0f3" alt="二次元挂件" />`;
   } catch { return ""; }
 }
 
@@ -304,11 +304,8 @@ function videoBlock(videos) {
       return `
       <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
         <a href="${esc(v.url)}" style="text-decoration:none;display:block">
-          <div style="position:relative;width:100%;max-width:560px;padding-bottom:56.25%;overflow:hidden;border-radius:6px;margin-bottom:8px">
-            <img src="${esc(v.thumb)}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover" onerror="this.src='https://img.youtube.com/vi/${esc(v.id)}/default.jpg'">
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40px;color:#fff;opacity:0.85;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))">▶</div>
-          </div>
-          <div style="font-size:13px;color:#1a1a1a">${esc(`YouTube 演示 · ${v.id}`)}</div>
+          <img src="${esc(v.thumb)}" style="width:100%;max-width:560px;border-radius:6px;display:block;margin-bottom:8px" onerror="this.src='https://img.youtube.com/vi/${esc(v.id)}/default.jpg'">
+          <div style="font-size:13px;color:#1a1a1a">▶ ${esc(`YouTube 演示 · ${v.id}`)}</div>
         </a>
       </div>`;
     }
@@ -316,10 +313,7 @@ function videoBlock(videos) {
       return `
       <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
         <a href="${esc(v.url)}" style="text-decoration:none;display:block">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:48px;height:36px;background:#191919;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">B</div>
-            <div style="font-size:13px;color:#1a1a1a">Bilibili 演示 · ${esc(v.id)}</div>
-          </div>
+          <div><span style="display:inline-block;width:48px;height:36px;background:#191919;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">B</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">Bilibili 演示 · ${esc(v.id)}</span></div>
         </a>
       </div>`;
     }
@@ -327,10 +321,7 @@ function videoBlock(videos) {
       return `
       <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
         <a href="${esc(v.url)}" style="text-decoration:none;display:block">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:48px;height:36px;background:#1ab7ea;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">V</div>
-            <div style="font-size:13px;color:#1a1a1a">Vimeo 演示 · ${esc(v.id)}</div>
-          </div>
+          <div><span style="display:inline-block;width:48px;height:36px;background:#1ab7ea;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">V</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">Vimeo 演示 · ${esc(v.id)}</span></div>
         </a>
       </div>`;
     }
@@ -339,10 +330,7 @@ function videoBlock(videos) {
     return `
     <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
       <a href="${esc(v.url)}" style="text-decoration:none;display:block">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:48px;height:36px;background:#282c34;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">▶</div>
-        <div style="font-size:13px;color:#1a1a1a">${esc(v.thumb ? '演示动图' : '演示视频')} · ${esc(fname)}</div>
-        </div>
+        <div><span style="display:inline-block;width:48px;height:36px;background:#282c34;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">▶</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">${esc(v.thumb ? '演示动图' : '演示视频')} · ${esc(fname)}</span></div>
       </a>
     </div>`;
   }).join('');
@@ -468,7 +456,7 @@ function section(r, i, shotCid) {
   const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:12px 14px;background:#fbf3ff;border-radius:12px;font-size:13px;color:#b08ccd;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
   // 收尾上手区：仓库地址 + 一句可直接复制给任意 AI Agent 的安装提示词
   const agentBox = `
-<div style="margin:16px 0 0;padding:14px 16px;background:linear-gradient(135deg,#fdf3fb,#eef6ff);border:2px solid #f3d9ff;border-radius:14px;font-size:14px;line-height:2;color:#3a3a3a">
+<div style="margin:16px 0 0;padding:14px 16px;background:#f8f1fb;background:linear-gradient(135deg,#fdf3fb,#eef6ff);border:2px solid #f3d9ff;border-radius:14px;font-size:14px;line-height:2;color:#3a3a3a">
   <b style="color:#c75bd6">🌈 仓库地址：</b><a href="https://github.com/${esc(r.repo)}" style="color:#9b6cff;text-decoration:none;font-weight:700">github.com/${esc(r.repo)}</a><br>
   <b style="color:#c75bd6">🤖 交给 Agent 安装：</b>把这句话发给任意 AI Agent（Claude Code / Codex / Cursor / Qwen Code 都行）——
   <span style="display:block;margin-top:6px;padding:9px 12px;background:#fff;border:2px dashed #e3b7f5;border-radius:10px;font-size:13px;line-height:1.8;color:#7a4fa8">帮我克隆 https://github.com/${esc(r.repo)}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用</span>
@@ -476,10 +464,10 @@ function section(r, i, shotCid) {
 
   return `
 <section style="margin:0 0 34px;padding:0 2px 26px;border-bottom:1px solid #f3e0f0">
-  <h2 style="margin:0 0 12px;display:flex;align-items:center;font-size:19px;font-weight:800;color:#1a1a1a;line-height:1.4">
-    <span style="display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border-radius:9px;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;font-size:15px;font-weight:900;margin-right:10px">${String(i + 1).padStart(2, "0")}</span>
-    <span style="margin-right:10px">${esc(repoShort(r.repo))}</span>
-    <small style="color:#c9a0d6;font-weight:500;font-size:12px">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</small>
+  <h2 style="margin:0 0 12px;font-size:19px;font-weight:800;color:#1a1a1a;line-height:1.4">
+    <span style="display:inline-block;line-height:30px;text-align:center;min-width:30px;height:30px;padding:0 6px;border-radius:9px;background:#c77dff;background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;font-size:15px;font-weight:900;vertical-align:middle;margin-right:10px">${String(i + 1).padStart(2, "0")}</span>
+    <span style="vertical-align:middle;margin-right:10px">${esc(repoShort(r.repo))}</span>
+    <small style="color:#c9a0d6;font-weight:500;font-size:12px;vertical-align:middle">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</small>
   </h2>
   <p ${p}"><b style="color:#1a1a1a">${md(hook)}</b></p>
   <p ${p}">${md(what)}</p>
@@ -536,10 +524,10 @@ function buildHTML(data, cidMap) {
 <div style="border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(159,108,255,.12);border:2px solid #f3d9ff;margin:0 0 34px">
 <table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;table-layout:fixed">
   <tr>
-    <th align="left" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:30px">#</th>
-    <th align="left" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:26%">仓库</th>
-    <th align="left" style="${ths};padding-left:12px;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">一眼看懂</th>
-    <th align="right" style="${ths};background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:58px">今日</th>
+    <th align="left" style="${ths};background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:30px">#</th>
+    <th align="left" style="${ths};background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:26%">仓库</th>
+    <th align="left" style="${ths};padding-left:12px;background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">一眼看懂</th>
+    <th align="right" style="${ths};background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:58px">今日</th>
   </tr>
   ${rows}
 </table>
@@ -549,23 +537,21 @@ function buildHTML(data, cidMap) {
 <body style="margin:0;background:#fdf3fb">
 <div style="max-width:677px;margin:0 auto;background:#fffdfd;padding:0 20px 40px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
 
-<div style="margin:0 -20px;padding:32px 20px 28px;background:linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%);color:#fff;position:relative;overflow:hidden">
-  <div style="position:absolute;right:-30px;top:-40px;font-size:120px;opacity:.25;transform:rotate(-12deg)">✨</div>
-  <div style="position:absolute;left:-16px;bottom:-36px;font-size:100px;opacity:.18;transform:rotate(8deg)">🎀</div>
-  <div style="display:flex;align-items:center;gap:14px;position:relative">
-    <div style="flex:1">
-      <h1 style="margin:0 0 8px;font-size:30px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</h1>
-      <p style="margin:0;font-size:13.5px;line-height:1.8;opacity:.95">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
-    </div>
-    ${mascot("5.png", 112)}
-  </div>
+<div style="margin:0 0 0;padding:28px 20px;background:#c77dff;background:linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%);color:#fff;overflow:hidden">
+  <table style="width:100%;border-collapse:collapse"><tr>
+    <td style="vertical-align:middle;padding-right:14px">
+      <h1 style="margin:0 0 8px;font-size:28px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</h1>
+      <p style="margin:0;font-size:13.5px;line-height:1.8">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
+    </td>
+    <td style="width:112px;vertical-align:middle">${mascot("5.png", 112)}</td>
+  </tr></table>
 </div>
 
 <p style="margin:16px 0 0;font-size:13px;color:#b08ccd;font-weight:700;text-align:center">🌸 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 🌸</p>
 
 ${overview}
 
-${top ? `<section style="background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
+${top ? `<section style="background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
   <p style="margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:2px;opacity:.95">🌟 今日最闪耀</p>
   <p style="margin:0 0 10px;font-size:24px;font-weight:900;line-height:1.35">${esc(repoShort(top.repo))}</p>
   <p style="margin:0 0 14px;font-size:14px;line-height:1.8;opacity:.97">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
@@ -575,7 +561,7 @@ ${top ? `<section style="background:linear-gradient(135deg,#ff9ad5,#c77dff);colo
 ${sections}
 
 ${(data.featured && data.featured.length) ? `
-<section style="margin:0 0 34px;padding:22px 20px;background:linear-gradient(135deg,#fdf3fb,#eef6ff);border-radius:18px;border:2px solid #f3d9ff">
+<section style="margin:0 0 34px;padding:22px 20px;background:#f8f1fb;background:linear-gradient(135deg,#fdf3fb,#eef6ff);border-radius:18px;border:2px solid #f3d9ff">
   <h2 style="margin:0 0 8px;font-size:18px;font-weight:900;color:#9b6cff">🚀 新晋潜力 · 从 0 快速增长的黑马</h2>
   <p style="margin:0 0 16px;font-size:13px;color:#b08ccd;line-height:1.7">这些是最近新建立、还没上日榜，但星数涨得飞快的仓库——真正值得早关注的黑马。</p>
   ${data.featured.map((r, i) => {
@@ -583,7 +569,7 @@ ${(data.featured && data.featured.length) ? `
     const hook = ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} ★，值得放进收藏。`;
     return `
   <div style="margin:0 0 14px;padding:16px 18px;background:#fff;border-radius:14px;border:2px solid #ffe0f3;box-shadow:0 3px 12px rgba(199,125,255,.08)">
-    <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#9b6cff;text-decoration:none;font-weight:800">${esc(r.repo)}</a></div>
+    <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#9b6cff;text-decoration:none;font-weight:800">${esc(r.repo)}</a></div>
     <p style="margin:0 0 8px;font-size:13px;line-height:1.8;color:#3a3a3a"><b>${md(hook)}</b></p>
     <p style="margin:0 0 10px;font-size:13px;line-height:1.8;color:#5a6472">${md(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))}</p>
     <div style="margin:0;font-size:12px;color:#b08ccd">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#c77dff;font-weight:700">仓库 →</a></div>
@@ -591,9 +577,12 @@ ${(data.featured && data.featured.length) ? `
   }).join("")}
 </section>` : ""}
 
-<section style="margin:6px 0 22px;padding:22px 20px;background:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;box-shadow:0 8px 26px rgba(199,125,255,.25);border:2px solid #ffe0f3">
-  <p style="margin:0 0 8px;font-size:16px;font-weight:900;letter-spacing:1px;display:flex;align-items:center;gap:12px;text-align:left">${mascot(Math.floor(Math.random() * 1000), 112, "5.png")}<span style="flex:1">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活</span></p>
-  <p style="margin:0;font-size:12.5px;opacity:.92">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
+<section style="margin:6px 0 22px;padding:20px;background:#c77dff;background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;border:2px solid #ffe0f3">
+  <table style="width:100%;border-collapse:collapse"><tr>
+    <td style="width:112px;vertical-align:middle">${mascot(Math.floor(Math.random() * 1000), 112, "5.png")}</td>
+    <td style="vertical-align:middle;padding-left:12px;font-size:16px;font-weight:900;letter-spacing:1px;text-align:left">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活</td>
+  </tr></table>
+  <p style="margin:10px 0 0;font-size:12.5px">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </section>
 
 <section style="margin-top:14px;padding:16px 18px;background:#fbf3ff;border-radius:12px;font-size:12.5px;color:#b08ccd;line-height:1.85;text-align:center">
@@ -781,23 +770,30 @@ if (data.featured) data.featured = data.featured.filter(substantive);
 mkdirSync(join(ROOT, "out"), { recursive: true });
 const html = buildHTML(data, cidMap);
 
-// 把 cid 图片内联成 base64（浏览器复制时图片随剪贴板一起走），贴进公众号编辑器图就自动进来
-const wechatHtml = html.replace(/src="cid:([^"]+)"/g, (m, cid) => {
-  const v = cidMap[cid];
-  if (!v?.path) return m;
-  try {
-    const ext = (v.path.split(".").pop() || "png").toLowerCase();
-    const mime = ext === "jpg" ? "jpeg" : ext === "jpeg" || ext === "png" || ext === "gif" || ext === "webp" ? ext : "png";
-    const b64 = readFileSync(v.path).toString("base64");
-    return `src="data:image/${mime};base64,${b64}"`;
-  } catch { return m; }
-});
-// 落盘两份都写 base64 版：仓库里那份直接打开就有图、复制即可用（cid 引用在浏览器里是空图，两份内容会不一致）
+// 公众号版：微信编辑器不接收 base64 图片，必须换成公网可访问的图片地址（粘贴时微信自动转存到自己服务器）
+const REPO_CDN = "https://cdn.jsdelivr.net/gh/pephupephu/Github-daily-report@main/";
+function toWechat(src, map) {
+  // 挂件：base64 -> 仓库里的原图外链（mascot 输出带 data-file）
+  let out = src.replace(/<img([^>]*?)src="data:image\/[^"]*"([^>]*?)>/g, (m, a, b) => {
+    const f = (m.match(/data-file="([^"]+)"/) || [])[1];
+    return f ? `<img${a}src="${REPO_CDN}assets/mascots/${f}"${b}>` : m;
+  });
+  // 截图：cid -> 仓库里的原图外链
+  out = out.replace(/src="cid:([^"]+)"/g, (m, cid) => {
+    const v = map[cid];
+    if (!v?.path) return m;
+    const rel = v.path.replace(ROOT, "").replace(/\\/g, "/").replace(/^\/+/, "");
+    return `src="${REPO_CDN}${rel}"`;
+  });
+  return out;
+}
+const wechatHtml = toWechat(html, cidMap);
+// 落盘的就是公众号版：浏览器打开有图、全选复制粘进公众号也保持同样的排版
 const file = join(ROOT, "out", `article-${data.day}.html`);
 writeFileSync(file, wechatHtml);
 const docxBuf = await Packer.toBuffer(buildDocx(data, cidMap));
 writeFileSync(join(ROOT, "out", `article-${data.day}.docx`), docxBuf);
-console.error(`[文章] 已生成 ${file}（图片已内联 base64，浏览器全选复制直接粘进公众号）与 article-${data.day}.docx`);
+console.error(`[文章] 已生成 ${file}（图片为公网外链，Chrome 打开后全选复制即可粘进公众号）与 article-${data.day}.docx`);
 
 const user = process.env.MAIL_USER, pass = process.env.MAIL_PASS;
 if (!user || !pass) { console.error("[文章] 未配置 MAIL_USER/MAIL_PASS，跳过发信"); process.exit(0); }
