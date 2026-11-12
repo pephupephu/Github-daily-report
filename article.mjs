@@ -302,7 +302,7 @@ function videoBlock(videos) {
   const cards = videos.map(v => {
     if (v.type === 'youtube') {
       return `
-      <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
+      <div style="margin:10px 0;padding:12px;background-color:#fff;border:1px solid #e1e4e8;border-radius:8px">
         <a href="${esc(v.url)}" style="text-decoration:none;display:block">
           <img src="${esc(v.thumb)}" style="width:100%;max-width:560px;border-radius:6px;display:block;margin-bottom:8px" onerror="this.src='https://img.youtube.com/vi/${esc(v.id)}/default.jpg'">
           <div style="font-size:13px;color:#1a1a1a">▶ ${esc(`YouTube 演示 · ${v.id}`)}</div>
@@ -311,26 +311,26 @@ function videoBlock(videos) {
     }
     if (v.type === 'bilibili') {
       return `
-      <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
+      <div style="margin:10px 0;padding:12px;background-color:#fff;border:1px solid #e1e4e8;border-radius:8px">
         <a href="${esc(v.url)}" style="text-decoration:none;display:block">
-          <div><span style="display:inline-block;width:48px;height:36px;background:#191919;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">B</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">Bilibili 演示 · ${esc(v.id)}</span></div>
+          <div><span style="display:inline-block;width:48px;height:36px;background-color:#191919;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">B</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">Bilibili 演示 · ${esc(v.id)}</span></div>
         </a>
       </div>`;
     }
     if (v.type === 'vimeo') {
       return `
-      <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
+      <div style="margin:10px 0;padding:12px;background-color:#fff;border:1px solid #e1e4e8;border-radius:8px">
         <a href="${esc(v.url)}" style="text-decoration:none;display:block">
-          <div><span style="display:inline-block;width:48px;height:36px;background:#1ab7ea;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">V</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">Vimeo 演示 · ${esc(v.id)}</span></div>
+          <div><span style="display:inline-block;width:48px;height:36px;background-color:#1ab7ea;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">V</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">Vimeo 演示 · ${esc(v.id)}</span></div>
         </a>
       </div>`;
     }
     // 直接文件
     let fname = v.url; try { fname = new URL(v.url).pathname.split('/').pop() || v.url; } catch {}
     return `
-    <div style="margin:10px 0;padding:12px;background:#fff;border:1px solid #e1e4e8;border-radius:8px">
+    <div style="margin:10px 0;padding:12px;background-color:#fff;border:1px solid #e1e4e8;border-radius:8px">
       <a href="${esc(v.url)}" style="text-decoration:none;display:block">
-        <div><span style="display:inline-block;width:48px;height:36px;background:#282c34;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">▶</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">${esc(v.thumb ? '演示动图' : '演示视频')} · ${esc(fname)}</span></div>
+        <div><span style="display:inline-block;width:48px;height:36px;background-color:#282c34;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">▶</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">${esc(v.thumb ? '演示动图' : '演示视频')} · ${esc(fname)}</span></div>
       </a>
     </div>`;
   }).join('');
@@ -438,7 +438,7 @@ function section(r, i, shotCid) {
   const vids = r.videos?.length ? videoBlock(r.videos) : "";
   const p = `style="margin:0 0 10px;font-size:15px;line-height:1.9;color:#3a3a3a"`;
   // 小节标签：二次元粉紫胶囊，给 case/core/who 一个统一视觉
-  const tag = (t) => `<span style="display:inline-block;background:#ffe0f3;color:#c75bd6;border-radius:7px;padding:2px 9px;font-size:12px;font-weight:800;margin-right:8px">${t}</span>`;
+  const tag = (t) => `<span style="display:inline-block;background-color:#ffe0f3;color:#c75bd6;border-radius:7px;padding:2px 9px;font-size:12px;font-weight:800;margin-right:8px">${t}</span>`;
 
   const links = [];
   if (r.homepage) { try { links.push(`<a href="${esc(r.homepage)}" style="color:#9b6cff;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`); } catch {} }
@@ -450,25 +450,25 @@ function section(r, i, shotCid) {
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r));
-  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("案例举例")}${md(ai?.case || r.scenarios[0])}</div>` : "";
-  const coreHtml = (ai?.core || r.mechanics?.length) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#f6f2ff;border:1px solid #e6dbff;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
-  const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div style="margin:0 0 12px;padding:12px 14px;background:#fff4f2;border:1px solid #ffded8;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
-  const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:12px 14px;background:#fbf3ff;border-radius:12px;font-size:13px;color:#b08ccd;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
+  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div style="margin:0 0 12px;padding:12px 14px;background-color:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("案例举例")}${md(ai?.case || r.scenarios[0])}</div>` : "";
+  const coreHtml = (ai?.core || r.mechanics?.length) ? `<div style="margin:0 0 12px;padding:12px 14px;background-color:#f6f2ff;border:1px solid #e6dbff;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
+  const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div style="margin:0 0 12px;padding:12px 14px;background-color:#fff4f2;border:1px solid #ffded8;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
+  const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:12px 14px;background-color:#fbf3ff;border-radius:12px;font-size:13px;color:#b08ccd;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
   // 收尾上手区：仓库地址 + 一句可直接复制给任意 AI Agent 的安装提示词
   const agentBox = `
-<div style="margin:16px 0 0;padding:14px 16px;background:#f8f1fb;background:linear-gradient(135deg,#fdf3fb,#eef6ff);border:2px solid #f3d9ff;border-radius:14px;font-size:14px;line-height:2;color:#3a3a3a">
+<div style="margin:16px 0 0;padding:14px 16px;background-color:#f8f1fb;background-image:linear-gradient(135deg,#fdf3fb,#eef6ff);border:2px solid #f3d9ff;border-radius:14px;font-size:14px;line-height:2;color:#3a3a3a">
   <b style="color:#c75bd6">🌈 仓库地址：</b><a href="https://github.com/${esc(r.repo)}" style="color:#9b6cff;text-decoration:none;font-weight:700">github.com/${esc(r.repo)}</a><br>
   <b style="color:#c75bd6">🤖 交给 Agent 安装：</b>把这句话发给任意 AI Agent（Claude Code / Codex / Cursor / Qwen Code 都行）——
-  <span style="display:block;margin-top:6px;padding:9px 12px;background:#fff;border:2px dashed #e3b7f5;border-radius:10px;font-size:13px;line-height:1.8;color:#7a4fa8">帮我克隆 https://github.com/${esc(r.repo)}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用</span>
+  <span style="display:block;margin-top:6px;padding:9px 12px;background-color:#fff;border:2px dashed #e3b7f5;border-radius:10px;font-size:13px;line-height:1.8;color:#7a4fa8">帮我克隆 https://github.com/${esc(r.repo)}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用</span>
 </div>`;
 
   return `
-<section style="margin:0 0 34px;padding:0 2px 26px;border-bottom:1px solid #f3e0f0">
-  <h2 style="margin:0 0 12px;font-size:19px;font-weight:800;color:#1a1a1a;line-height:1.4">
-    <span style="display:inline-block;line-height:30px;text-align:center;min-width:30px;height:30px;padding:0 6px;border-radius:9px;background:#c77dff;background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;font-size:15px;font-weight:900;vertical-align:middle;margin-right:10px">${String(i + 1).padStart(2, "0")}</span>
+<div style="margin:0 0 34px;padding:0 2px 26px;border-bottom:1px solid #f3e0f0">
+  <p style="margin:0 0 12px;font-size:19px;font-weight:800;color:#1a1a1a;line-height:1.4">
+    <span style="display:inline-block;line-height:30px;text-align:center;min-width:30px;height:30px;padding:0 6px;border-radius:9px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;font-size:15px;font-weight:900;vertical-align:middle;margin-right:10px">${String(i + 1).padStart(2, "0")}</span>
     <span style="vertical-align:middle;margin-right:10px">${esc(repoShort(r.repo))}</span>
-    <small style="color:#c9a0d6;font-weight:500;font-size:12px;vertical-align:middle">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</small>
-  </h2>
+    <span style="color:#c9a0d6;font-weight:500;font-size:12px;vertical-align:middle">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</span>
+  </p>
   <p ${p}"><b style="color:#1a1a1a">${md(hook)}</b></p>
   <p ${p}">${md(what)}</p>
   ${caseHtml}
@@ -479,7 +479,7 @@ function section(r, i, shotCid) {
   ${whoHtml}
   ${agentBox}
   ${fallbackBox}
-</section>`;
+</div>`;
 }
 
 function buildHTML(data, cidMap) {
@@ -499,7 +499,7 @@ function buildHTML(data, cidMap) {
   })();
 
   // 文首总览表：一chart表把今天的推荐直接铺开，oneliner 缺了就退回 trending 摘要/官方简介
-  const ths = `padding:10px 8px;background:#f7f8fa;color:#5a6472;font-size:12px;font-weight:600;letter-spacing:.5px`;
+  const ths = `padding:10px 8px;background-color:#f7f8fa;color:#5a6472;font-size:12px;font-weight:600;letter-spacing:.5px`;
   const seenOl = new Set();
   const rows = repos.map((r, i) => {
     // AI 偶尔把同一句套到多个仓库：重复的 oneliner 直接丢弃，退回该仓库自身摘要
@@ -512,35 +512,36 @@ function buildHTML(data, cidMap) {
     // 智能截断：到最近标点/空格，避免把词截一半
     const cut = (s, n) => { if (s.length <= n) return s; const t = s.slice(0, n); const m = Math.max(t.lastIndexOf("，"), t.lastIndexOf("。"), t.lastIndexOf("、"), t.lastIndexOf("；"), t.lastIndexOf("："), t.lastIndexOf(" ")); return (m > n / 2 ? t.slice(0, m + 1) : t) + "…"; };
     const line2 = cut(line, 60);
-    return `<tr style="background:${i % 2 ? "#fdf5fc" : "#fff"}">
-    <td style="padding:10px 8px 10px 12px;color:#c77dff;font-weight:800;vertical-align:top;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
-    <td style="padding:10px 8px;word-break:break-all;vertical-align:top;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
-    <td style="padding:10px 8px;color:#3a3a3a;line-height:1.7;border-top:1px solid #f7e9f5">${esc(line2)}</td>
-    <td style="padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:12px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
+    const bg = i % 2 ? "#fdf5fc" : "#fff";
+    return `<tr>
+    <td style="background-color:${bg};padding:10px 8px 10px 12px;color:#c77dff;font-weight:800;vertical-align:top;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
+    <td style="background-color:${bg};padding:10px 8px;word-break:break-all;vertical-align:top;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
+    <td style="background-color:${bg};padding:10px 8px;color:#3a3a3a;line-height:1.7;border-top:1px solid #f7e9f5">${esc(line2)}</td>
+    <td style="background-color:${bg};padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:12px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
   </tr>`;
   }).join("");
   const overview = repos.length ? `
 <p style="margin:0 0 14px;font-size:18px;font-weight:900;color:#c77dff">🌸 热榜总览表</p>
 <div style="border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(159,108,255,.12);border:2px solid #f3d9ff;margin:0 0 34px">
-<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;table-layout:fixed">
+<table style="width:100%;border-collapse:collapse;font-size:13px;background-color:#fff;table-layout:fixed">
   <tr>
-    <th align="left" style="${ths};background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:30px">#</th>
-    <th align="left" style="${ths};background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:26%">仓库</th>
-    <th align="left" style="${ths};padding-left:12px;background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">一眼看懂</th>
-    <th align="right" style="${ths};background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:58px">今日</th>
+    <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:30px">#</th>
+    <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:26%">仓库</th>
+    <th align="left" style="${ths};padding-left:12px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">一眼看懂</th>
+    <th align="right" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:58px">今日</th>
   </tr>
   ${rows}
 </table>
 </div>` : "";
 
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>最新开源AI技术分享 ${day}</title></head>
-<body style="margin:0;background:#fdf3fb">
-<div style="max-width:677px;margin:0 auto;background:#fffdfd;padding:0 20px 40px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+<body style="margin:0;background-color:#fdf3fb">
+<div style="max-width:677px;margin:0 auto;background-color:#fffdfd;padding:0 20px 40px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
 
-<div style="margin:0 0 0;padding:28px 20px;background:#c77dff;background:linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%);color:#fff;overflow:hidden">
+<div style="margin:0 0 0;padding:28px 20px;background-color:#c77dff;background-image:linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%);color:#fff;overflow:hidden">
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="vertical-align:middle;padding-right:14px">
-      <h1 style="margin:0 0 8px;font-size:28px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</h1>
+      <p style="margin:0 0 8px;font-size:28px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</p>
       <p style="margin:0;font-size:13.5px;line-height:1.8">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
     </td>
     <td style="width:112px;vertical-align:middle">${mascot("5.png", 112)}</td>
@@ -551,43 +552,43 @@ function buildHTML(data, cidMap) {
 
 ${overview}
 
-${top ? `<section style="background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
+${top ? `<div style="background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
   <p style="margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:2px;opacity:.95">🌟 今日最闪耀</p>
   <p style="margin:0 0 10px;font-size:24px;font-weight:900;line-height:1.35">${esc(repoShort(top.repo))}</p>
   <p style="margin:0 0 14px;font-size:14px;line-height:1.8;opacity:.97">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
-  <div style="display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:13px;font-weight:700">今日 ${fmtStars(top.today)} ★ · 总 ${(top.stars || 0).toLocaleString()} ★</div>
-</section>` : ""}
+  <div style="display:inline-block;background-color:rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:13px;font-weight:700">今日 ${fmtStars(top.today)} ★ · 总 ${(top.stars || 0).toLocaleString()} ★</div>
+</div>` : ""}
 
 ${sections}
 
 ${(data.featured && data.featured.length) ? `
-<section style="margin:0 0 34px;padding:22px 20px;background:#f8f1fb;background:linear-gradient(135deg,#fdf3fb,#eef6ff);border-radius:18px;border:2px solid #f3d9ff">
-  <h2 style="margin:0 0 8px;font-size:18px;font-weight:900;color:#9b6cff">🚀 新晋潜力 · 从 0 快速增长的黑马</h2>
+<div style="margin:0 0 34px;padding:22px 20px;background-color:#f8f1fb;background-image:linear-gradient(135deg,#fdf3fb,#eef6ff);border-radius:18px;border:2px solid #f3d9ff">
+  <p style="margin:0 0 8px;font-size:18px;font-weight:900;color:#9b6cff">🚀 新晋潜力 · 从 0 快速增长的黑马</p>
   <p style="margin:0 0 16px;font-size:13px;color:#b08ccd;line-height:1.7">这些是最近新建立、还没上日榜，但星数涨得飞快的仓库——真正值得早关注的黑马。</p>
   ${data.featured.map((r, i) => {
     const ai = r.ai;
     const hook = ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} ★，值得放进收藏。`;
     return `
-  <div style="margin:0 0 14px;padding:16px 18px;background:#fff;border-radius:14px;border:2px solid #ffe0f3;box-shadow:0 3px 12px rgba(199,125,255,.08)">
-    <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#9b6cff;text-decoration:none;font-weight:800">${esc(r.repo)}</a></div>
+  <div style="margin:0 0 14px;padding:16px 18px;background-color:#fff;border-radius:14px;border:2px solid #ffe0f3;box-shadow:0 3px 12px rgba(199,125,255,.08)">
+    <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#9b6cff;text-decoration:none;font-weight:800">${esc(r.repo)}</a></div>
     <p style="margin:0 0 8px;font-size:13px;line-height:1.8;color:#3a3a3a"><b>${md(hook)}</b></p>
     <p style="margin:0 0 10px;font-size:13px;line-height:1.8;color:#5a6472">${md(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))}</p>
     <div style="margin:0;font-size:12px;color:#b08ccd">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#c77dff;font-weight:700">仓库 →</a></div>
   </div>`;
   }).join("")}
-</section>` : ""}
+</div>` : ""}
 
-<section style="margin:6px 0 22px;padding:20px;background:#c77dff;background:#e07ad8;background:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;border:2px solid #ffe0f3">
+<div style="margin:6px 0 22px;padding:20px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;border:2px solid #ffe0f3">
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="width:112px;vertical-align:middle">${mascot(Math.floor(Math.random() * 1000), 112, "5.png")}</td>
     <td style="vertical-align:middle;padding-left:12px;font-size:16px;font-weight:900;letter-spacing:1px;text-align:left">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活</td>
   </tr></table>
   <p style="margin:10px 0 0;font-size:12.5px">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
-</section>
+</div>
 
-<section style="margin-top:14px;padding:16px 18px;background:#fbf3ff;border-radius:12px;font-size:12.5px;color:#b08ccd;line-height:1.85;text-align:center">
+<div style="margin-top:14px;padding:16px 18px;background-color:#fbf3ff;border-radius:12px;font-size:12.5px;color:#b08ccd;line-height:1.85;text-align:center">
   <p style="margin:0">本文内容仅作参考，具体以各仓库官方说明为准。</p>
-</section>
+</div>
 
 </div></body></html>`;
 }
