@@ -313,26 +313,20 @@ function videoBlock(videos) {
     if (v.type === 'bilibili') {
       return `
       <div style="margin:10px 0;padding:12px;background-color:#fff;border:1px solid #e1e4e8;border-radius:8px">
-        <a href="${esc(v.url)}" style="text-decoration:none;display:block">
-          <div><span style="display:inline-block;width:48px;height:36px;background-color:#191919;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">B</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">Bilibili 演示 · ${esc(v.id)}</span></div>
-        </a>
+        <a href="${esc(v.url)}" style="text-decoration:none;display:block"><span style="font-size:13px;color:#1a1a1a">▶ Bilibili 演示 · ${esc(v.id)}</span></a>
       </div>`;
     }
     if (v.type === 'vimeo') {
       return `
       <div style="margin:10px 0;padding:12px;background-color:#fff;border:1px solid #e1e4e8;border-radius:8px">
-        <a href="${esc(v.url)}" style="text-decoration:none;display:block">
-          <div><span style="display:inline-block;width:48px;height:36px;background-color:#1ab7ea;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">V</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">Vimeo 演示 · ${esc(v.id)}</span></div>
-        </a>
+        <a href="${esc(v.url)}" style="text-decoration:none;display:block"><span style="font-size:13px;color:#1a1a1a">▶ Vimeo 演示 · ${esc(v.id)}</span></a>
       </div>`;
     }
     // 直接文件
     let fname = v.url; try { fname = new URL(v.url).pathname.split('/').pop() || v.url; } catch {}
     return `
     <div style="margin:10px 0;padding:12px;background-color:#fff;border:1px solid #e1e4e8;border-radius:8px">
-      <a href="${esc(v.url)}" style="text-decoration:none;display:block">
-        <div><span style="display:inline-block;width:48px;height:36px;background-color:#282c34;border-radius:4px;color:#fff;font-weight:700;text-align:center;line-height:36px;vertical-align:middle">▶</span><span style="font-size:13px;color:#1a1a1a;vertical-align:middle;margin-left:10px">${esc(v.thumb ? '演示动图' : '演示视频')} · ${esc(fname)}</span></div>
-      </a>
+      <a href="${esc(v.url)}" style="text-decoration:none;display:block"><span style="font-size:13px;color:#1a1a1a">▶ ${esc(v.thumb ? '演示动图' : '演示视频')} · ${esc(fname)}</span></a>
     </div>`;
   }).join('');
   return `<div style="margin:12px 0">${cards}</div>`;
@@ -451,6 +445,11 @@ function section(r, i, shotCid) {
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r));
+  // 开头总结+正文整块截图：微信会把 <p> 上的 font-size 剥回 16px，<b> 里的黑字也保不住，截图后与下方卡片字号一致
+  const leadHtml = `<div data-block="card-lead-${i}" style="margin:0 0 4px">
+  <p ${p}><b style="color:#1a1a1a">${md(hook)}</b></p>
+  <p ${p}>${md(what)}</p>
+</div>`;
   const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div data-block="card-case-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("案例举例")}${md(ai?.case || r.scenarios[0])}</div>` : "";
   const coreHtml = (ai?.core || r.mechanics?.length) ? `<div data-block="card-core-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#f6f2ff;border:1px solid #e6dbff;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
   const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div data-block="card-who-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#fff4f2;border:1px solid #ffded8;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
@@ -470,13 +469,12 @@ function section(r, i, shotCid) {
     <span style="vertical-align:middle;margin-right:10px">${esc(repoShort(r.repo))}</span>
     <span style="color:#c9a0d6;font-weight:500;font-size:12px;vertical-align:middle">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</span>
   </p>
-  <p ${p}"><b style="color:#1a1a1a">${md(hook)}</b></p>
-  <p ${p}">${md(what)}</p>
+  ${leadHtml}
   ${caseHtml}
   ${coreHtml}
   ${img}
   ${vids}
-  ${links.length ? `<div style="margin:10px 0">${links.join("　　")}</div>` : ""}
+  ${links.length ? `<div style="margin:10px 0"><span style="font-size:13px">${links.join("　　")}</span></div>` : ""}
   ${whoHtml}
   ${agentBox}
   ${fallbackBox}
@@ -574,7 +572,7 @@ ${(data.featured && data.featured.length) ? `
     <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#9b6cff;text-decoration:none;font-weight:800">${esc(r.repo)}</a></div>
     <p style="margin:0 0 8px;font-size:13px;line-height:1.8;color:#3a3a3a"><b>${md(hook)}</b></p>
     <p style="margin:0 0 10px;font-size:13px;line-height:1.8;color:#5a6472">${md(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))}</p>
-    <div style="margin:0;font-size:12px;color:#b08ccd">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#c77dff;font-weight:700">仓库 →</a></div>
+    <div data-block="feat-meta-${i}" style="margin:0;font-size:12px;color:#b08ccd">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#c77dff;font-weight:700">仓库 →</a></div>
   </div>`;
   }).join("")}
 </div>` : ""}
@@ -587,7 +585,7 @@ ${(data.featured && data.featured.length) ? `
   <p style="margin:10px 0 0;font-size:12.5px">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </div>
 
-<div style="margin-top:14px;padding:16px 18px;background-color:#fbf3ff;border-radius:12px;font-size:12.5px;color:#b08ccd;line-height:1.85;text-align:center">
+<div data-block="footer-note" style="margin-top:14px;padding:16px 18px;background-color:#fbf3ff;border-radius:12px;font-size:12.5px;color:#b08ccd;line-height:1.85;text-align:center">
   <p style="margin:0">本文内容仅作参考，具体以各仓库官方说明为准。</p>
 </div>
 
@@ -615,8 +613,8 @@ async function blocksToImages(html, day) {
     const els = await page.$$("[data-block]");
     for (const el of els) {
       const name = await el.getAttribute("data-block");
-      // 正文卡片数量多（每仓库 3~4 张），用 JPEG 控体积；头部/文末大图保持 PNG
-      const isCard = name.startsWith("card-");
+      // 只有三张渐变大图用 PNG，其余文字块（每仓库 5 张）用 JPEG 控体积
+      const isCard = !["header", "top", "footer"].includes(name);
       const buf = await el.screenshot(isCard ? { type: "jpeg", quality: 90 } : { type: "png" });
       const ext = isCard ? "jpg" : "png";
       const mime = isCard ? "image/jpeg" : "image/png";
