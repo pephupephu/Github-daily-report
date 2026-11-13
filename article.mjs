@@ -451,13 +451,13 @@ function section(r, i, shotCid) {
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r));
-  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div style="margin:0 0 12px;padding:12px 14px;background-color:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("案例举例")}${md(ai?.case || r.scenarios[0])}</div>` : "";
-  const coreHtml = (ai?.core || r.mechanics?.length) ? `<div style="margin:0 0 12px;padding:12px 14px;background-color:#f6f2ff;border:1px solid #e6dbff;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
-  const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div style="margin:0 0 12px;padding:12px 14px;background-color:#fff4f2;border:1px solid #ffded8;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
+  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div data-block="card-case-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("案例举例")}${md(ai?.case || r.scenarios[0])}</div>` : "";
+  const coreHtml = (ai?.core || r.mechanics?.length) ? `<div data-block="card-core-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#f6f2ff;border:1px solid #e6dbff;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
+  const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div data-block="card-who-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#fff4f2;border:1px solid #ffded8;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
   const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:12px 14px;background-color:#fbf3ff;border-radius:12px;font-size:13px;color:#b08ccd;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
   // 收尾上手区：仓库地址 + 一句可直接复制给任意 AI Agent 的安装提示词
   const agentBox = `
-<div style="margin:16px 0 0;padding:14px 16px;background-color:#f8f1fb;background-image:linear-gradient(135deg,#fdf3fb,#eef6ff);border:2px solid #f3d9ff;border-radius:14px;font-size:14px;line-height:2;color:#3a3a3a">
+<div data-block="card-agent-${i}" style="margin:16px 0 0;padding:14px 16px;background-color:#f8f1fb;background-image:linear-gradient(135deg,#fdf3fb,#eef6ff);border:2px solid #f3d9ff;border-radius:14px;font-size:14px;line-height:2;color:#3a3a3a">
   <b style="color:#c75bd6">🌈 仓库地址：</b><a href="https://github.com/${esc(r.repo)}" style="color:#9b6cff;text-decoration:none;font-weight:700">github.com/${esc(r.repo)}</a><br>
   <b style="color:#c75bd6">🤖 交给 Agent 安装：</b>把这句话发给任意 AI Agent（Claude Code / Codex / Cursor / Qwen Code 都行）——
   <span style="display:block;margin-top:6px;padding:9px 12px;background-color:#fff;border:2px dashed #e3b7f5;border-radius:10px;font-size:13px;line-height:1.8;color:#7a4fa8">帮我克隆 https://github.com/${esc(r.repo)}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用</span>
@@ -615,10 +615,14 @@ async function blocksToImages(html, day) {
     const els = await page.$$("[data-block]");
     for (const el of els) {
       const name = await el.getAttribute("data-block");
-      const buf = await el.screenshot({ type: "png" });
+      // 正文卡片数量多（每仓库 3~4 张），用 JPEG 控体积；头部/文末大图保持 PNG
+      const isCard = name.startsWith("card-");
+      const buf = await el.screenshot(isCard ? { type: "jpeg", quality: 90 } : { type: "png" });
+      const ext = isCard ? "jpg" : "png";
+      const mime = isCard ? "image/jpeg" : "image/png";
       // 文件名带内容哈希：同一天重跑换了内容，jsDelivr 也不会返回旧图
       const hash = createHash("md5").update(buf).digest("hex").slice(0, 8);
-      const rel = `shots/${day}-block-${name}-${hash}.png`;
+      const rel = `shots/${day}-block-${name}-${hash}.${ext}`;
       writeFileSync(join(ROOT, rel), buf);
       await el.evaluate((e, arg) => {
         const cs = getComputedStyle(e);
@@ -628,7 +632,7 @@ async function blocksToImages(html, day) {
         img.setAttribute("alt", "");
         img.style.cssText = `width:100%;display:block;margin:${cs.marginTop} ${cs.marginRight} ${cs.marginBottom} ${cs.marginLeft}`;
         e.replaceWith(img);
-      }, { src: `data:image/png;base64,${buf.toString("base64")}`, rel });
+      }, { src: `data:${mime};base64,${buf.toString("base64")}`, rel });
     }
     await fontTag.evaluate((e) => e.remove()).catch(() => {});
     return await page.content();
