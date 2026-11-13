@@ -605,6 +605,10 @@ async function blocksToImages(html, day) {
     const ctx = await browser.newContext({ viewport: { width: 720, height: 1000 }, deviceScaleFactor: 2 });
     const page = await ctx.newPage();
     await page.setContent(html, { waitUntil: "load" });
+    // 明确指定中文字体：CI 是 Linux（Noto CJK），本地是 Windows（微软雅黑），不指定会退成方框
+    await page.addStyleTag({
+      content: `body,body *{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC","Noto Sans SC","WenQuanYi Zen Hei","Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif !important}`,
+    });
     await page.waitForTimeout(300);
     const els = await page.$$("[data-block]");
     for (const el of els) {
