@@ -607,7 +607,8 @@ async function blocksToImages(html, day) {
     const page = await ctx.newPage();
     await page.setContent(html, { waitUntil: "load" });
     // 明确指定中文字体：CI 是 Linux（Noto CJK），本地是 Windows（微软雅黑），不指定会退成方框
-    await page.addStyleTag({
+    // 截图完必须移除，否则 page.content() 会把它带进最终 HTML，反过来改公众号里的字体
+    const fontTag = await page.addStyleTag({
       content: `body,body *{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC","Noto Sans SC","WenQuanYi Zen Hei","Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif !important}`,
     });
     await page.waitForTimeout(300);
@@ -629,6 +630,7 @@ async function blocksToImages(html, day) {
         e.replaceWith(img);
       }, { src: `data:image/png;base64,${buf.toString("base64")}`, rel });
     }
+    await fontTag.evaluate((e) => e.remove()).catch(() => {});
     return await page.content();
   } catch (e) {
     process.stderr.write(`[板块截图] 失败（${e.message.slice(0, 80)}）→ 退回纯 CSS 版\n`);
@@ -636,6 +638,36 @@ async function blocksToImages(html, day) {
   } finally {
     if (browser) await browser.close();
   }
+}
+
+// ---------- 公众号版转换 ----------
+// 微信编辑器不接收 base64 图片，必须换成公网可访问的图片地址（粘贴时微信自动转存到自己服务器）
+const REPO_CDN = "https://cdn.jsdelivr.net/gh/pephupephu/Github-daily-report@main/";
+function toWechat(src, map) {
+  // 内联图（挂件 / 彩色板块截图）-> 仓库里的原图外链
+  let out = src.replace(/<img([^>]*?)src="data:image\/[^"]*"([^>]*?)>/g, (m, a, b) => {
+    const f = (m.match(/data-file="([^"]+)"/) || [])[1];
+    return f ? `<img${a}src="${REPO_CDN}${f}"${b}>` : m;
+  });
+  // 截图：cid -> 仓库里的原图外链
+  out = out.replace(/src="cid:([^"]+)"/g, (m, cid) => {
+    const v = map[cid];
+    if (!v?.path) return m;
+    const rel = v.path.replace(ROOT, "").replace(/\\/g, "/").replace(/^\/+/, "");
+    return `src="${REPO_CDN}${rel}"`;
+  });
+  // 渐变：微信剥 linear-gradient，换成同款渐变的图片底（100% 100% 拉伸，线性渐变拉伸不变形）
+  const grads = [
+    ["linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%)", "header.png"],
+    ["linear-gradient(135deg,#ff9ad5,#c77dff)", "card.png"],
+    ["linear-gradient(135deg,#fdf3fb,#eef6ff)", "soft.png"],
+  ];
+  for (const [grad, bgFile] of grads) {
+    out = out.split(`background-image:${grad}`).join(
+      `background-image:url(${REPO_CDN}assets/bg/${bgFile});background-size:100% 100%;background-repeat:no-repeat`
+    );
+  }
+  return out;
 }
 
 // ---------- Word 文稿（.docx）----------
@@ -817,36 +849,8 @@ mkdirSync(join(ROOT, "out"), { recursive: true });
 // 彩色板块先整块截图，邮件里内联、公众号版换外链
 const html = await blocksToImages(buildHTML(data, cidMap), data.day);
 
-// 公众号版：微信编辑器不接收 base64 图片，必须换成公网可访问的图片地址（粘贴时微信自动转存到自己服务器）
-const REPO_CDN = "https://cdn.jsdelivr.net/gh/pephupephu/Github-daily-report@main/";
-function toWechat(src, map) {
-  // 内联图（挂件 / 彩色板块截图）-> 仓库里的原图外链
-  let out = src.replace(/<img([^>]*?)src="data:image\/[^"]*"([^>]*?)>/g, (m, a, b) => {
-    const f = (m.match(/data-file="([^"]+)"/) || [])[1];
-    return f ? `<img${a}src="${REPO_CDN}${f}"${b}>` : m;
-  });
-  // 截图：cid -> 仓库里的原图外链
-  out = out.replace(/src="cid:([^"]+)"/g, (m, cid) => {
-    const v = map[cid];
-    if (!v?.path) return m;
-    const rel = v.path.replace(ROOT, "").replace(/\\/g, "/").replace(/^\/+/, "");
-    return `src="${REPO_CDN}${rel}"`;
-  });
-  // 渐变：微信剥 linear-gradient，换成同款渐变的图片底（100% 100% 拉伸，线性渐变拉伸不变形）
-  const grads = [
-    ["linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%)", "header.png"],
-    ["linear-gradient(135deg,#ff9ad5,#c77dff)", "card.png"],
-    ["linear-gradient(135deg,#fdf3fb,#eef6ff)", "soft.png"],
-  ];
-  for (const [grad, file] of grads) {
-    out = out.split(`background-image:${grad}`).join(
-      `background-image:url(${REPO_CDN}assets/bg/${file});background-size:100% 100%;background-repeat:no-repeat`
-    );
-  }
-  return out;
-}
-const wechatHtml = toWechat(html, cidMap);
 // 落盘的就是公众号版：浏览器打开有图、全选复制粘进公众号也保持同样的排版
+const wechatHtml = toWechat(html, cidMap);
 const file = join(ROOT, "out", `article-${data.day}.html`);
 writeFileSync(file, wechatHtml);
 const docxBuf = await Packer.toBuffer(buildDocx(data, cidMap));
