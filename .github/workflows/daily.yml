@@ -65,6 +65,9 @@ jobs:
           MAIL_TO: ${{ secrets.MAIL_TO }}
         run: node article.mjs
 
+      - name: 清理旧板块图（内容哈希命名，不清理会一直堆积）
+        run: find shots -name '*-block-*.png' -mtime +10 -delete
+
       - name: 提交报告
         run: |
           git config user.name  "report-bot"

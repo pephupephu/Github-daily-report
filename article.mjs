@@ -5,6 +5,7 @@
 // 用法: node article.mjs
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createTransport } from "nodemailer";
@@ -613,8 +614,10 @@ async function blocksToImages(html, day) {
     const els = await page.$$("[data-block]");
     for (const el of els) {
       const name = await el.getAttribute("data-block");
-      const rel = `shots/${day}-block-${name}.png`;
       const buf = await el.screenshot({ type: "png" });
+      // 文件名带内容哈希：同一天重跑换了内容，jsDelivr 也不会返回旧图
+      const hash = createHash("md5").update(buf).digest("hex").slice(0, 8);
+      const rel = `shots/${day}-block-${name}-${hash}.png`;
       writeFileSync(join(ROOT, rel), buf);
       await el.evaluate((e, arg) => {
         const cs = getComputedStyle(e);
