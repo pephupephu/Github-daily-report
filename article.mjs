@@ -31,7 +31,7 @@ function mascot(pick = 0, size = 84, exclude = "") {
   try {
     const b64 = readFileSync(join(dir, file)).toString("base64");
     const mime = /\.png$/i.test(file) ? "image/png" : "image/jpeg";
-    return `<img src="data:${mime};base64,${b64}" data-file="${file}" width="${size}" style="border-radius:14px;box-shadow:0 3px 12px rgba(199,125,255,.25);vertical-align:middle;border:2px solid #ffe0f3" alt="二次元挂件" />`;
+    return `<img src="data:${mime};base64,${b64}" data-file="assets/mascots/${file}" width="${size}" style="border-radius:14px;box-shadow:0 3px 12px rgba(199,125,255,.25);vertical-align:middle;border:2px solid #ffe0f3" alt="二次元挂件" />`;
   } catch { return ""; }
 }
 
@@ -538,7 +538,7 @@ function buildHTML(data, cidMap) {
 <body style="margin:0;background-color:#fdf3fb">
 <div style="max-width:677px;margin:0 auto;background-color:#fffdfd;padding:0 20px 40px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
 
-<div style="margin:0 0 0;padding:28px 20px;background-color:#c77dff;background-image:linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%);color:#fff;overflow:hidden">
+<div data-block="header" style="margin:0 0 0;padding:28px 20px;background-color:#c77dff;background-image:linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%);color:#fff;overflow:hidden">
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="vertical-align:middle;padding-right:14px">
       <p style="margin:0 0 8px;font-size:28px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</p>
@@ -552,7 +552,7 @@ function buildHTML(data, cidMap) {
 
 ${overview}
 
-${top ? `<div style="background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
+${top ? `<div data-block="top" style="background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
   <p style="margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:2px;opacity:.95">🌟 今日最闪耀</p>
   <p style="margin:0 0 10px;font-size:24px;font-weight:900;line-height:1.35">${esc(repoShort(top.repo))}</p>
   <p style="margin:0 0 14px;font-size:14px;line-height:1.8;opacity:.97">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
@@ -578,10 +578,10 @@ ${(data.featured && data.featured.length) ? `
   }).join("")}
 </div>` : ""}
 
-<div style="margin:6px 0 22px;padding:20px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;border:2px solid #ffe0f3">
+<div data-block="footer" style="margin:6px 0 22px;padding:20px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;border:2px solid #ffe0f3">
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="width:112px;vertical-align:middle">${mascot(Math.floor(Math.random() * 1000), 112, "5.png")}</td>
-    <td style="vertical-align:middle;padding-left:12px;font-size:16px;font-weight:900;letter-spacing:1px;text-align:left">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活</td>
+    <td style="vertical-align:middle;padding-left:12px;font-size:16px;font-weight:900;letter-spacing:1px;text-align:left">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</td>
   </tr></table>
   <p style="margin:10px 0 0;font-size:12.5px">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </div>
@@ -591,6 +591,44 @@ ${(data.featured && data.featured.length) ? `
 </div>
 
 </div></body></html>`;
+}
+
+// ---------- 彩色板块整块转图 ----------
+// 微信粘贴时会剥掉所有 CSS 背景（background-color 和 background-image 都可能丢），
+// 把带背景的板块连文字一起截图，粘进公众号才能原样保留，也顺手解决 table 宽度跑偏
+async function blocksToImages(html, day) {
+  let browser;
+  try {
+    const { chromium } = await import("playwright-core");
+    browser = await chromium.launch({ args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"] });
+    // 2x 出图：公众号内容区宽 677，按 2 倍截才不发虚
+    const ctx = await browser.newContext({ viewport: { width: 720, height: 1000 }, deviceScaleFactor: 2 });
+    const page = await ctx.newPage();
+    await page.setContent(html, { waitUntil: "load" });
+    await page.waitForTimeout(300);
+    const els = await page.$$("[data-block]");
+    for (const el of els) {
+      const name = await el.getAttribute("data-block");
+      const rel = `shots/${day}-block-${name}.png`;
+      const buf = await el.screenshot({ type: "png" });
+      writeFileSync(join(ROOT, rel), buf);
+      await el.evaluate((e, arg) => {
+        const cs = getComputedStyle(e);
+        const img = document.createElement("img");
+        img.src = arg.src;
+        img.setAttribute("data-file", arg.rel);
+        img.setAttribute("alt", "");
+        img.style.cssText = `width:100%;display:block;margin:${cs.marginTop} ${cs.marginRight} ${cs.marginBottom} ${cs.marginLeft}`;
+        e.replaceWith(img);
+      }, { src: `data:image/png;base64,${buf.toString("base64")}`, rel });
+    }
+    return await page.content();
+  } catch (e) {
+    process.stderr.write(`[板块截图] 失败（${e.message.slice(0, 80)}）→ 退回纯 CSS 版\n`);
+    return html;
+  } finally {
+    if (browser) await browser.close();
+  }
 }
 
 // ---------- Word 文稿（.docx）----------
@@ -769,15 +807,16 @@ if (dropped) console.error(`[文章] 质量门槛：剔除 ${dropped} 个无实�
 if (data.featured) data.featured = data.featured.filter(substantive);
 
 mkdirSync(join(ROOT, "out"), { recursive: true });
-const html = buildHTML(data, cidMap);
+// 彩色板块先整块截图，邮件里内联、公众号版换外链
+const html = await blocksToImages(buildHTML(data, cidMap), data.day);
 
 // 公众号版：微信编辑器不接收 base64 图片，必须换成公网可访问的图片地址（粘贴时微信自动转存到自己服务器）
 const REPO_CDN = "https://cdn.jsdelivr.net/gh/pephupephu/Github-daily-report@main/";
 function toWechat(src, map) {
-  // 挂件：base64 -> 仓库里的原图外链（mascot 输出带 data-file）
+  // 内联图（挂件 / 彩色板块截图）-> 仓库里的原图外链
   let out = src.replace(/<img([^>]*?)src="data:image\/[^"]*"([^>]*?)>/g, (m, a, b) => {
     const f = (m.match(/data-file="([^"]+)"/) || [])[1];
-    return f ? `<img${a}src="${REPO_CDN}assets/mascots/${f}"${b}>` : m;
+    return f ? `<img${a}src="${REPO_CDN}${f}"${b}>` : m;
   });
   // 截图：cid -> 仓库里的原图外链
   out = out.replace(/src="cid:([^"]+)"/g, (m, cid) => {
@@ -823,9 +862,8 @@ try {
     from: `"GitHub 日报" <${user}>`,
     to: process.env.MAIL_TO || user,
     subject: `【公众号初稿】GitHub 热榜 ${data.day} · ${data.repos.length} 个项目 · ${new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false })}`,
-    // 正文直接用公众号版（外链图 + 图片底色）：在邮箱里看到的就是粘进公众号的样子，全选复制即可
-    // 不再发 html 附件——邮箱的附件预览器会重写样式，和真实文件不一致，容易误判
-    html: wechatHtml,
+    // 正文用内联图版：手机邮箱访问不了 jsDelivr，内联图才能显示；复制到公众号请用下载的 html 附件
+    html,
     attachments,
   });
   console.error(`[文章] 已发送 ${data.repos.length} 个项目到邮箱，附件截图 ${attachments.length} 张`);
