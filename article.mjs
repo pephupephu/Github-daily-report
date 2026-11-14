@@ -433,7 +433,7 @@ function section(r, i, shotCid) {
   const ai = r.ai;
   const img = shotCid ? `<img src="cid:${shotCid}" style="max-width:100%;border-radius:10px;margin:0 0 16px;display:block;box-shadow:0 4px 16px rgba(16,24,40,.08);border:1px solid #f0f1f3" alt="${esc(repoShort(r.repo))} 演示截图" />` : "";
   const vids = r.videos?.length ? videoBlock(r.videos) : "";
-  const p = `style="margin:0 0 10px;font-size:21px;line-height:1.9;color:#3a3a3a"`;
+  const p = `style="margin:0 0 10px;font-size:26px;line-height:1.9;color:#3a3a3a"`;
   // 小节标签：二次元粉紫胶囊，给 case/core/who 一个统一视觉
   const tag = (t) => `<span style="display:inline-block;background-color:#ffe0f3;color:#c75bd6;border-radius:7px;padding:2px 9px;font-size:12px;font-weight:800;margin-right:8px">${t}</span>`;
 
@@ -452,13 +452,13 @@ function section(r, i, shotCid) {
   <p ${p}><b style="color:#1a1a1a">${md(hook)}</b></p>
   <p ${p}>${md(what)}</p>
 </div>`;
-  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div data-block="card-case-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:21px;line-height:1.9;color:#3a3a3a">${tag("案例举例")}${md(ai?.case || r.scenarios[0])}</div>` : "";
-  const coreHtml = (ai?.core || r.mechanics?.length) ? `<div data-block="card-core-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#f6f2ff;border:1px solid #e6dbff;border-radius:12px;font-size:21px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
-  const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div data-block="card-who-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#fff4f2;border:1px solid #ffded8;border-radius:12px;font-size:21px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
+  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div data-block="card-case-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:26px;line-height:1.9;color:#3a3a3a">${tag("案例举例")}${md(ai?.case || r.scenarios[0])}</div>` : "";
+  const coreHtml = (ai?.core || r.mechanics?.length) ? `<div data-block="card-core-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#f6f2ff;border:1px solid #e6dbff;border-radius:12px;font-size:26px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
+  const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div data-block="card-who-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#fff4f2;border:1px solid #ffded8;border-radius:12px;font-size:26px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
   const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:12px 14px;background-color:#fbf3ff;border-radius:12px;font-size:13px;color:#b08ccd;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
   // 收尾上手区：仓库地址 + 一句可直接复制给任意 AI Agent 的安装提示词
   const agentBox = `
-<div data-block="card-agent-${i}" style="margin:16px 0 0;padding:14px 16px;background-color:#f8f1fb;background-image:linear-gradient(135deg,#fdf3fb,#eef6ff);border:2px solid #f3d9ff;border-radius:14px;font-size:21px;line-height:2;color:#3a3a3a">
+<div data-block="card-agent-${i}" style="margin:16px 0 0;padding:14px 16px;background-color:#f8f1fb;background-image:linear-gradient(135deg,#fdf3fb,#eef6ff);border:2px solid #f3d9ff;border-radius:14px;font-size:26px;line-height:2;color:#3a3a3a">
   <b style="color:#c75bd6">🌈 仓库地址：</b><a href="https://github.com/${esc(r.repo)}" style="color:#9b6cff;text-decoration:none;font-weight:700">github.com/${esc(r.repo)}</a><br>
   <b style="color:#c75bd6">🤖 交给 Agent 安装：</b>把这句话发给任意 AI Agent（Claude Code / Codex / Cursor / Qwen Code 都行）——
   <span style="display:block;margin-top:6px;padding:9px 12px;background-color:#fff;border:2px dashed #e3b7f5;border-radius:10px;font-size:18px;line-height:1.8;color:#7a4fa8">帮我克隆 https://github.com/${esc(r.repo)}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用</span>
@@ -466,7 +466,7 @@ function section(r, i, shotCid) {
 
   return `
 <div style="margin:0 0 34px;padding:0 2px 26px;border-bottom:1px solid #f3e0f0">
-  <p style="margin:0 0 12px;font-size:19px;font-weight:800;color:#1a1a1a;line-height:1.4">
+  <p style="margin:0 0 12px;font-size:15px;font-weight:800;color:#1a1a1a;line-height:1.4">
     <span style="display:inline-block;line-height:30px;text-align:center;min-width:30px;height:30px;padding:0 6px;border-radius:9px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;font-size:15px;font-weight:900;vertical-align:middle;margin-right:10px">${String(i + 1).padStart(2, "0")}</span>
     <span style="vertical-align:middle;margin-right:10px">${esc(repoShort(r.repo))}</span>
     <span style="color:#c9a0d6;font-weight:500;font-size:12px;vertical-align:middle">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</span>
@@ -500,7 +500,7 @@ function buildHTML(data, cidMap) {
   })();
 
   // 文首总览表：一chart表把今天的推荐直接铺开，oneliner 缺了就退回 trending 摘要/官方简介
-  const ths = `padding:10px 8px;background-color:#f7f8fa;color:#5a6472;font-size:18px;font-weight:600;letter-spacing:.5px`;
+  const ths = `padding:10px 8px;background-color:#f7f8fa;color:#5a6472;font-size:22px;font-weight:600;letter-spacing:.5px`;
   const seenOl = new Set();
   const rows = repos.map((r, i) => {
     // AI 偶尔把同一句套到多个仓库：重复的 oneliner 直接丢弃，退回该仓库自身摘要
@@ -515,16 +515,16 @@ function buildHTML(data, cidMap) {
     const line2 = cut(line, 60);
     const bg = i % 2 ? "#fdf5fc" : "#fff";
     return `<tr>
-    <td style="background-color:${bg};padding:10px 6px;color:#c77dff;font-weight:800;vertical-align:top;font-size:17px;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
-    <td style="background-color:${bg};padding:10px 8px;word-break:break-all;vertical-align:top;font-size:19px;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
-    <td style="background-color:${bg};padding:10px 8px;color:#3a3a3a;line-height:1.6;font-size:17px;border-top:1px solid #f7e9f5">${esc(line2)}</td>
-    <td style="background-color:${bg};padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:18px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
+    <td style="background-color:${bg};padding:10px 6px;color:#c77dff;font-weight:800;vertical-align:top;font-size:21px;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
+    <td style="background-color:${bg};padding:10px 8px;word-break:break-all;vertical-align:top;font-size:23px;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
+    <td style="background-color:${bg};padding:10px 8px;color:#3a3a3a;line-height:1.6;font-size:21px;border-top:1px solid #f7e9f5">${esc(line2)}</td>
+    <td style="background-color:${bg};padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:22px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
   </tr>`;
   }).join("");
   const overview = repos.length ? `
 <div data-block="overview" style="border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(159,108,255,.12);border:2px solid #f3d9ff;margin:0 0 34px">
-<p style="margin:0;padding:14px 16px 0;font-size:23px;font-weight:900;color:#c77dff">🌸 热榜总览表</p>
-<table style="width:100%;border-collapse:collapse;font-size:18px;background-color:#fff;table-layout:fixed">
+<p style="margin:0;padding:14px 16px 0;font-size:28px;font-weight:900;color:#c77dff">🌸 热榜总览表</p>
+<table style="width:100%;border-collapse:collapse;font-size:22px;background-color:#fff;table-layout:fixed">
   <tr>
     <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:22px">#</th>
     <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:22%">仓库</th>
@@ -542,8 +542,8 @@ function buildHTML(data, cidMap) {
 <div data-block="header" style="margin:0 0 0;padding:28px 20px;background-color:#c77dff;background-image:linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%);color:#fff;overflow:hidden">
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="vertical-align:middle;padding-right:14px">
-      <p style="margin:0 0 8px;font-size:37px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</p>
-      <p style="margin:0;font-size:22px;line-height:1.8">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
+      <p style="margin:0 0 8px;font-size:44px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</p>
+      <p style="margin:0;font-size:27px;line-height:1.8">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
     </td>
     <td style="width:112px;vertical-align:middle">${mascot("5.png", 112)}</td>
   </tr></table>
@@ -554,17 +554,17 @@ function buildHTML(data, cidMap) {
 ${overview}
 
 ${top ? `<div data-block="top" style="background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
-  <p style="margin:0 0 10px;font-size:19px;font-weight:800;letter-spacing:2px;opacity:.95">🌟 今日最闪耀</p>
-  <p style="margin:0 0 10px;font-size:31px;font-weight:900;line-height:1.35">${esc(repoShort(top.repo))}</p>
-  <p style="margin:0 0 14px;font-size:21px;line-height:1.8;opacity:.97">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
-  <div style="display:inline-block;background-color:rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:19px;font-weight:700">今日 ${fmtStars(top.today)} ★ · 总 ${(top.stars || 0).toLocaleString()} ★</div>
+  <p style="margin:0 0 10px;font-size:23px;font-weight:800;letter-spacing:2px;opacity:.95">🌟 今日最闪耀</p>
+  <p style="margin:0 0 10px;font-size:37px;font-weight:900;line-height:1.35">${esc(repoShort(top.repo))}</p>
+  <p style="margin:0 0 14px;font-size:26px;line-height:1.8;opacity:.97">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
+  <div style="display:inline-block;background-color:rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:23px;font-weight:700">今日 ${fmtStars(top.today)} ★ · 总 ${(top.stars || 0).toLocaleString()} ★</div>
 </div>` : ""}
 
 ${sections}
 
 ${(data.featured && data.featured.length) ? `
 <div style="margin:0 0 34px;padding:22px 20px;background-color:#f8f1fb;background-image:linear-gradient(135deg,#fdf3fb,#eef6ff);border-radius:18px;border:2px solid #f3d9ff">
-  <p style="margin:0 0 8px;font-size:18px;font-weight:900;color:#9b6cff">🚀 新晋潜力 · 从 0 快速增长的黑马</p>
+  <p style="margin:0 0 8px;font-size:15px;font-weight:900;color:#9b6cff">🚀 新晋潜力 · 从 0 快速增长的黑马</p>
   <p style="margin:0 0 16px;font-size:13px;color:#b08ccd;line-height:1.7">这些是最近新建立、还没上日榜，但星数涨得飞快的仓库——真正值得早关注的黑马。</p>
   ${data.featured.map((r, i) => {
     const ai = r.ai;
@@ -572,9 +572,9 @@ ${(data.featured && data.featured.length) ? `
     return `
   <div style="margin:0 0 14px;padding:16px 18px;background-color:#fff;border-radius:14px;border:2px solid #ffe0f3;box-shadow:0 3px 12px rgba(199,125,255,.08)">
     <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#9b6cff;text-decoration:none;font-weight:800">${esc(r.repo)}</a></div>
-    <p style="margin:0 0 8px;font-size:13px;line-height:1.8;color:#3a3a3a"><b>${md(hook)}</b></p>
-    <p style="margin:0 0 10px;font-size:13px;line-height:1.8;color:#5a6472">${md(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))}</p>
-    <div data-block="feat-meta-${i}" style="margin:0;font-size:12px;color:#b08ccd">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#c77dff;font-weight:700">仓库 →</a></div>
+    <p style="margin:0 0 8px;font-size:16px;line-height:1.8;color:#3a3a3a"><b>${md(hook)}</b></p>
+    <p style="margin:0 0 10px;font-size:16px;line-height:1.8;color:#5a6472">${md(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))}</p>
+    <div data-block="feat-meta-${i}" style="margin:0;font-size:18px;color:#b08ccd">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#c77dff;font-weight:700">仓库 →</a></div>
   </div>`;
   }).join("")}
 </div>` : ""}
@@ -582,12 +582,12 @@ ${(data.featured && data.featured.length) ? `
 <div data-block="footer" style="margin:6px 0 22px;padding:20px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;border:2px solid #ffe0f3">
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="width:112px;vertical-align:middle">${mascot(Math.floor(Math.random() * 1000), 112, "5.png")}</td>
-    <td style="vertical-align:middle;padding-left:12px;font-size:16px;font-weight:900;letter-spacing:1px;text-align:left">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</td>
+    <td style="vertical-align:middle;padding-left:12px;font-size:20px;font-weight:900;letter-spacing:1px;text-align:left">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</td>
   </tr></table>
   <p style="margin:10px 0 0;font-size:12.5px">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </div>
 
-<div data-block="footer-note" style="margin-top:14px;padding:16px 18px;background-color:#fbf3ff;border-radius:12px;font-size:18px;color:#b08ccd;line-height:1.85;text-align:center">
+<div data-block="footer-note" style="margin-top:14px;padding:16px 18px;background-color:#fbf3ff;border-radius:12px;font-size:22px;color:#b08ccd;line-height:1.85;text-align:center">
   <p style="margin:0">本文内容仅作参考，具体以各仓库官方说明为准。</p>
 </div>
 
