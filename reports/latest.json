@@ -7,9 +7,9 @@
       "repo": "backnotprop/plannotator",
       "lang": "TypeScript",
       "desc": "The workspace to stay in the loop and on top of agents - shape, decide, plan, annotate, review code, share with team, and send all feedback to agents with one click.",
-      "stars": 11471,
-      "today": "408",
-      "forks": 1008,
+      "stars": 11515,
+      "today": "860",
+      "forks": 1016,
       "created": "2025-12-28",
       "license": "Apache-2.0",
       "topics": [
@@ -24,21 +24,22 @@
       ],
       "homepage": "https://plannotator.ai",
       "url": "https://github.com/backnotprop/plannotator",
-      "summary": "Plannotator 是一个本地浏览器工具，用于与 AI 编码代理（如 Claude Code、Codex、Copilot CLI 等）进行交互和代码审查。它允许用户标注计划、规范、消息、HTML 文档，并直接将反馈发送给代理。此外，它还支持代码审查功能，可以审查本地更改或远程的 GitHub 或 GitLab PRs，并将评论返回给代理。",
-      "judgment": "如果你需要与 AI 编码代理进行高效的协作和代码审查，Plannotator 是一个值得考虑的工具。",
+      "summary": "Plannotator 是一个本地浏览器工具，用于与 AI 编码代理（如 Claude Code、Codex、Copilot CLI 等）和智能助手（如 Grok Bot、Muse 等）进行交互和代码审查。它允许用户注释计划、规范、消息、HTML 文档，审查代码更改或远程拉取请求，并将反馈直接发送给代理。工作流程包括代理生成内容后，Plannotator 在浏览器中打开，用户进行注释和评论，然后通过命令将反馈发送回代理。",
+      "judgment": "如果你需要与 AI 编码代理进行高效的协作和代码审查，Plannotator 是一个值得尝试的工具。",
       "mechanics": [
-        "通过插件、钩子和命令与 AI 代理直接集成",
-        "使用浏览器界面进行文档标注和代码审查",
-        "支持多种文件类型，包括 Markdown、HTML 和代码文件",
-        "集成了代码审查功能，支持 Git、GitButler、Jujutsu、Perforce、GitHub 和 GitLab",
-        "提供 Plannotator Inbox 功能，集中管理来自多个代理的消息和任务",
-        "支持终端界面（Herdr Annotate）进行文档标注和代码审查"
+        "插件和钩子机制，直接将 Plannotator 集成到 AI 代理中",
+        "浏览器内代码审查界面，支持 diff 和 PR 审查",
+        "支持多种文件类型注释，包括 Markdown、HTML 和计划文档",
+        "CLI 命令与代理通信，如 `plannotator-annotate` 和 `plannotator-review`",
+        "Inbox 功能，集中管理多个代理的消息和请求",
+        "终端界面 Herdr Annotate，提供命令行注释功能",
+        "支持 Git、GitButler、Jujutsu、Perforce、GitHub 和 GitLab"
       ],
       "scenarios": [
-        "AI 编码代理的开发者和用户，需要与代理进行高效协作",
-        "需要进行代码审查和文档标注的软件开发团队",
-        "个人开发者或研究人员，希望提高与 AI 代理的工作效率",
-        "任何需要集中管理来自多个 AI 代理反馈的场景"
+        "AI 编码代理的开发者，需要与代理协作进行代码编写和审查",
+        "团队协作，需要集中管理和审查多个代理生成的计划或代码",
+        "个人开发者，需要与智能助手进行交互和反馈",
+        "需要远程审查拉取请求或代码更改的情况"
       ],
       "readmeCN": ""
     },
@@ -46,28 +47,30 @@
       "repo": "GoogleChrome/modern-web-guidance-src",
       "lang": "TypeScript",
       "desc": "Keep your coding agent up to date with the latest web best practices",
-      "stars": 6455,
-      "today": "1231",
-      "forks": 509,
+      "stars": 6515,
+      "today": "1220",
+      "forks": 521,
       "created": "2026-01-27",
       "license": "Apache-2.0",
       "topics": [],
       "homepage": "https://goo.gle/modern-web-guidance",
       "url": "https://github.com/GoogleChrome/modern-web-guidance-src",
-      "summary": "Modern Web Guidance 是一个开源项目，用于将最新的网页最佳实践、平台专业知识以及浏览器兼容性数据嵌入到编码代理中，帮助代理避免使用过时的模式，转向利用现代网页平台的能力。它提供了一个交互式命令行工具，可以搜索、检索和评估网页指南，并扫描代码库以识别需要现代化的过时模式。",
-      "judgment": "如果你需要提升 AI 生成的代码质量并遵循现代网页最佳实践，Modern Web Guidance 是一个值得参考的项目。",
+      "summary": "Modern Web Guidance 是一个开源项目，用于将最新的网页最佳实践、平台专业知识以及浏览器兼容性数据嵌入到编码代理中。它通过交互式命令行工具提供现代网页技术的指导，帮助编码代理避免使用过时的模式，转向利用现代网页平台的力量和功能。用户可以通过命令行搜索、检索和扫描代码库中的遗留模式，以实现现代化。",
+      "judgment": "如果你想让 AI 编码代理生成更现代、高效的网页代码，值得参考和使用 Modern Web Guidance。",
       "mechanics": [
-        "基于 TypeScript 开发，提供模块化的网页指南",
-        "使用 CLI 工具进行安装、搜索、检索和扫描代码库",
-        "包含 250 个现代网页特性的指南，涵盖用户体验、CSS 布局、性能、表单与 UI、无障碍访问和内置 AI",
-        "通过评估机制优化指南内容，确保 token 效率",
-        "与 Google Chrome、Microsoft Edge、Mozilla Firefox 和 MDN 团队合作维护"
+        "基于 TypeScript 开发，提供模块化的 CLI 工具",
+        "使用交互式向导进行安装和配置",
+        "通过搜索、检索和扫描功能提供专家指导",
+        "涵盖现代浏览器 API、性能优化、可访问性等核心领域",
+        "采用评估机制，确保内容的高效性和时效性",
+        "支持多种安装方式，包括直接运行和脚本安装",
+        "提供详细的技能覆盖列表，包括 250 个现代网页特性"
       ],
       "scenarios": [
-        "开发者和 AI 研究人员用于改进编码代理生成的代码质量",
-        "集成到自动化代码审查工具中，帮助识别和修复过时模式",
-        "教育机构用于教授现代网页开发最佳实践",
-        "企业用于确保其 AI 生成的代码符合最新的网页标准"
+        "开发者用于指导 AI 编码代理生成更现代、高效的网页代码",
+        "浏览器开发团队用于集成和测试最新的网页技术特性",
+        "网页开发社区用于学习和应用现代网页最佳实践",
+        "教育机构用于教授现代网页开发技术"
       ],
       "readmeCN": ""
     },
@@ -75,31 +78,31 @@
       "repo": "tradermonty/claude-trading-skills",
       "lang": "Python",
       "desc": "Claude Code skills for equity investors and traders — market analysis, technical charting, economic calendars, screeners, and trading strategy development.",
-      "stars": 5088,
-      "today": "553",
-      "forks": 1081,
+      "stars": 5115,
+      "today": "707",
+      "forks": 1098,
       "created": "2025-10-19",
       "license": "MIT",
       "topics": [],
       "homepage": "https://tradermonty.github.io/claude-trading-skills/",
       "url": "https://github.com/tradermonty/claude-trading-skills",
-      "summary": "这是一个基于 Claude 技能的 Python 工具包，旨在帮助时间有限的个人投资者进行市场分析、技术图表绘制、经济日历查看、筛选器和交易策略开发，但不直接提供买卖决策。它通过结构化市场回顾、风险管理、交易计划、记录和持续改进来提升交易决策流程。",
-      "judgment": "适合希望系统化提升交易决策流程的个人投资者，但需自行解决数据源问题。",
+      "summary": "这是一个基于 Claude 技能的 Python 工具包，旨在帮助时间有限的个人投资者进行市场分析、技术图表绘制、经济日历查看、筛选器和交易策略开发，但不直接提供买卖决策。它通过结构化市场回顾、风险管理、交易计划、交易记录和持续改进来提升交易决策流程。",
+      "judgment": "适合希望系统化提升交易决策流程的个人投资者，但需考虑外部数据成本和配置复杂度。",
       "mechanics": [
         "使用 Claude 技能进行自动化市场分析和数据处理",
         "基于 YAML 文件定义和执行交易工作流",
-        "结合外部数据源如 FMP、FINVIZ 和 Alpaca（可选）",
-        "本地文件和公共 CSV 数据作为输入",
-        "交易记忆核心（trader-memory-core）用于本地 YAML 日记记录",
-        "风险管理和交易纪律门禁（如 pre-trade-discipline-gate）",
-        "提供多种预设工作流模板，如每日市场检查、每周投资组合回顾等"
+        "结合外部数据源如 FMP、FINVIZ 和 Alpaca 进行实时市场数据获取",
+        "内置风险管理和交易纪律检查机制",
+        "使用本地文件和 YAML 进行交易记录和回顾",
+        "提供多种预设工作流模板满足不同交易需求",
+        "通过技能索引文件管理所有技能和集成"
       ],
       "scenarios": [
-        "时间有限的个人投资者，特别是偏好长期投资、ETF 和红利股票的投资者",
-        "希望在市场条件有利时进行纪律性波段交易的投资者",
-        "需要结构化投资组合回顾的红利和 ETF 投资者",
-        "在寻找交易候选前希望先管理风险的交易者",
-        "希望记录并改进其决策过程的投资者"
+        "时间有限的个人投资者进行结构化交易决策",
+        "长期投资者结合波段交易策略的投资者",
+        "偏好 ETF 和红利股票的投资者进行投资组合回顾",
+        "注重风险管理并在风险可控时寻找交易机会的交易者",
+        "希望通过交易记录和分析持续改进交易决策的投资者"
       ],
       "readmeCN": ""
     },
@@ -107,9 +110,9 @@
       "repo": "ChromeDevTools/chrome-devtools-mcp",
       "lang": "TypeScript",
       "desc": "Chrome DevTools for coding agents",
-      "stars": 56539,
-      "today": "664",
-      "forks": 4786,
+      "stars": 56575,
+      "today": "718",
+      "forks": 4790,
       "created": "2025-09-11",
       "license": "Apache-2.0",
       "topics": [
@@ -124,19 +127,20 @@
       ],
       "homepage": "https://developer.chrome.com/docs/devtools/agents",
       "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
-      "summary": "这是一个让 AI 编码代理（如 Antigravity、Claude、Cursor 或 Copilot）控制和检查实时 Chrome 浏览器的工具。它作为一个 Model-Context-Protocol (MCP) 服务器和命令行界面 (CLI) 提供，使 AI 编码助手能够访问 Chrome DevTools 的全部功能，用于可靠的自动化、深入的调试和性能分析。具体工作流程包括：在 MCP 客户端配置中添加服务器命令，代理通过发送指令到 MCP 服务器，服务器启动 Chrome 浏览器并执行自动化操作或调试任务，如分析网络请求、截取屏幕截图、检查浏览器控制台消息等。",
-      "judgment": "如果需要 AI 代理深度控制 Chrome 进行自动化测试和调试，值得尝试，但要注意数据安全和兼容性问题",
+      "summary": "这是一个让 AI 编码代理（如 Antigravity、Claude、Cursor 或 Copilot）控制和检查实时 Chrome 浏览器的工具。它作为一个 Model-Context-Protocol (MCP) 服务器和命令行界面 (CLI) 提供，使 AI 编码助手能够访问 Chrome DevTools 的全部功能，用于可靠的自动化、深入的调试和性能分析。具体工作流程包括：通过 MCP 服务器或 CLI 控制浏览器，执行网络请求分析、截图、检查浏览器控制台消息（带源映射堆栈跟踪）、记录性能追踪并提取可操作的性能洞察、以及使用 puppeteer 自动化 Chrome 中的操作并自动等待结果。",
+      "judgment": "",
       "mechanics": [
-        "Model-Context-Protocol (MCP) 协议用于代理与服务器之间的通信",
-        "基于 puppeteer 技术实现浏览器自动化操作",
-        "利用 Chrome DevTools 前端技术记录性能追踪并提取分析结果",
-        "支持通过 CLI 直接从终端控制浏览器",
-        "集成多种技能（skills）指导代理使用 Chrome DevTools 功能"
+        "Model-Context-Protocol (MCP) 协议用于代理与服务器间的通信",
+        "基于 Chrome DevTools 前端技术来记录追踪和提取性能洞察",
+        "使用 puppeteer 库实现 Chrome 浏览器的自动化操作",
+        "提供 CLI 接口允许从终端控制浏览器",
+        "支持网络请求分析、截图、控制台消息检查等调试功能"
       ],
       "scenarios": [
-        "AI 编码代理开发者需要自动化测试或调试网页时",
-        "需要深入分析网页性能或自动化执行复杂浏览器任务的情况",
-        "集成 AI 助手到开发环境，实现代码调试和自动化测试的场景"
+        "AI 编码代理开发者需要自动化测试或调试复杂网页交互时",
+        "需要深入分析网页性能并进行优化的场景",
+        "需要远程控制浏览器执行特定任务并获取结果的自动化工作流",
+        "开发者需要构建集成浏览器调试功能的智能编码助手"
       ],
       "readmeCN": ""
     },
@@ -144,9 +148,9 @@
       "repo": "alibaba/open-code-review",
       "lang": "Go",
       "desc": "Secure, fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI &amp; Anthropic compatible.",
-      "stars": 51652,
-      "today": "893",
-      "forks": 4013,
+      "stars": 51687,
+      "today": "688",
+      "forks": 4023,
       "created": "2026-05-18",
       "license": "Apache-2.0",
       "topics": [
@@ -160,21 +164,22 @@
       "homepage": "https://open-codereview.ai",
       "url": "https://github.com/alibaba/open-code-review",
       "summary": "OpenCodeReview 是一个基于 AI 的代码审查命令行工具，它读取 Git 差异，通过一个具有工具使用能力的代理将更改文件发送到可配置的大型语言模型（LLM），并生成具有行级精度的结构化审查评论。它支持精确的文件选择、智能文件捆绑、细粒度规则匹配和外部定位与反射模块，以提供高质量的代码审查。",
-      "judgment": "如果你需要一个高效、准确的代码审查工具，并且有足够的资源支持其运行，那么 OpenCodeReview 是一个值得考虑的选择。",
+      "judgment": "如果你的团队需要高效的代码审查工具，并且有资源支持其运行，OpenCodeReview 是一个值得考虑的选择。",
       "mechanics": [
-        "混合架构：结合确定性工程和代理，确定性工程处理必须正确执行的任务，代理处理动态决策和上下文检索。",
-        "LLM Agent：通过工具使用能力与 LLM 交互，能够读取文件内容、搜索代码库、检查其他更改文件以获取上下文，并生成深度审查。",
-        "确定性工程逻辑：包括精确文件选择、智能文件捆绑、细粒度规则匹配和外部定位与反射模块，确保审查过程的正确性和稳定性。",
-        "模板引擎：用于细粒度规则匹配，提高审查的稳定性和可预测性。",
-        "场景调整提示：针对代码审查深度优化的提示模板，提高效率并减少 token 消耗。",
-        "多语言规则集：内置多语言规则集，用于检测 NPE、线程安全、XSS 和 SQL 注入等问题。",
-        "OpenAI & Anthropic 兼容：支持与 OpenAI 和 Anthropic 等大型语言模型的兼容性。"
+        "混合架构：结合确定性工程和代理，确定性工程处理必须正确执行的步骤，代理处理动态决策和上下文检索。",
+        "LLM 代理：能够读取完整文件内容、搜索代码库、检查其他更改文件以获取上下文，并生成深度审查。",
+        "工具使用能力：代理可以调用工具进行代码搜索、定位和反射，提高审查的准确性和效率。",
+        "确定性文件选择：精确确定需要审查的文件，并过滤掉不需要审查的文件，确保没有重要的更改被遗漏。",
+        "智能文件捆绑：将相关的文件捆绑成一个审查单元，每个单元作为一个子代理运行，支持并发审查并保持稳定性。",
+        "细粒度规则匹配：将审查规则与每个文件的特性相匹配，使模型的注意力集中在相关信息上，减少信息噪声。",
+        "外部定位与反射模块：独立地改进 AI 反馈的位置准确性和内容准确性。",
+        "场景调整提示：针对代码审查深度优化的提示模板，提高有效性并减少 token 消耗。"
       ],
       "scenarios": [
-        "大型科技公司和开发团队，特别是在阿里巴巴这样规模的企业中，用于提高代码审查的效率和准确性。",
-        "需要自动化代码审查流程的开发者，特别是那些使用 Git 进行版本控制的团队。",
-        "需要进行大规模代码审查的场景，例如开源项目或大型软件项目的代码维护。",
-        "对代码质量有较高要求的团队，希望减少人工审查的工作量和错误率。"
+        "大型软件开发团队：用于自动化代码审查流程，提高代码质量和开发效率。",
+        "开源项目：帮助贡献者审查代码，确保代码符合项目标准。",
+        "企业内部代码审查：用于内部代码库的代码审查，确保代码质量和一致性。",
+        "CI/CD 管道：集成到持续集成/持续部署管道中，自动进行代码审查。"
       ],
       "readmeCN": ""
     },
@@ -182,9 +187,9 @@
       "repo": "QwenLM/qwen-code",
       "lang": "TypeScript",
       "desc": "An open-source AI coding agent that lives in your terminal.",
-      "stars": 30460,
+      "stars": 30481,
       "today": "64",
-      "forks": 3527,
+      "forks": 3530,
       "created": "2025-06-26",
       "license": "Apache-2.0",
       "topics": [
@@ -199,19 +204,20 @@
       ],
       "homepage": "https://qwenlm.github.io/qwen-code-docs/en/users/overview",
       "url": "https://github.com/QwenLM/qwen-code",
-      "summary": "Qwen Code 是一个开源的 AI 编程代理，可以在终端、编辑器、桌面、浏览器和聊天中运行。它支持自动记忆、技能、子代理和 MCP 功能，提供代理团队、代理竞技场和动态工作流等高级功能，支持 OpenAI、Anthropic、Gemini 和 Qwen API，以及任何第三方提供商或本地模型。",
-      "judgment": "值得尝试，适合需要 AI 辅助编程的开发者和研究人员",
+      "summary": "Qwen Code 是一个开源的 AI 编程代理，可以在终端、编辑器、桌面、浏览器和聊天中运行。它通过命令与用户交互，提供代码解释、编写、调试等功能，支持多种 API 和本地模型，并可与多种工具集成。",
+      "judgment": "适合需要 AI 编程辅助的开发者和研究人员，但需注意其实验性和资源要求",
       "mechanics": [
-        "基于 Qoder 和 Qwen Code 的代理框架，支持自动记忆和技能管理",
-        "多协议支持，包括 OpenAI、Anthropic、Gemini、Qwen API 和本地模型",
-        "MCP（多代理协作协议）机制，实现代理间的协作",
-        "动态工作流和代理团队功能，支持实验性或可选功能",
-        "跨平台支持，包括终端、IDE 插件、桌面应用、Web UI 和聊天集成"
+        "基于代理的架构，包括自动记忆、技能、子代理和 MCP 机制",
+        "支持 OpenAI、Anthropic、Gemini、Qwen 等多种 API，以及本地模型（Ollama / vLLM）",
+        "多协议支持，可在运行时切换不同的 API 提供商",
+        "内置多种集成，包括终端界面、IDE 插件、桌面应用、Web UI 和聊天集成",
+        "动态工作流程和代理团队功能，支持实验性或可选功能"
       ],
       "scenarios": [
-        "开发者用于代码生成、解释和调试",
-        "AI 研究人员用于实验和开发新的代理模型",
-        "企业用于自动化代码审查和测试"
+        "开发者用于代码编写、调试和解释的辅助工具",
+        "研究人员用于测试和开发 AI 编程代理的应用",
+        "教育机构用于教学和实验 AI 编程技术",
+        "企业用于提高开发效率和代码质量"
       ],
       "readmeCN": ""
     },
@@ -219,9 +225,9 @@
       "repo": "dream-num/univer",
       "lang": "TypeScript",
       "desc": "Build your own AI office with Univer Office SDK. Bring editing, calculation, collaboration, and file processing into your product for people and AI agents. Built on an extensible open-source core.",
-      "stars": 25158,
+      "stars": 25196,
       "today": "495",
-      "forks": 2305,
+      "forks": 2307,
       "created": "2022-09-29",
       "license": "Apache-2.0",
       "topics": [
@@ -236,21 +242,23 @@
       ],
       "homepage": "https://univer.ai",
       "url": "https://github.com/dream-num/univer",
-      "summary": "Univer 是一个开源的办公软件 SDK，允许用户在自己的产品中构建办公应用，包括电子表格、文档、演示文稿等功能。用户可以通过 Web SDK 快速嵌入电子表格编辑器，通过 Server SDK 实现实时协作和文件处理，通过 AI SDK 将办公能力与现有智能体和工作流程连接起来。",
-      "judgment": "适合需要快速集成办公功能且预算充足的企业和开发者，值得尝试但需注意许可问题。",
+      "summary": "Univer 是一个开源的办公软件 SDK，允许开发者将其自己的产品中嵌入办公应用，支持表格、文档、演示文稿、关系表、画布和 PDF 等功能。通过 Web SDK、Server SDK 和 AI SDK 三部分，提供内容模型、编辑、渲染、公式计算、协作和文件处理能力，支持 Headless 处理和与 AI 代理的集成。",
+      "judgment": "适合需要快速集成办公功能且有一定 AI 集成需求的企业或开发者，但需注意开源版本功能的局限性。",
       "mechanics": [
-        "基于插件和预设的模块化架构，支持自定义功能扩展",
-        "使用内容模型和快照格式进行数据存储和同步",
-        "命令系统实现跨功能编辑和撤销/重做",
-        "公式和渲染引擎支持电子表格和文档的计算与显示",
-        "Facade API 提供应用接口，事件系统支持应用与智能体交互",
-        "支持 Headless 处理，即无界面编辑和计算"
+        "内容模型和快照格式：定义和存储文档内容的数据结构。",
+        "插件和依赖管理：通过插件化架构扩展功能，管理插件依赖。",
+        "命令系统：实现编辑操作和状态管理的核心机制。",
+        "公式和渲染引擎：支持公式计算和文档渲染的引擎。",
+        "Facade APIs：提供面向应用开发者的 API 接口，简化集成。",
+        "UI 基础：提供基础 UI 组件和样式支持。",
+        "实时协作和编辑历史：Server SDK 支持多人实时协作和编辑历史记录。",
+        "AI SDK 集成：连接 AI 代理和工作流，实现智能办公功能。"
       ],
       "scenarios": [
-        "企业开发自定义办公套件，集成到现有业务系统",
-        "教育机构开发在线协作学习平台，集成电子表格和文档编辑",
-        "开发者构建面向特定行业的办公应用，如金融、医疗等",
-        "AI 研究者将 Univer 作为基础平台，开发智能办公助手"
+        "企业开发者在自己的产品中嵌入表格、文档等办公功能，提升产品竞争力。",
+        "教育机构开发在线协作学习平台，集成表格和文档编辑功能。",
+        "开发者构建面向特定行业的办公应用，如金融、医疗等，利用 Univer 提供的基础功能快速开发。",
+        "AI 代理开发者通过 AI SDK 集成 Univer 功能，实现智能办公自动化。"
       ],
       "readmeCN": ""
     },
@@ -258,9 +266,9 @@
       "repo": "ag-ui-protocol/ag-ui",
       "lang": "TypeScript",
       "desc": "AG-UI: the Agent-User Interaction Protocol. Bring Agents into Frontend Applications.",
-      "stars": 17514,
+      "stars": 17536,
       "today": "9",
-      "forks": 1750,
+      "forks": 1755,
       "created": "2025-05-07",
       "license": "MIT",
       "topics": [
@@ -272,22 +280,20 @@
       ],
       "homepage": "https://ag-ui.com",
       "url": "https://github.com/ag-ui-protocol/ag-ui",
-      "summary": "AG-UI 是一个开放、轻量级、基于事件的标准协议，用于规范 AI 代理与用户界面应用程序的连接。它允许代理在执行时发出兼容 AG-UI 标准事件类型的事件，并接受简单的 AG-UI 兼容输入。通过灵活的中间件层，AG-UI 支持任何事件传输方式（如 SSE、WebSockets、webhooks 等），并实现宽松的事件格式匹配，以促进代理和应用程序之间的互操作性。它还提供了参考 HTTP 实现和默认连接器，帮助团队快速上手。",
-      "judgment": "如果需要将 AI 代理无缝集成到前端应用程序中，AG-UI 是一个值得考虑的选择。",
+      "summary": "AG-UI 是一个开放的、轻量级的、基于事件的协议，用于标准化 AI 代理与用户界面应用程序的连接。它允许 AI 代理在执行时发出兼容 AG-UI 标准事件类型的事件，并接受 AG-UI 兼容的输入。它包括一个灵活的中间件层，支持任何事件传输方式（如 SSE、WebSockets、webhooks 等），并提供了参考 HTTP 实现和默认连接器。",
+      "judgment": "如果需要将 AI 代理无缝集成到前端应用，AG-UI 是一个值得考虑的选择。",
       "mechanics": [
-        "基于事件的标准协议：定义了约 16 种标准事件类型，用于代理与用户界面之间的通信。",
-        "灵活的中间件层：支持多种事件传输方式（SSE、WebSockets、webhooks 等），并实现宽松的事件格式匹配。",
-        "实时双向状态同步：允许代理和用户界面之间实时同步状态。",
-        "生成式 UI 和结构化消息：支持生成式 UI 和结构化消息的展示。",
-        "实时上下文增强：能够在用户界面中实时增强上下文信息。",
-        "前端工具集成：支持与前端工具的集成，实现人机协作。",
-        "参考 HTTP 实现和默认连接器：提供参考 HTTP 实现和默认连接器，帮助团队快速上手。"
+        "基于事件的通信机制，代理后端发出标准事件类型通知前端",
+        "中间件层实现跨环境的兼容性，支持多种事件传输协议",
+        "灵活的事件格式匹配，确保不同代理和应用程序的互操作性",
+        "双向状态同步，保持代理和前端的状态一致",
+        "生成式 UI 和结构化消息，支持实时聊天和内容展示"
       ],
       "scenarios": [
-        "开发者需要将 AI 代理集成到前端应用程序中时，可以使用 AG-UI 实现无缝集成。",
-        "需要实时交互和状态同步的应用场景，如聊天机器人、智能客服等。",
-        "需要生成式 UI 和结构化消息展示的应用，如智能文档编辑器、数据分析工具等。",
-        "需要实时上下文增强和前端工具集成的应用，如智能代码助手、智能写作助手等。"
+        "开发者需要将 AI 代理集成到现有前端应用程序中的场景",
+        "需要实时交互和状态同步的 AI 应用场景",
+        "希望利用多种事件传输方式（如 WebSocket、SSE）进行通信的应用场景",
+        "需要与 LangChain、CrewAI、Microsoft Agent Framework 等平台集成的场景"
       ],
       "readmeCN": ""
     },
@@ -295,7 +301,7 @@
       "repo": "ashhart/TensorFold",
       "lang": "Zig",
       "desc": "LLM Inference Engine for Metal, CUDA and Vulkan.",
-      "stars": 2218,
+      "stars": 2225,
       "today": "37",
       "forks": 520,
       "created": "2026-06-19",
@@ -310,18 +316,21 @@
       "homepage": "https://tensorfold.dev",
       "url": "https://github.com/ashhart/TensorFold",
       "summary": "TensorFold 是一个在 Apple Silicon 和 NVIDIA GPU 上运行的 LLM 推理引擎，它可以从 Zig 二进制文件中提供语言模型，支持 Metal 和 CUDA 内核直接运行，无需安装 Python 或 MLX。",
-      "judgment": "如果需要高性能且无 Python 依赖的 LLM 推理引擎，且硬件环境支持，值得尝试。",
+      "judgment": "如果需要在 Apple Silicon 或 NVIDIA GPU 上进行 LLM 推理，且不介意使用 Zig 语言编写的工具，那么 TensorFold 是一个值得考虑的选择。",
       "mechanics": [
         "使用 Zig 语言编写，支持跨平台编译和部署",
-        "通过 Metal 或 CUDA 架构进行 GPU 加速推理",
-        "支持从模型检查点加载和运行语言模型",
-        "内置 tokenization 处理请求",
-        "提供 HTTP API 接口进行模型服务和管理"
+        "通过 Metal 或 CUDA 架构直接运行 GPU 内核进行模型推理",
+        "支持从模型检查点加载模型并进行推理",
+        "使用 tokenizer 对输入请求进行分词处理",
+        "提供 HTTP API 接口供外部服务调用模型推理",
+        "支持多线程并发处理推理请求",
+        "内置模型管理功能，支持从 Hugging Face 等平台拉取模型"
       ],
       "scenarios": [
-        "需要在 Apple Silicon 或 NVIDIA GPU 上部署 LLM 推理服务的研究人员或开发者",
-        "希望在没有 Python 环境下运行 LLM 的边缘计算场景",
-        "需要高性能 LLM 推理且对部署环境有特定要求的 AI 应用"
+        "在 Apple Silicon Mac 上进行 LLM 推理任务",
+        "在 NVIDIA GPU 服务器上进行大规模 LLM 推理任务",
+        "需要无 Python 环境部署 LLM 推理服务的场景",
+        "对推理延迟和吞吐量有较高要求的场景"
       ],
       "readmeCN": ""
     },
@@ -329,7 +338,7 @@
       "repo": "JuliusBrussee/caveman",
       "lang": "Go",
       "desc": "🪨 why use many token when few token do trick. Viral skill + proxy for coding agents that cuts 65% of tokens by talking like a caveman.",
-      "stars": 120258,
+      "stars": 120290,
       "today": "227",
       "forks": 7011,
       "created": "2026-04-04",
@@ -346,21 +355,22 @@
       ],
       "homepage": "https://docs.caveman.so/caveman",
       "url": "https://github.com/JuliusBrussee/caveman",
-      "summary": "Caveman 是一个 Go 语言编写的开源工具，旨在通过让 AI 代理像原始人一样说话来减少 tokens 使用量，从而降低成本。它通过提供一个 'caveman-style' 模式来缩短 AI 代理的回答，同时保持代码和关键信息的准确性。用户可以通过一个命令安装并启用该工具，使其适用于多个 AI 代理，如 Claude、Codex 等。它包含多个功能模块，如 'say less'、'read less'、'auto'、'blocks' 等，每个模块都旨在从不同角度减少 tokens 使用。",
-      "judgment": "如果你需要显著降低 AI 代理的使用成本，并且不介意稍微牺牲一些回答的自然度，那么值得尝试 Caveman。",
+      "summary": "Caveman 是一个 Go 语言编写的开源工具，旨在通过让 AI 代理以类似原始人的简洁语言进行交互，从而大幅减少 token 使用量。它通过六种功能模块（'rocks'）来优化 AI 代理的行为，包括缩短代理回答的长度（'Say less'）、减少代理读取的输入数据量（'Read less'）、自动选择模型和努力程度（'Auto'）、优化代码模式下的脚本执行（'Blocks'）、优化提示缓存和查找 token 消耗问题（'Waste fixes'）以及压缩网页内容（'Browse'）。用户可以通过一个命令安装并启用这些功能，从而在保持 AI 代理功能不变的情况下降低使用成本。",
+      "judgment": "如果你需要大幅降低 AI 代理的使用成本，并且不介意其简洁的交互方式，那么值得尝试",
       "mechanics": [
-        "使用 'caveman-style' 模式来缩短 AI 代理的回答，通过简化语言和结构来减少 tokens 使用量",
-        "通过 'read less' 模块压缩和预处理 AI 代理需要读取的数据，如日志、JSON、CSV 和测试输出",
-        "通过 'auto' 模块自动选择合适的模型和努力程度来优化每个请求的处理",
-        "通过 'blocks' 模块让 AI 代理在代码模式下重用和运行之前编写的脚本，减少重复的 tokens 使用",
-        "通过 'waste fixes' 模块识别和修复 tokens 使用中的浪费问题",
-        "通过 'browse' 模块压缩返回的网页内容，减少传输和处理的 tokens"
+        "GPT-6.1 Sol 和其他模型支持，通过简洁化输出减少 token 使用",
+        "ASD-STE100 控制英语规则，确保回答简洁且无冗余",
+        "代理会话中代码和工具调用的保留，仅优化非核心部分",
+        "输入数据预处理，如日志、JSON、CSV 和测试输出的压缩",
+        "代码模式下的脚本缓存和重用，减少重复执行的开销",
+        "自动模型选择和努力程度调整，以最低成本完成任务",
+        "网页内容压缩，减少代理处理的数据量"
       ],
       "scenarios": [
-        "开发者和程序员希望在保持 AI 代理功能的同时降低使用成本",
-        "数据科学家和分析师需要处理大量数据，希望通过减少 tokens 使用来节省费用",
-        "企业用户希望优化 AI 代理的使用效率，特别是在大规模部署时",
-        "任何使用 AI 代理进行任务自动化并希望降低运营成本的用户"
+        "开发者和程序员，希望在保持 AI 代理功能的同时降低使用成本",
+        "AI 研究人员和数据科学家，需要处理大量 AI 代理交互数据",
+        "企业 IT 部门，需要优化 AI 代理在内部系统中的应用成本",
+        "任何依赖 AI 代理进行代码生成或问题解决的场景"
       ],
       "readmeCN": ""
     },
@@ -368,9 +378,9 @@
       "repo": "louislam/uptime-kuma",
       "lang": "JavaScript",
       "desc": "A fancy self-hosted monitoring tool",
-      "stars": 94359,
-      "today": "430",
-      "forks": 8838,
+      "stars": 94374,
+      "today": "352",
+      "forks": 8840,
       "created": "2021-07-03",
       "license": "MIT",
       "topics": [
@@ -385,22 +395,21 @@
       ],
       "homepage": "https://uptime.kuma.pet",
       "url": "https://github.com/louislam/uptime-kuma",
-      "summary": "Uptime Kuma 是一个易于使用的自托管监控工具，可以监控 HTTP(s)、TCP、Websocket、Ping、DNS 记录等多种服务的在线状态，并提供一个炫酷的 UI 界面，支持通过 Telegram、Discord 等多种方式发送通知，可以创建多个状态页面并将页面映射到特定域名。",
-      "judgment": "如果你需要一个功能丰富且易于部署的自托管监控工具，Uptime Kuma 是一个值得考虑的选择。",
+      "summary": "Uptime Kuma 是一个易于使用的自托管监控工具，可以监控 HTTP(s)、TCP、Websocket、Ping、DNS 记录等多种服务的在线状态，并提供一个美观的 UI 界面，支持通过 Telegram、Discord 等多种方式发送通知，可以创建多个状态页面并将页面映射到特定域名。",
+      "judgment": "如果你需要一款功能丰富且界面美观的自托管监控工具，Uptime Kuma 是一个值得考虑的选择。",
       "mechanics": [
-        "使用 WebSocket 技术实现实时数据推送和交互",
-        "基于 Node.js 构建，利用 Vue 3 和 Vite.js 框架开发前端界面",
-        "采用 Bootstrap 5 框架实现响应式布局和炫酷 UI",
-        "支持多种监控协议和自定义监控项，如 HTTP(s) 响应头、JSON 查询等",
-        "内置多种通知服务，如 Telegram、Discord、Slack 等",
-        "支持 Docker Compose 和 Docker 命令快速部署",
-        "使用 PM2 进程管理器在后台运行服务"
+        "使用 WebSocket 技术实现实时监控和通知",
+        "基于 Node.js 开发，使用 Vue 3 和 Vite.js 构建 UI",
+        "采用 Bootstrap 5 框架设计界面",
+        "支持多种监控协议和自定义监控项",
+        "使用 PM2 进程管理器或在 Docker 容器中运行",
+        "支持多种通知服务，如 Telegram、Discord 等"
       ],
       "scenarios": [
-        "网站管理员用于监控网站和服务的在线状态",
-        "开发团队用于监控 API 和服务的可用性",
-        "运维人员用于监控服务器和网络设备的健康状况",
-        "个人用户用于监控个人项目或服务的运行状态"
+        "个人开发者用于监控个人项目或服务的在线状态",
+        "小型团队或初创公司用于监控关键服务的可用性",
+        "运维人员用于监控系统资源和服务的健康状况",
+        "爱好者或技术爱好者用于学习和实验监控工具的开发"
       ],
       "readmeCN": ""
     },
@@ -408,30 +417,30 @@
       "repo": "we-promise/sure",
       "lang": "Ruby",
       "desc": "The personal finance app for everyone (by everyone)",
-      "stars": 15484,
-      "today": "659",
-      "forks": 1349,
+      "stars": 15509,
+      "today": "520",
+      "forks": 1363,
       "created": "2025-07-23",
       "license": "AGPL-3.0",
       "topics": [],
       "homepage": "https://sure.am",
       "url": "https://github.com/we-promise/sure",
       "summary": "Sure 是一个开源的个人财务管理应用，用户可以通过 Docker 自托管该应用，支持从浏览器、macOS 桌面应用、移动应用、API 客户端和 LLM 代理访问。它提供现金流量、净资产、支出和流出等财务概览，并包含一个 AI 助手回答用户关于储蓄的问题。",
-      "judgment": "适合有一定技术基础且需要自托管个人财务管理工具的用户，但需注意性能和 AI 费用问题。",
+      "judgment": "适合有一定技术基础且需要自托管个人财务管理工具的用户，但需要注意性能和 AI 助手依赖外部服务的问题",
       "mechanics": [
-        "使用 Ruby 语言开发",
-        "基于 PostgreSQL 和 Redis 数据库",
-        "采用 Docker 进行容器化部署",
-        "集成 Sidekiq 进行后台任务处理",
-        "支持 OpenAI 背后的 AI 功能",
-        "使用 AGPLv3 许可证",
-        "包含 API 和 LLM 代理接口"
+        "使用 Docker 进行自托管部署",
+        "支持多种客户端访问方式，包括浏览器、桌面应用、移动应用、API 客户端和 LLM 代理",
+        "采用 PostgreSQL 和 Redis 作为后端数据库和缓存服务",
+        "集成 AI 助手功能，支持与 OpenAI 或外部 AI 服务交互",
+        "基于 Ruby 语言开发，使用 Sidekiq 进行后台任务处理",
+        "采用 AGPLv3 许可证，允许用户自由使用和修改代码",
+        "提供性能监控工具，帮助开发者调试和优化应用性能"
       ],
       "scenarios": [
-        "个人或家庭用于管理财务和资产",
-        "开发者用于学习和贡献开源项目",
-        "企业用于自托管财务分析工具",
-        "金融顾问用于提供个性化财务建议"
+        "个人用户希望自托管个人财务管理应用",
+        "开发者希望参与开源项目，贡献代码或进行定制开发",
+        "小型企业或组织希望搭建内部财务管理工具",
+        "对个人财务管理有一定需求，并希望使用 AI 助手提供智能建议的用户"
       ],
       "readmeCN": ""
     },
@@ -439,9 +448,9 @@
       "repo": "Tencent/LoopForge",
       "lang": "Go",
       "desc": "Self-hosted workflows for coding-agent delivery. Orchestrate CodeBuddy, Codex and Claude Code with scripts and human approval gates. Includes Local workflows for coding assistants.",
-      "stars": 1089,
+      "stars": 1125,
       "today": "33",
-      "forks": 241,
+      "forks": 244,
       "created": "2026-07-28",
       "license": "NOASSERTION",
       "topics": [
@@ -456,22 +465,22 @@
       ],
       "homepage": "https://loopforge.cn",
       "url": "https://github.com/Tencent/LoopForge",
-      "summary": "LoopForge 是一个自托管的工作空间，用于通过编码代理（如 CodeBuddy、Codex 和 Claude Code）进行软件开发工作流管理。用户可以通过与主机器人聊天或运行标准操作流程（SOP）来描述需求，系统会自动创建 Docker 沙盒、检出代码库、分配角色并打开 Pull Request。支持将常见工作流保存为可重复使用的 SOP，并包含人工审批环节。",
-      "judgment": "适合需要将编码代理能力与人工审批流程结合的团队，值得尝试但需评估运维成本",
+      "summary": "LoopForge 是一个自托管的工作空间，用于通过编码代理（如 CodeBuddy、Codex 和 Claude Code）进行软件开发工作流管理。用户可以通过与主机器人聊天或运行预定义的标准工作流（SOP）来完成任务，支持在 Docker 虚拟环境中执行代码生成、审查和合并等操作，并包含人工审批环节。",
+      "judgment": "适合希望自托管并标准化编码代理工作流的开发团队，但需要一定的技术基础和运维能力。",
       "mechanics": [
-        "基于 Docker 的沙盒环境隔离执行编码代理的任务",
-        "使用聊天机器人作为交互界面，接收用户需求并触发工作流",
-        "标准操作流程（SOP）机制，包含编码代理、脚本和人工审批节点",
-        "支持多种编码代理 CLI 作为执行器，如 CodeBuddy、Codex 等",
-        "集成 GitHub、技能和 MCP 工具链辅助开发流程",
-        "提供人工审批 gates，允许用户在关键节点进行干预和决策",
-        "工作流状态可观察、可暂停、可重试和可从任意节点重新运行"
+        "基于 Docker 的沙盒环境隔离执行代码代理任务",
+        "使用脚本和人工审批节点编排工作流（SOP）",
+        "通过主机器人（Main Bot）与编码代理进行交互和任务分配",
+        "支持多种编码代理 CLI 作为执行工具",
+        "集成 GitHub 和自定义技能作为工具链",
+        "提供可观察和可恢复的工作流节点状态和日志追踪",
+        "采用 MIT 许可证和自托管架构"
       ],
       "scenarios": [
-        "软件开发团队需要自动化和标准化编码任务的工作流",
-        "需要通过编码代理进行代码生成、修复或优化的研发环境",
-        "希望将人工审批环节嵌入到自动化工作流中的企业或团队",
-        "对代码质量和交付过程有严格要求的组织"
+        "软件开发团队需要自动化和标准化代码生成、审查和合并流程时",
+        "需要通过编码代理快速迭代和修复代码问题的场景",
+        "希望将编码代理集成到现有开发工作流并保持控制权的团队",
+        "对代码代理输出进行人工审批以确保质量和合规性的企业"
       ],
       "readmeCN": ""
     },
@@ -479,29 +488,31 @@
       "repo": "Likely7/Veyra-NRVideo",
       "lang": "C++",
       "desc": "Bring PS5 GTA6 to 120FPS with DLSS 5. An advanced Windows video player and capture enhancement tool featuring real-time preview for videos, images, and capture card sources. Combine AI-powered Super Resolution, DLSS5 image enhancement, and Frame Generation to deliver a next-generation visual experience.",
-      "stars": 2504,
-      "today": "420",
+      "stars": 2557,
+      "today": "731",
       "forks": 207,
       "created": "2026-09-09",
       "license": "GPL-3.0",
       "topics": [],
       "homepage": "",
       "url": "https://github.com/Likely7/Veyra-NRVideo",
-      "summary": "Veyra 是一款 Windows 视频增强和录制工具，能实时提升本地视频、捕捉卡和游戏流的质量。它支持 AI 超分辨率、DLSS 5 图像增强和帧生成技术，将视频转换为 120FPS 的高质量体验，并提供了实时预览、多层降噪、HDR 处理等功能。",
-      "judgment": "如果你有高端显卡且追求极致的视频体验，值得尝试",
+      "summary": "Veyra 是一款 Windows 视频增强和录制工具，通过 GPU 实时提升视频分辨率、降噪、HDR 和帧生成，支持本地视频、捕捉卡和游戏流，具备 AI 超分辨率、DLSS 5 图像增强和帧生成技术，提供实时预览和高级设置。",
+      "judgment": "如果你有高端 NVIDIA 或 AMD 显卡且追求极致视频体验，值得尝试，但需注意硬件负担和实验性功能的风险。",
       "mechanics": [
-        "基于 C++ 开发，利用 DirectX 12 进行 GPU 加速渲染",
-        "集成 AI 超分辨率技术，支持 NVIDIA RTX Video 和 AMD RX 7000 系列 GPU 的专用降噪和帧生成",
-        "支持 DLSS 5 和 XeSS 等图像增强技术，提升游戏和视频的分辨率和流畅度",
-        "提供实时预览功能，支持视频、图像和捕捉卡源的多源输入",
-        "采用节点式编辑界面，允许用户自定义视频处理流程和参数",
-        "支持多种输出格式和音频轨道，包括 MP4、MKV 和字幕嵌入"
+        "基于 C++ 和 DirectX 12 的 GPU 加速视频处理架构",
+        "AI 驱动的超分辨率技术（支持 NVIDIA RTX Video 和 AMD RX 7000）",
+        "DLSS 5 和 XeSS/FSR 图像增强技术",
+        "实时帧生成（Frame Generation）技术",
+        "多层降噪（NR）算法，支持独立控制和预设",
+        "节点式可编程工作流，支持效果组合和调整",
+        "捕获卡和游戏流支持，兼容 Moonlight/Sunshine",
+        "可编辑的导出工作流，支持多轨道音频和字幕"
       ],
       "scenarios": [
-        "游戏玩家用于提升游戏直播和录制的帧率和画质",
-        "视频创作者用于增强视频素材的分辨率和清晰度",
-        "直播爱好者用于优化直播流的视觉效果",
-        "技术爱好者用于探索和实验 GPU 加速的视频处理技术"
+        "游戏玩家用于提升 PS5 和 Xbox 游戏流的帧率和图像质量",
+        "视频创作者用于实时预览和录制增强后的游戏或视频内容",
+        "技术爱好者用于测试和体验最新的 GPU 视频增强技术",
+        "直播爱好者用于提升直播流的视觉效果"
       ],
       "readmeCN": ""
     },
@@ -509,9 +520,9 @@
       "repo": "martin-olivier/airgorah",
       "lang": "Rust",
       "desc": "A WiFi security auditing software",
-      "stars": 6101,
+      "stars": 6130,
       "today": "270",
-      "forks": 1049,
+      "forks": 1052,
       "created": "2022-09-30",
       "license": "MIT",
       "topics": [
@@ -527,20 +538,20 @@
       "homepage": "https://crates.io/crates/airgorah",
       "url": "https://github.com/martin-olivier/airgorah",
       "summary": "Airgorah 是一款 WiFi 安全审计软件，可以捕获附近的 WiFi 流量，发现连接到接入点的客户端，执行去认证攻击，捕获握手和 PMKIDs，并破解接入点的密码。它使用 GTK4 构建 GUI，工作流程包括扫描 WiFi 网络、选择目标进行攻击、捕获数据包、分析并破解密码。",
-      "judgment": "如果你是网络管理员或安全研究人员且在 Linux 环境下工作，且拥有合适的无线网卡，值得参考使用",
+      "judgment": "如果你需要专业的 WiFi 安全审计工具且在 Linux 环境下工作，值得参考学习，但需注意法律风险和硬件要求。",
       "mechanics": [
-        "使用 GTK4 构建 GUI，提供图形化操作界面",
+        "使用 GTK4 构建 GUI 界面",
         "通过 monitor mode 捕获 WiFi 流量",
         "利用 packet injection 技术执行 deauthentication 攻击",
         "捕获并分析 WiFi 握手和 PMKIDs",
-        "使用密码破解算法（如字典攻击、暴力破解）破解 WiFi 密码",
-        "通过 polkit 管理特权操作，需要时启动特权代理 airgorah-agent 进行认证",
+        "使用密码破解算法（如字典攻击）破解 WiFi 密码",
+        "通过 polkit 启动特权代理程序进行需要 root 权限的操作",
         "支持 Linux 平台，兼容 X11 和 Wayland 显示服务器"
       ],
       "scenarios": [
         "网络管理员用于测试和发现自身网络的安全漏洞",
-        "安全研究人员用于评估 WiFi 网络的安全性",
-        "渗透测试人员用于模拟攻击以验证防御措施的有效性"
+        "安全研究人员用于进行 WiFi 网络渗透测试",
+        "黑客用于破解未授权的 WiFi 网络（存在法律风险）"
       ],
       "readmeCN": ""
     }
@@ -559,23 +570,22 @@
       "homepage": "https://nihongodemo.howen.ink/",
       "url": "https://github.com/cokice/japanese-analyzer",
       "featured": true,
-      "summary": "这是一个日语文章解析工具，可以输入日语句子，逐词标出假名、罗马音和词性，并提供整句译文。用户可以点击任意一个词查看其意思、用法、活用和例句，还可以拖过几个词将它们作为一个整体来解析。支持长文分段解析、图片识别提取日语文字、朗读原文以及结合当前句子的 AI 日语助手。",
-      "judgment": "如果你需要一款功能强大的日语文章解析工具，并且不介意 AGPL-3.0 许可证和部署的技术要求，那么值得尝试。",
+      "summary": "这是一个日语文章解析工具，可以输入或粘贴日语句子，逐词标出假名、罗马音和词性，并提供整句译文。用户可以点击任意一个词查看其意思、用法、活用和例句，还可以拖过几个词将它们作为一个整体来解析。此外，它还支持长文分段解析、图片识别提取日语文字、朗读原文以及结合当前句子的 AI 日语助手。",
+      "judgment": "如果你需要一款功能强大的日语文章解析工具，并且不介意 AGPL 许可证，那么值得尝试。",
       "mechanics": [
-        "分词和词性标注：使用 DeepSeek 或 Gemini 模型对日语句子进行分词和词性标注。",
-        "翻译和释义：调用 DeepSeek 或 Gemini 模型提供句子的翻译和词汇释义。",
-        "图片识别：使用与文本模型相同的模型来识别图片中的日语文字。",
-        "朗读功能：通过 Edge TTS 或 Gemini TTS 提供朗读服务。",
-        "AI 日语助手：结合当前句子提供 AI 辅助功能。",
-        "界面切换：支持多种语言界面和浅色/深色模式切换。",
-        "本地存储：最近的解析记录保存在浏览器本地。",
-        "环境变量配置：通过环境变量配置 API Key 和其他服务参数。"
+        "分词和词性标注：使用 DeepSeek 或 Gemini 模型进行日语分词和词性标注。",
+        "翻译和释义：调用 DeepSeek 或 Gemini 模型提供翻译和词义释义。",
+        "图片识别：使用与文本模型一致的模型提取图片中的日语文字。",
+        "朗读功能：通过 Edge TTS 或 Gemini TTS 进行文本朗读。",
+        "AI 日语助手：结合当前句子提供 AI 交互功能。",
+        "前端框架：使用 Next.js 和 React 构建，支持多种界面语言和主题切换。",
+        "本地存储：使用浏览器本地存储保存最近的解析记录。"
       ],
       "scenarios": [
-        "日语学习者可以使用它来逐词理解日语句子，查看词汇释义和用法。",
-        "日语教师可以使用它来辅助教学，提供句子的详细解析和翻译。",
-        "翻译工作者可以使用它来快速解析和翻译日语文本。",
-        "需要进行日语文本分析的研究人员也可以使用它来辅助研究。"
+        "日语学习者可以使用它来逐词理解日语句子，查看词性和释义。",
+        "日语教师可以使用它来辅助教学，提供词义和例句。",
+        "需要翻译或理解日语长文的用户可以使用它的分段解析功能。",
+        "开发者和研究人员可以使用它的 API 进行日语文本处理和分析。"
       ],
       "readmeCN": ""
     },
@@ -592,27 +602,27 @@
       "homepage": "",
       "url": "https://github.com/fluffypony/yojam",
       "featured": true,
-      "summary": "Yojam 是一款 macOS 应用，用于根据预设规则将点击的链接或从剪贴板复制的链接打开在指定的浏览器、应用程序或浏览器配置文件中，支持自定义规则、特定配置文件、Firefox 容器、多显示器定位、跟踪参数移除、URL 修改等功能。",
-      "judgment": "如果你需要精细控制 macOS 上的链接打开行为，Yojam 是一个值得尝试的工具。",
+      "summary": "Yojam 是一款 macOS 应用，用于根据预设规则将点击的链接或从剪贴板复制的链接打开到指定的浏览器、应用程序或浏览器配置文件中，支持自定义规则、浏览器配置文件、Firefox 容器、多显示器定位、跟踪参数移除、URL 修改等功能。",
+      "judgment": "如果你需要精细控制 macOS 上的链接打开方式，Yojam 是一个值得考虑的工具",
       "mechanics": [
         "规则引擎：通过域名、前缀、正则表达式、源应用程序等条件路由 URL 到指定目标",
         "配置文件支持：针对 Chrome、Firefox、Edge 等浏览器管理特定配置文件",
-        "Firefox 和 Orion 容器：通过 WebExtension 将链接路由到指定 Firefox 容器",
-        "多显示器定位：将链接打开在指定的显示器上",
+        "Firefox 和 Orion 容器：通过 WebExtension 将链接路由到特定 Firefox 容器中",
+        "多显示器定位：将链接打开到指定的显示器上",
         "跟踪参数移除：自动移除 URL 中的跟踪参数",
         "URL 修改：支持正则表达式进行 URL 的查找替换",
         "私有窗口：可设置为始终在新标签页或隐私模式下打开浏览器",
-        "邮件处理：自动将 mailto: 链接路由到默认邮件客户端",
+        "邮件处理：支持将 mailto: 链接路由到指定的邮件客户端",
         "剪贴板监控：监控剪贴板并提示打开复制的链接",
-        "自动学习：根据用户选择自动学习并推荐浏览器设置",
+        "自动学习：根据用户的选择自动学习并推荐浏览器设置",
         "配置同步：支持 iCloud 同步规则和浏览器设置",
-        "快捷指令集成：支持快捷指令自动化操作"
+        "快捷指令集成：支持与快捷指令集成实现自动化"
       ],
       "scenarios": [
-        "开发者或高效率工作者需要根据不同场景（工作/个人）使用不同浏览器或配置文件",
-        "需要将特定网站（如社交媒体）的链接打开在特定应用程序或浏览器配置文件中",
-        "希望统一管理多个显示器上不同应用的链接打开行为",
-        "注重隐私的用户希望自动移除 URL 中的跟踪参数"
+        "开发者或高效率工作者需要根据不同场景（工作、个人）使用不同浏览器或配置文件",
+        "需要将特定类型的链接（如 Figma、AWS）固定到特定浏览器或应用中",
+        "希望统一管理多个浏览器配置文件并自动路由链接的用户",
+        "需要隐私保护，希望在隐私模式下打开某些链接的用户"
       ],
       "readmeCN": ""
     },
@@ -638,19 +648,20 @@
       "homepage": "https://arxiv.org/abs/2510.23587",
       "url": "https://github.com/HKUSTDial/awesome-data-agents",
       "featured": true,
-      "summary": "这是一个关于数据代理（Data Agents）的开源项目，提供了关于数据代理领域的研究论文列表和资源。它还包括一个论文推荐功能，允许用户提交他们认为重要的论文。项目旨在通过梳理和分类数据代理的相关研究，帮助用户了解数据代理的发展现状和未来趋势。",
-      "judgment": "对于想了解数据代理领域最新研究进展的人来说，这个项目非常有价值，但需要注意术语和实际应用的不成熟性。",
+      "summary": "这是一个关于数据代理（Data Agents）的开源项目，提供了关于数据代理领域的研究论文列表和资源。它还包括一个论文调查，将数据代理分为六个层次，从手动操作（L0）到完全自主的生成式代理（L5），并详细介绍了每个层次的数据代理的角色和能力。",
+      "judgment": "对于想了解数据代理领域的人来说，这是一个非常有价值的项目，但需要注意该领域仍处于快速发展阶段，许多技术尚未成熟。",
       "mechanics": [
-        "基于论文的自主性水平分类（L0-L5）",
-        "按数据管理、准备、分析任务分类",
-        "提供论文推荐和资源链接",
-        "包含SIGMOD 2026教程幻灯片"
+        "基于六层分类法（L0-L5）对数据代理进行系统化分类，从手动操作到完全自主",
+        "按数据管理、准备和分析任务对论文进行索引，每个层次下再细分具体任务",
+        "提供数据代理的演进路径和技术差距分析，特别是L2到L3的过渡",
+        "定义每个层次中人类和数据代理的角色和责任分配",
+        "包含对现有研究论文的系统回顾和资源列表"
       ],
       "scenarios": [
-        "数据科学和人工智能研究人员",
-        "对数据代理技术感兴趣的开发者",
-        "需要了解数据代理最新进展的学生和学者",
-        "企业技术决策者"
+        "数据科学和人工智能研究人员使用此项目来跟踪数据代理领域的研究进展",
+        "对数据代理技术感兴趣的学生和开发者可以使用此资源来了解该领域的最新动态",
+        "企业可以使用此项目来了解数据代理技术如何应用于他们的数据管理、准备和分析任务",
+        "学术和工业界的专家可以使用此项目来发现数据代理领域的研究空白和机会"
       ],
       "readmeCN": ""
     },
@@ -667,22 +678,21 @@
       "homepage": "",
       "url": "https://github.com/getagentseal/founder-playbook",
       "featured": true,
-      "summary": "这是一个将15本商业书籍中的核心框架、决策树、案例研究和模板提炼出来，专为大型语言模型设计的技能集合。用户可以通过命令安装这些技能，并在使用Claude Code、ChatGPT、Gemini、Cursor等语言模型时，根据问题自动触发相应的技能，以获得具体的商业建议和解决方案。",
-      "judgment": "对于需要快速获取商业知识和解决方案的用户来说，值得参考和使用。",
+      "summary": "这是一个将15本商业书籍中的核心框架、决策树、案例研究和模板提炼出来，转化为适合大型语言模型（LLM）使用的结构化技能的工具。用户可以通过命令安装这些技能，并在使用Claude Code、ChatGPT、Gemini、Cursor等LLM时，根据具体问题自动触发相应的技能，从而获得针对性的建议和指导。",
+      "judgment": "对于需要快速获取商业知识和解决方案的用户来说，值得尝试，但需注意信息的时效性和适用性。",
       "mechanics": [
-        "技能自动触发机制：根据用户问题自动加载相应的技能模块",
-        "结构化技能设计：每个技能包含决策树、框架、案例、模板等部分，按需加载",
-        "多语言模型兼容：支持Claude Code、ChatGPT、Gemini、Cursor等多种语言模型",
-        "技能集成映射：展示不同技能之间的关系和冲突",
-        "渐进式信息披露：只加载所需信息，提高效率",
-        "现代相关性标注：标注过时或不适用的框架",
-        "诚实范围声明：每个技能都说明其适用范围和局限性"
+        "基于命令行工具的技能安装和管理机制",
+        "与LLM（如Claude Code、ChatGPT、Gemini、Cursor）的集成，支持自动触发和手动调用",
+        "技能的模块化设计，包含决策树、框架、案例、模板等组件",
+        "按需加载机制，仅加载所需信息以提高效率",
+        "技能之间的集成关系和冲突解决机制",
+        "YAML格式的元数据支持"
       ],
       "scenarios": [
-        "创业者用于解决商业发展中的各种问题，如市场验证、产品定位、客户获取等",
-        "产品经理和市场营销人员用于优化产品策略和营销活动",
-        "大型语言模型用户用于获取结构化的商业知识和解决方案",
-        "教育机构和培训师用于教授商业知识和技能"
+        "创业者用于从零到一构建和验证商业模式的参考",
+        "产品经理和项目经理用于解决具体业务问题的决策支持",
+        "学生和研究人员用于学习和研究商业理论的实践工具",
+        "任何需要快速获取商业知识和解决方案的专业人士"
       ],
       "readmeCN": ""
     },
@@ -699,19 +709,20 @@
       "homepage": "",
       "url": "https://github.com/mees-robot-learning-course/ethz-course-2026",
       "featured": true,
-      "summary": "这是一个用于机器人学习的课程项目，包含了一系列的实验和代码，旨在帮助学生理解和实践机器人学习的基本概念和技术。通过运行项目中的代码，学生可以学习到机器人如何通过学习算法来感知环境、做出决策和执行动作。",
-      "judgment": "适合机器人学习初学者和研究者，但需要一定的技术背景和配置能力。",
+      "summary": "这是一个用于机器人学习的课程项目，包含了一系列的实验和教程，旨在帮助学生理解和实践机器人学习的基本概念和技术。通过一系列的Python脚本和命令，学生可以完成从数据预处理到模型训练和评估的整个工作流程。",
+      "judgment": "如果你是机器人学习领域的学生或研究者，这个项目值得参考和学习。",
       "mechanics": [
-        "基于Python的编程环境",
-        "使用TensorFlow进行机器学习模型的构建和训练",
-        "包含多种机器人学习算法的实现，如Q-learning、强化学习等",
-        "提供数据集和仿真环境，用于算法的测试和验证",
-        "通过命令行工具进行实验的配置和运行"
+        "使用Python编程语言进行开发",
+        "基于TensorFlow和PyTorch等深度学习框架",
+        "采用ROS（Robot Operating System）进行机器人通信和数据处理",
+        "利用Git进行版本控制和协作开发",
+        "通过Jupyter Notebook进行交互式编程和实验演示"
       ],
       "scenarios": [
-        "高校机器人学习课程的辅助教学工具",
-        "机器人学习初学者进行实验和学习的平台",
-        "研究人员进行机器人学习算法开发和测试的环境"
+        "高校机器人学习课程的实验项目",
+        "机器人研究人员的实验平台",
+        "对机器人学习和深度学习感兴趣的学生和爱好者",
+        "需要进行机器人学习和数据处理的教育和研究机构"
       ],
       "readmeCN": ""
     }
