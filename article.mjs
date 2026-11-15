@@ -300,38 +300,18 @@ function extractVideos(md, repoUrl, repo) {
 
 function videoBlock(videos) {
   if (!videos.length) return '';
+  // 只保留能真正展示的：GIF 动图等有内嵌 <img> 的；纯文本的 YouTube/Bilibili 行没有可展示内容，直接去掉
   const cards = videos.map(v => {
-    if (v.type === 'youtube') {
-      return `
-      <div style="margin:10px 0;padding:12px;background-color:#fff;border:1px solid #e1e4e8;border-radius:8px">
-        <a href="${esc(v.url)}" style="text-decoration:none;display:block">
-          <img src="${esc(v.thumb)}" style="width:100%;max-width:560px;border-radius:6px;display:block;margin-bottom:8px" onerror="this.src='https://img.youtube.com/vi/${esc(v.id)}/default.jpg'">
-          <div style="font-size:13px;color:#1a1a1a">▶ ${esc(`YouTube 演示 · ${v.id}`)}</div>
-        </a>
-      </div>`;
-    }
-    if (v.type === 'bilibili') {
-      return `
-      <div style="margin:10px 0;padding:12px;background-color:#fff;border:1px solid #e1e4e8;border-radius:8px">
-        <a href="${esc(v.url)}" style="text-decoration:none;display:block"><span style="font-size:13px;color:#1a1a1a">▶ Bilibili 演示 · ${esc(v.id)}</span></a>
-      </div>`;
-    }
-    if (v.type === 'vimeo') {
-      return `
-      <div style="margin:10px 0;padding:12px;background-color:#fff;border:1px solid #e1e4e8;border-radius:8px">
-        <a href="${esc(v.url)}" style="text-decoration:none;display:block"><span style="font-size:13px;color:#1a1a1a">▶ Vimeo 演示 · ${esc(v.id)}</span></a>
-      </div>`;
-    }
-    // 直接文件
+    if (v.type === 'youtube' || v.type === 'bilibili' || v.type === 'vimeo') return '';
+    // 直接文件：是 GIF 演示动图就嵌 <img>，否则只有一行文字链接、无可展示内容，去掉
+    if (!v.thumb) return '';
     let fname = v.url; try { fname = new URL(v.url).pathname.split('/').pop() || v.url; } catch {}
-    // 是 GIF 演示动图：直接嵌进 <img>，微信复制后能正常播放动画
-    const gifImg = v.thumb ? `<img src="${esc(v.thumb)}" style="width:100%;max-width:560px;border-radius:6px;display:block;margin-bottom:8px" alt="演示动图" />` : "";
     return `
     <div style="margin:10px 0;padding:12px;background-color:#fff;border:1px solid #e1e4e8;border-radius:8px">
-      <a href="${esc(v.url)}" style="text-decoration:none;display:block">${gifImg}<span style="font-size:13px;color:#1a1a1a">▶ ${esc(v.thumb ? '演示动图' : '演示视频')} · ${esc(fname)}</span></a>
+      <a href="${esc(v.url)}" style="text-decoration:none;display:block"><img src="${esc(v.thumb)}" style="width:100%;max-width:560px;border-radius:6px;display:block" alt="演示动图" /></a>
     </div>`;
-  }).join('');
-  return `<div style="margin:12px 0">${cards}</div>`;
+  }).filter(Boolean).join('');
+  return cards ? `<div style="margin:12px 0">${cards}</div>` : '';
 }
 
 // ---------- 浏览器层面：抓 SPA 中文入口 + 截图 ----------
@@ -433,35 +413,37 @@ function section(r, i, shotCid) {
   const ai = r.ai;
   const img = shotCid ? `<img src="cid:${shotCid}" style="max-width:100%;border-radius:10px;margin:0 0 16px;display:block;box-shadow:0 4px 16px rgba(16,24,40,.08);border:1px solid #f0f1f3" alt="${esc(repoShort(r.repo))} 演示截图" />` : "";
   const vids = r.videos?.length ? videoBlock(r.videos) : "";
-  const p = `style="margin:0 0 10px;font-size:26px;line-height:1.9;color:#3a3a3a"`;
+  const p = `style="margin:0 0 10px;font-size:15px;line-height:1.9;color:#3a3a3a"`;
   // 小节标签：二次元粉紫胶囊，给 case/core/who 一个统一视觉
   const tag = (t) => `<span style="display:inline-block;background-color:#ffe0f3;color:#c75bd6;border-radius:7px;padding:2px 9px;font-size:12px;font-weight:800;margin-right:8px">${t}</span>`;
 
   const links = [];
   if (r.homepage) { try { links.push(`<a href="${esc(r.homepage)}" style="color:#9b6cff;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`); } catch {} }
-  r.links.cnDemo.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#ff5c8a;font-weight:700;text-decoration:none">中文体验 → ${esc(l.url)}</a>`));
-  r.links.demo.slice(0, 2).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">官方演示 → ${esc(l.url)}</a>`));
-  r.links.docs.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">文档 → ${esc(l.url)}</a>`));
-  r.links.paper.slice(0, 1).forEach((l) => links.push(`<a href="${esc(l.url)}" style="color:#b08ccd;text-decoration:none">论文 → ${esc(l.url)}</a>`));
+  // 只收网页类链接；原始视频文件(mp4/webm 等)微信里点不开也播不了，直接去掉，避免无效死链
+  const isMedia = (u) => /\.(mp4|webm|mov|avi|mkv|flv|m3u8)(\?.*)?$/i.test(u);
+  r.links.cnDemo.slice(0, 1).forEach((l) => { if (!isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#ff5c8a;font-weight:700;text-decoration:none">中文体验 → ${esc(l.url)}</a>`); });
+  r.links.demo.slice(0, 2).forEach((l) => { if (!isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">官方演示 → ${esc(l.url)}</a>`); });
+  r.links.docs.slice(0, 1).forEach((l) => { if (!isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">文档 → ${esc(l.url)}</a>`); });
+  r.links.paper.slice(0, 1).forEach((l) => { if (!isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#b08ccd;text-decoration:none">论文 → ${esc(l.url)}</a>`); });
 
   const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r));
-  // 开头总结+正文整块截图：微信会把 <p> 上的 font-size 剥回 16px，<b> 里的黑字也保不住，截图后与下方卡片字号一致
-  const leadHtml = `<div data-block="card-lead-${i}" style="margin:0 0 4px">
+  // 开头总结+正文直接文字展示（不再截图）：<p> 里的字号微信会剥回约 16px，属正常，文字可复制
+  const leadHtml = `<div style="margin:0 0 4px">
   <p ${p}><b style="color:#1a1a1a">${md(hook)}</b></p>
   <p ${p}>${md(what)}</p>
 </div>`;
-  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div data-block="card-case-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:26px;line-height:1.9;color:#3a3a3a">${tag("案例举例")}${md(ai?.case || r.scenarios[0])}</div>` : "";
-  const coreHtml = (ai?.core || r.mechanics?.length) ? `<div data-block="card-core-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#f6f2ff;border:1px solid #e6dbff;border-radius:12px;font-size:26px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
-  const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div data-block="card-who-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#fff4f2;border:1px solid #ffded8;border-radius:12px;font-size:26px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
+  const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div style="margin:0 0 12px;padding:12px 14px;background-color:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("案例举例")}${md(ai?.case || r.scenarios[0])}</div>` : "";
+  const coreHtml = (ai?.core || r.mechanics?.length) ? `<div style="margin:0 0 12px;padding:12px 14px;background-color:#f6f2ff;border:1px solid #e6dbff;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("怎么做到的")}${md(ai?.core || r.mechanics.join("；"))}</div>` : "";
+  const whoHtml = (ai?.who || r.scenarios?.[1]) ? `<div style="margin:0 0 12px;padding:12px 14px;background-color:#fff4f2;border:1px solid #ffded8;border-radius:12px;font-size:15px;line-height:1.9;color:#3a3a3a">${tag("适合谁")}${md(ai?.who || r.scenarios[1])}</div>` : "";
   const fallbackBox = !ai && (CN(r.summary) || CN(r.desc)) ? `<div style="margin:0;padding:12px 14px;background-color:#fbf3ff;border-radius:12px;font-size:13px;color:#b08ccd;line-height:1.8"><strong>一句话概括：</strong>${esc(CN(r.summary) || CN(r.desc))}</div>` : "";
   // 收尾上手区：仓库地址 + 一句可直接复制给任意 AI Agent 的安装提示词
   const agentBox = `
-<div data-block="card-agent-${i}" style="margin:16px 0 0;padding:14px 16px;background-color:#f8f1fb;background-image:linear-gradient(135deg,#fdf3fb,#eef6ff);border:2px solid #f3d9ff;border-radius:14px;font-size:26px;line-height:2;color:#3a3a3a">
+<div style="margin:16px 0 0;padding:14px 16px;background-color:#f8f1fb;background-image:linear-gradient(135deg,#fdf3fb,#eef6ff);border:2px solid #f3d9ff;border-radius:14px;font-size:15px;line-height:2;color:#3a3a3a">
   <b style="color:#c75bd6">🌈 仓库地址：</b><a href="https://github.com/${esc(r.repo)}" style="color:#9b6cff;text-decoration:none;font-weight:700">github.com/${esc(r.repo)}</a><br>
   <b style="color:#c75bd6">🤖 交给 Agent 安装：</b>把这句话发给任意 AI Agent（Claude Code / Codex / Cursor / Qwen Code 都行）——
-  <span style="display:block;margin-top:6px;padding:9px 12px;background-color:#fff;border:2px dashed #e3b7f5;border-radius:10px;font-size:18px;line-height:1.8;color:#7a4fa8">帮我克隆 https://github.com/${esc(r.repo)}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用</span>
+  <span style="display:block;margin-top:6px;padding:9px 12px;background-color:#fff;border:2px dashed #e3b7f5;border-radius:10px;font-size:14px;line-height:1.8;color:#7a4fa8">帮我克隆 https://github.com/${esc(r.repo)}，按它 README 的说明装好依赖并运行起来，最后告诉我怎么用</span>
 </div>`;
 
   return `
@@ -500,7 +482,7 @@ function buildHTML(data, cidMap) {
   })();
 
   // 文首总览表：一chart表把今天的推荐直接铺开，oneliner 缺了就退回 trending 摘要/官方简介
-  const ths = `padding:10px 8px;background-color:#f7f8fa;color:#5a6472;font-size:22px;font-weight:600;letter-spacing:.5px`;
+  const ths = `padding:10px 8px;background-color:#f7f8fa;color:#5a6472;font-size:13px;font-weight:600;letter-spacing:.5px`;
   const seenOl = new Set();
   const rows = repos.map((r, i) => {
     // AI 偶尔把同一句套到多个仓库：重复的 oneliner 直接丢弃，退回该仓库自身摘要
@@ -515,21 +497,21 @@ function buildHTML(data, cidMap) {
     const line2 = cut(line, 60);
     const bg = i % 2 ? "#fdf5fc" : "#fff";
     return `<tr>
-    <td style="background-color:${bg};padding:10px 6px;color:#c77dff;font-weight:800;vertical-align:top;font-size:21px;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
-    <td style="background-color:${bg};padding:10px 8px;word-break:break-all;vertical-align:top;font-size:23px;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
-    <td style="background-color:${bg};padding:10px 8px;color:#3a3a3a;line-height:1.6;font-size:21px;border-top:1px solid #f7e9f5">${esc(line2)}</td>
-    <td style="background-color:${bg};padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:22px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
+    <td style="background-color:${bg};padding:10px 6px;color:#c77dff;font-weight:800;vertical-align:top;font-size:13px;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
+    <td style="background-color:${bg};padding:10px 8px;word-break:break-all;vertical-align:top;font-size:14px;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
+    <td style="background-color:${bg};padding:10px 8px;color:#3a3a3a;line-height:1.6;font-size:13px;border-top:1px solid #f7e9f5">${esc(line2)}</td>
+    <td style="background-color:${bg};padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:13px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
   </tr>`;
   }).join("");
   const overview = repos.length ? `
-<div data-block="overview" style="border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(159,108,255,.12);border:2px solid #f3d9ff;margin:0 0 34px">
-<p style="margin:0;padding:14px 16px 0;font-size:28px;font-weight:900;color:#c77dff">🌸 热榜总览表</p>
-<table style="width:100%;border-collapse:collapse;font-size:22px;background-color:#fff;table-layout:fixed">
+<div style="border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(159,108,255,.12);border:2px solid #f3d9ff;margin:0 0 34px">
+<p style="margin:0;padding:14px 16px 0;font-size:18px;font-weight:900;color:#c77dff">🌸 热榜总览表</p>
+<table style="width:100%;border-collapse:collapse;font-size:13px;background-color:#fff;table-layout:fixed">
   <tr>
     <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:22px">#</th>
     <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:22%">仓库</th>
     <th align="left" style="${ths};padding-left:12px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">一眼看懂</th>
-    <th align="right" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:40px">今日</th>
+    <th align="right" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:70px">今日</th>
   </tr>
   ${rows}
 </table>
@@ -539,11 +521,11 @@ function buildHTML(data, cidMap) {
 <body style="margin:0;background-color:#fdf3fb">
 <div style="max-width:677px;margin:0 auto;background-color:#fffdfd;padding:0 20px 40px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
 
-<div data-block="header" style="margin:0 0 0;padding:28px 20px;background-color:#c77dff;background-image:linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%);color:#fff;overflow:hidden">
+<div style="margin:0 0 0;padding:28px 20px;background-color:#c77dff;background-image:linear-gradient(135deg,#ff9ad5 0%,#c77dff 55%,#8ab4ff 100%);color:#fff;overflow:hidden">
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="vertical-align:middle;padding-right:14px">
-      <p style="margin:0 0 8px;font-size:44px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</p>
-      <p style="margin:0;font-size:27px;line-height:1.8">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
+      <p style="margin:0 0 8px;font-size:22px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</p>
+      <p style="margin:0;font-size:15px;line-height:1.8">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
     </td>
     <td style="width:112px;vertical-align:middle">${mascot("5.png", 112)}</td>
   </tr></table>
@@ -553,11 +535,11 @@ function buildHTML(data, cidMap) {
 
 ${overview}
 
-${top ? `<div data-block="top" style="background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
-  <p style="margin:0 0 10px;font-size:23px;font-weight:800;letter-spacing:2px;opacity:.95">🌟 今日最闪耀</p>
-  <p style="margin:0 0 10px;font-size:37px;font-weight:900;line-height:1.35">${esc(repoShort(top.repo))}</p>
-  <p style="margin:0 0 14px;font-size:26px;line-height:1.8;opacity:.97">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
-  <div style="display:inline-block;background-color:rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:23px;font-weight:700">今日 ${fmtStars(top.today)} ★ · 总 ${(top.stars || 0).toLocaleString()} ★</div>
+${top ? `<div style="background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 30px;box-shadow:0 8px 26px rgba(199,125,255,.28);border:2px solid #ffe0f3">
+  <p style="margin:0 0 10px;font-size:16px;font-weight:800;letter-spacing:2px;opacity:.95">🌟 今日最闪耀</p>
+  <p style="margin:0 0 10px;font-size:22px;font-weight:900;line-height:1.35">${esc(repoShort(top.repo))}</p>
+  <p style="margin:0 0 14px;font-size:15px;line-height:1.8;opacity:.97">${esc(String(top.ai?.what || CN(top.summary) || CN(top.desc) || metaLine(top)).slice(0, 130))}</p>
+  <div style="display:inline-block;background-color:rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:14px;font-weight:700">今日 ${fmtStars(top.today)} ★ · 总 ${(top.stars || 0).toLocaleString()} ★</div>
 </div>` : ""}
 
 ${sections}
@@ -572,22 +554,22 @@ ${(data.featured && data.featured.length) ? `
     return `
   <div style="margin:0 0 14px;padding:16px 18px;background-color:#fff;border-radius:14px;border:2px solid #ffe0f3;box-shadow:0 3px 12px rgba(199,125,255,.08)">
     <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#9b6cff;text-decoration:none;font-weight:800">${esc(r.repo)}</a></div>
-    <p style="margin:0 0 8px;font-size:16px;line-height:1.8;color:#3a3a3a"><b>${md(hook)}</b></p>
-    <p style="margin:0 0 10px;font-size:16px;line-height:1.8;color:#5a6472">${md(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))}</p>
-    <div data-block="feat-meta-${i}" style="margin:0;font-size:18px;color:#b08ccd">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#c77dff;font-weight:700">仓库 →</a></div>
+    <p style="margin:0 0 8px;font-size:12px;line-height:1.8;color:#3a3a3a"><b>${md(hook)}</b></p>
+    <p style="margin:0 0 10px;font-size:12px;line-height:1.8;color:#5a6472">${md(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))}</p>
+    <div style="margin:0;font-size:13px;color:#b08ccd">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#c77dff;font-weight:700">仓库 →</a></div>
   </div>`;
   }).join("")}
 </div>` : ""}
 
-<div data-block="footer" style="margin:6px 0 22px;padding:20px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;border:2px solid #ffe0f3">
+<div style="margin:6px 0 22px;padding:20px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;border:2px solid #ffe0f3">
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="width:112px;vertical-align:middle">${mascot(Math.floor(Math.random() * 1000), 112, "5.png")}</td>
-    <td style="vertical-align:middle;padding-left:12px;font-size:20px;font-weight:900;letter-spacing:1px;text-align:left">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</td>
+    <td style="vertical-align:middle;padding-left:12px;font-size:16px;font-weight:900;letter-spacing:1px;text-align:left">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</td>
   </tr></table>
   <p style="margin:10px 0 0;font-size:12.5px">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </div>
 
-<div data-block="footer-note" style="margin-top:14px;padding:16px 18px;background-color:#fbf3ff;border-radius:12px;font-size:22px;color:#b08ccd;line-height:1.85;text-align:center">
+<div style="margin-top:14px;padding:16px 18px;background-color:#fbf3ff;border-radius:12px;font-size:13px;color:#b08ccd;line-height:1.85;text-align:center">
   <p style="margin:0">本文内容仅作参考，具体以各仓库官方说明为准。</p>
 </div>
 
@@ -850,8 +832,9 @@ if (dropped) console.error(`[文章] 质量门槛：剔除 ${dropped} 个无实�
 if (data.featured) data.featured = data.featured.filter(substantive);
 
 mkdirSync(join(ROOT, "out"), { recursive: true });
-// 彩色板块先整块截图，邮件里内联、公众号版换外链
-const html = await blocksToImages(buildHTML(data, cidMap), data.day);
+// 全部走真实 HTML 文字（不再截图）：文字可复制、链接可点、字号可控
+// 背景用描边+浅底色+彩色文字，微信粘贴剥底色时边框和颜色仍在，观感清晰
+const html = buildHTML(data, cidMap);
 
 // 落盘的就是公众号版：浏览器打开有图、全选复制粘进公众号也保持同样的排版
 const wechatHtml = toWechat(html, cidMap);
