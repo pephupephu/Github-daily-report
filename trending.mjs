@@ -255,12 +255,20 @@ async function risingRepos(max = 5) {
   for (const it of (j.items || [])) {
     if (!it || !it.full_name || onBoard.has(it.full_name)) continue;
     if ((it.pushed_at || "") < new Date(Date.now() - 40e9).toISOString()) continue;
+    // 搜索 API 的 stargazers_count 是陈旧索引缓存（常虚高/虚低、满 800 的上限值）
+    // 逐个用 /repos 接口拉真实星数+创建时间覆盖，根治 10724/重复 800 这类幻觉
+    const real = await meta(it.full_name).catch(() => null);
+    const stars = real?.stars ?? it.stargazers_count ?? 0;
+    const created = real?.created || (it.created_at || "").slice(0, 10);
+    // 硬校验：确属 90 天内新建、真实星数在 50..800，非 800 上限值的"假黑马"
+    if (!created || created < from) continue;
+    if (stars < 50 || stars > 800) continue;
     out.push({
       repo: it.full_name, lang: it.language || "—",
-      desc: it.description || "", stars: it.stargazers_count ?? 0,
-      today: "0", forks: it.forks_count ?? 0,
-      created: (it.created_at || "").slice(0, 10), license: it.license?.spdx_id || "",
-      topics: (it.topics || []).slice(0, 8), homepage: it.homepage || "",
+      desc: it.description || "", stars,
+      today: "0", forks: real?.forks ?? it.forks_count ?? 0,
+      created, license: (real?.license ?? it.license?.spdx_id) || "",
+      topics: (it.topics || []).slice(0, 8), homepage: real?.homepage || it.homepage || "",
       url: `https://github.com/${it.full_name}`,
       featured: true,
     });

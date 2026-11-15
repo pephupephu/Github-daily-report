@@ -149,6 +149,12 @@ const FALLBACK_HOOKS = [
   (n, name) => `单日 **+${n}★** 的 ${name}，看看它对你有没有用。`,
 ];
 
+// AI 有时会写出套话/幻觉数字的病句（如"程序员用它…10824人星标"）：
+// 直接识别这些坏句换回基于榜单事实的开场，宁可用朴实的事实句，也不放一句读不通的。
+const BAD_HOOK = /分享一个|爆火|火得有理|涨得最凶|杀疯|上榜|今天看到|值得一看|人星标|人⭐|人★|程序员用它|看得眼花|选择困难|闭眼入|yyds|YYDS|绝绝子/;
+const safeHook = (h, fallback) =>
+  (h && String(h).trim().length >= 8 && !BAD_HOOK.test(String(h))) ? String(h).trim() : fallback;
+
 // ---------- 链接抽取 ----------
 
 const DEMO = /(demo|try (it )?(online|out)|live|playground|play ?with|online demo|web ?ui|体验|演示|试用|在线|玩一下|在线体验)/i;
@@ -426,7 +432,7 @@ function section(r, i, shotCid) {
   r.links.docs.slice(0, 1).forEach((l) => { if (!isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">文档 → ${esc(l.url)}</a>`); });
   r.links.paper.slice(0, 1).forEach((l) => { if (!isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#b08ccd;text-decoration:none">论文 → ${esc(l.url)}</a>`); });
 
-  const hook = ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo));
+  const hook = safeHook(ai?.hook, FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo)));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r));
   // 开头总结+正文直接文字展示（不再截图）：<p> 里的字号微信会剥回约 16px，属正常，文字可复制
@@ -550,7 +556,7 @@ ${(data.featured && data.featured.length) ? `
   <p style="margin:0 0 16px;font-size:13px;color:#b08ccd;line-height:1.7">这些是最近新建立、还没上日榜，但星数涨得飞快的仓库——真正值得早关注的黑马。</p>
   ${data.featured.map((r, i) => {
     const ai = r.ai;
-    const hook = ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} ★，值得放进收藏。`;
+    const hook = safeHook(ai?.hook, `新晋开源 ${(r.stars || 0).toLocaleString()} ★，从 0 快速涨起来，值得早收藏。`);
     return `
   <div style="margin:0 0 14px;padding:16px 18px;background-color:#fff;border-radius:14px;border:2px solid #ffe0f3;box-shadow:0 3px 12px rgba(199,125,255,.08)">
     <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#9b6cff;text-decoration:none;font-weight:800">${esc(r.repo)}</a></div>
@@ -693,7 +699,7 @@ function buildDocx(data, cidMap) {
     const i = num++;
     children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 28, color: "07A050", before: 240, after: 60 }));
     children.push(para(`${r.lang || ""} · ${(r.stars || 0).toLocaleString()} ★ · 今日 +${r.today || 0}`, { color: "9A9A9A", size: 18, after: 120 }));
-    children.push(para(clean(ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo))), { bold: true }));
+    children.push(para(clean(safeHook(ai?.hook, FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo)))), { bold: true }));
     children.push(para(clean(ai?.what || CN(r.summary) || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r))));
     // 演示截图直接嵌进 Word，方便打开即看图
     children.push(...imgPara(r));
@@ -726,7 +732,7 @@ function buildDocx(data, cidMap) {
       const ai = r.ai;
       children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 26, color: "C77DFF", before: 220, after: 60 }));
       children.push(para(`${(r.stars || 0).toLocaleString()} ★ · ${r.lang || ""}`, { color: "9A9A9A", size: 18, after: 100 }));
-      children.push(para(clean(ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} ★，值得放进收藏。`), { bold: true }));
+      children.push(para(clean(safeHook(ai?.hook, `新晋开源 ${(r.stars || 0).toLocaleString()} ★，从 0 快速涨起来，值得早收藏。`)), { bold: true }));
       children.push(para(clean(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))));
       children.push(...imgPara(r));
       children.push(para(`仓库地址：https://github.com/${r.repo}`, { color: "576B95", size: 19, after: 200 }));
