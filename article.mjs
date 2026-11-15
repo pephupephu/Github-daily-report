@@ -66,7 +66,9 @@ hook（开头）是全文胜负手：读者看完这一句才决定要不要往�
 
 禁止 AI 腔套话，一次都不许出现：值得注意的是、总的来说、总而言之、不可否认、在当今、极大地、深入地、一站式、赋能、致力于、旨在、此外、然而、因此、从而、无缝衔接。写具体事、具体数字、具体动作。整篇各个仓库的写法要各不相同，绝不允许两篇开头相似、结构雷同，每个仓库都要有它自己的开头和展开方式。严禁空洞废话——像"它不是一个又大又全的东西，而是小而精""功能强大、性能优秀""它是为解决XX而生"这类不落地的形容一概不要，要说就说出它到底小在哪、精在哪、哪个具体点强，用能感知的细节或数字说话。
 
-在 what / case / core 的内容里，把关键名词、数字、量化收益用 **双星号** 包起来标黑（如 **7 美元**、**3295 个可编辑对象**、**一块 ESP32-S3 开发板**），每段 1 到 3 处，不要整句加粗。`;
+在 what / case / core 的内容里，把关键名词、数字、量化收益用 **双星号** 包起来标黑（如 **7 美元**、**3295 个可编辑对象**、**一块 ESP32-S3 开发板**），每段 1 到 3 处，不要整句加粗。
+
+绝对红线（违反即失败）：① 所有数字、百分比、金额、时间、规模，必须出自上面给出的 README/简介原文，README 里没出现的具体数字（如"省100倍""一次改3295个对象""一天能下800首"）一律不许写——不确定就只写定性描述，不编造量级；② hook/what 必须是你从该仓库的 README 事实里读出来的，禁止凭空想象功能、禁止把一个仓库的能力套到另一个仓库上，禁止两个仓库写成同一段话；③ 如果 README 太短、提炼不出一个带数字的具体亮点，hook 就老实写"这是个做什么的仓库"，不要硬凑一个看似具体的数字。`;
 
 async function callAI(prompt) {
   // 多 key 轮换：1305 限流时换下一个 key 重试，摊平负载
@@ -555,7 +557,8 @@ ${(data.featured && data.featured.length) ? `
   <p style="margin:0 0 16px;font-size:13px;color:#b08ccd;line-height:1.7">这些是最近新建立、还没上日榜，但星数涨得飞快的仓库——真正值得早关注的黑马。</p>
   ${data.featured.map((r, i) => {
     const ai = r.ai;
-    const hook = safeHook(ai?.hook, `新晋开源 ${(r.stars || 0).toLocaleString()} ★，从 0 快速涨起来，值得早收藏。`);
+    // 不做"从0快速涨起来"这种编造的涨幅话术；AI 没给出 hook 时，用该仓库自己的 desc 起头，避免所有黑马都同一句模板
+    const hook = safeHook(ai?.hook, CN(r.desc || r.summary) || `这个新仓库值得你早点看看：${esc((r.lang || "").toUpperCase()) || "开源"} · ${(r.stars || 0).toLocaleString()} ★`);
     return `
   <div style="margin:0 0 14px;padding:16px 18px;background-color:#fff;border-radius:14px;border:2px solid #ffe0f3;box-shadow:0 3px 12px rgba(199,125,255,.08)">
     <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#9b6cff;text-decoration:none;font-weight:800">${esc(r.repo)}</a></div>
@@ -731,7 +734,7 @@ function buildDocx(data, cidMap) {
       const ai = r.ai;
       children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 26, color: "C77DFF", before: 220, after: 60 }));
       children.push(para(`${(r.stars || 0).toLocaleString()} ★ · ${r.lang || ""}`, { color: "9A9A9A", size: 18, after: 100 }));
-      children.push(para(clean(ai?.hook || `新晋开源，${(r.stars || 0).toLocaleString()} ★，值得放进收藏。`), { bold: true }));
+      children.push(para(clean(ai?.hook || CN(r.desc || r.summary) || `这个新仓库值得早点看：${r.lang || "开源"} · ${(r.stars || 0).toLocaleString()} ★`), { bold: true }));
       children.push(para(clean(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))));
       children.push(...imgPara(r));
       children.push(para(`仓库地址：https://github.com/${r.repo}`, { color: "576B95", size: 19, after: 200 }));
