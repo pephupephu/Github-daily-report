@@ -68,7 +68,9 @@ hook（开头）是全文胜负手：读者看完这一句才决定要不要往�
 
 在 what / case / core 的内容里，把关键名词、数字、量化收益用 **双星号** 包起来标黑（如 **7 美元**、**3295 个可编辑对象**、**一块 ESP32-S3 开发板**），每段 1 到 3 处，不要整句加粗。
 
-绝对红线（违反即失败）：① 所有数字、百分比、金额、时间、规模，必须出自上面给出的 README/简介原文，README 里没出现的具体数字（如"省100倍""一次改3295个对象""一天能下800首"）一律不许写——不确定就只写定性描述，不编造量级；② hook/what 必须是你从该仓库的 README 事实里读出来的，禁止凭空想象功能、禁止把一个仓库的能力套到另一个仓库上，禁止两个仓库写成同一段话；③ 如果 README 太短、提炼不出一个带数字的具体亮点，hook 就老实写"这是个做什么的仓库"，不要硬凑一个看似具体的数字。`;
+绝对红线（违反即失败）：① 所有数字、百分比、金额、时间、规模，必须出自上面给出的 README/简介原文，README 里没出现的具体数字（如"省100倍""一次改3295个对象""一天能下800首"）一律不许写——不确定就只写定性描述，不编造量级；② hook/what 必须是你从该仓库的 README 事实里读出来的，禁止凭空想象功能、禁止把一个仓库的能力套到另一个仓库上、禁止两个仓库写成同一段话；③ 如果 README 太短、提炼不出一个带数字的具体亮点，hook 就老实写"这是个做什么的仓库"，不要硬凑一个看似具体的数字。
+
+写每个仓库前，先在心里想清楚它区别于同类工具的**那个独一份的优势**到底是什么（性能、上手门槛、开箱即用程度、适用范围、生态、数据来源、成本），再用读者的视角把它讲出来——不是堆特性清单，而是让读者看完能明白"同样干这个事，我为啥用这个而不是别的"。这个优势要能从 README 的细节里读出来，靠你自己读出来，不能靠猜，也不能为了显得厉害硬套一个它没有的优势；不同仓库优势各不相同，绝不允许所有仓库写成同一种"很厉害"的模板腔。`;
 
 async function callAI(prompt) {
   // 多 key 轮换：1305 限流时换下一个 key 重试，摊平负载
@@ -142,20 +144,6 @@ async function analyzeOne(r, md, usedHooks = []) {
     }
   }
 }
-
-// AI 缺席时的轮换兜底开场，只陈述榜单事实，不喊口号
-const FALLBACK_HOOKS = [
-  (n, name) => `${name} 今天单日 **+${n}★**。`,
-  (n, name) => `**+${n}★** 一天，${name} 在解决一个具体问题。`,
-  (n, name) => `${name} 今天的榜单成绩：**+${n}★**。`,
-  (n, name) => `单日 **+${n}★** 的 ${name}，看看它对你有没有用。`,
-];
-
-// AI 有时会写出套话/幻觉数字的病句（如"程序员用它…10824人星标"）：
-// 直接识别这些坏句换回基于榜单事实的开场，宁可用朴实的事实句，也不放一句读不通的。
-const BAD_HOOK = /分享一个|爆火|火得有理|涨得最凶|杀疯|上榜|今天看到|值得一看|人星标|人⭐|人★|程序员用它|看得眼花|选择困难|闭眼入|yyds|YYDS|绝绝子/;
-const safeHook = (h, fallback) =>
-  (h && String(h).trim().length >= 8 && !BAD_HOOK.test(String(h))) ? String(h).trim() : fallback;
 
 // ---------- 链接抽取 ----------
 
@@ -422,23 +410,23 @@ function section(r, i, shotCid) {
   const vids = r.videos?.length ? videoBlock(r.videos) : "";
   const p = `style="margin:0 0 10px;font-size:26px;line-height:1.9;color:#3a3a3a"`;
   // 小节标签：二次元粉紫胶囊，给 case/core/who 一个统一视觉
-  const tag = (t) => `<span style="display:inline-block;background-color:#ffe0f3;color:#c75bd6;border-radius:7px;padding:2px 9px;font-size:12px;font-weight:800;margin-right:8px">${t}</span>`;
+  const tag = (t) => `<span style="display:inline-block;background-color:#ffe0f3;color:#c75bd6;border-radius:7px;padding:2px 9px;font-size:26px;font-weight:800;margin-right:8px">${t}</span>`;
 
   const links = [];
   if (r.homepage) { try { links.push(`<a href="${esc(r.homepage)}" style="color:#9b6cff;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`); } catch {} }
   // 只收网页类链接；原始视频文件(mp4/webm 等)微信里点不开也播不了，直接去掉，避免无效死链
   const isMedia = (u) => /\.(mp4|webm|mov|avi|mkv|flv|m3u8)(\?.*)?$/i.test(u);
-  r.links.cnDemo.slice(0, 1).forEach((l) => { if (!isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#ff5c8a;font-weight:700;text-decoration:none">中文体验 → ${esc(l.url)}</a>`); });
-  r.links.demo.slice(0, 2).forEach((l) => { if (!isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">官方演示 → ${esc(l.url)}</a>`); });
-  r.links.docs.slice(0, 1).forEach((l) => { if (!isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">文档 → ${esc(l.url)}</a>`); });
-  r.links.paper.slice(0, 1).forEach((l) => { if (!isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#b08ccd;text-decoration:none">论文 → ${esc(l.url)}</a>`); });
+  // 超长路径/带query的链接一行放不下会折行出空格，直接去掉，只保留短地址
+  const shortUrl = (u) => u.length <= 45;
+  r.links.cnDemo.slice(0, 1).forEach((l) => { if (shortUrl(l.url) && !isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#ff5c8a;font-weight:700;text-decoration:none">中文体验 → ${esc(l.url)}</a>`); });
+  r.links.demo.slice(0, 2).forEach((l) => { if (shortUrl(l.url) && !isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">官方演示 → ${esc(l.url)}</a>`); });
+  r.links.docs.slice(0, 1).forEach((l) => { if (shortUrl(l.url) && !isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">文档 → ${esc(l.url)}</a>`); });
+  r.links.paper.slice(0, 1).forEach((l) => { if (shortUrl(l.url) && !isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#b08ccd;text-decoration:none">论文 → ${esc(l.url)}</a>`); });
 
-  const hook = safeHook(ai?.hook, FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo)));
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r));
-  // 开头总结+正文整块截图：微信会把 <p> 上的 font-size 剥回 16px，<b> 里的黑字也保不住，截图后与下方卡片字号一致
+  // 开头正文整块截图：微信会把 <p> 上的 font-size 剥回 16px，截图后与下方卡片字号一致。AI 开头那句带数据的话 AI 味重、易编造，直接不展示
   const leadHtml = `<div data-block="card-lead-${i}" style="margin:0 0 4px">
-  <p ${p}><b style="color:#1a1a1a">${md(hook)}</b></p>
   <p ${p}>${md(what)}</p>
 </div>`;
   const caseHtml = (ai?.case || r.scenarios?.[0]) ? `<div data-block="card-case-${i}" style="margin:0 0 12px;padding:12px 14px;background-color:#fdf3fb;border:1px solid #ffe0f3;border-radius:12px;font-size:26px;line-height:1.9;color:#3a3a3a">${tag("案例举例")}${md(ai?.case || r.scenarios[0])}</div>` : "";
@@ -455,10 +443,10 @@ function section(r, i, shotCid) {
 
   return `
 <div style="margin:0 0 34px;padding:0 2px 26px;border-bottom:1px solid #f3e0f0">
-  <p style="margin:0 0 12px;font-size:15px;font-weight:800;color:#1a1a1a;line-height:1.4">
-    <span style="display:inline-block;line-height:30px;text-align:center;min-width:30px;height:30px;padding:0 6px;border-radius:9px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;font-size:15px;font-weight:900;vertical-align:middle;margin-right:10px">${String(i + 1).padStart(2, "0")}</span>
-    <span style="vertical-align:middle;margin-right:10px">${esc(repoShort(r.repo))}</span>
-    <span style="color:#c9a0d6;font-weight:500;font-size:12px;vertical-align:middle">${esc(r.lang)} · ${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</span>
+  <p style="margin:0 0 12px;font-size:13px;font-weight:800;color:#1a1a1a;line-height:1.4">
+    <span style="display:inline-block;line-height:26px;text-align:center;min-width:26px;height:26px;padding:0 5px;border-radius:8px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;font-size:13px;font-weight:900;vertical-align:middle;margin-right:8px">${String(i + 1).padStart(2, "0")}</span>
+    <span style="vertical-align:middle;margin-right:8px">${esc(repoShort(r.repo))}</span>
+    <span style="color:#c9a0d6;font-weight:500;font-size:12px;vertical-align:middle">${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}</span>
   </p>
   ${leadHtml}
   ${caseHtml}
@@ -532,13 +520,11 @@ function buildHTML(data, cidMap) {
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="vertical-align:middle;padding-right:14px">
       <p style="margin:0 0 8px;font-size:44px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</p>
-      <p style="margin:0;font-size:27px;line-height:1.8">把今天最值得动手的 AI 开源仓库，用大白话讲给你听，一眼看懂能干嘛。</p>
+      <p style="margin:0;font-size:27px;line-height:1.8">🌸 白话转述，一眼看懂，提效工作、改变生活 🌸</p>
     </td>
     <td style="width:112px;vertical-align:middle">${mascot("5.png", 112)}</td>
   </tr></table>
 </div>
-
-<p style="margin:16px 0 0;font-size:13px;color:#b08ccd;font-weight:700;text-align:center">🌸 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 🌸</p>
 
 ${overview}
 
@@ -557,14 +543,17 @@ ${(data.featured && data.featured.length) ? `
   <p style="margin:0 0 16px;font-size:13px;color:#b08ccd;line-height:1.7">这些是最近新建立、还没上日榜，但星数涨得飞快的仓库——真正值得早关注的黑马。</p>
   ${data.featured.map((r, i) => {
     const ai = r.ai;
-    // 不做"从0快速涨起来"这种编造的涨幅话术；AI 没给出 hook 时，用该仓库自己的 desc 起头，避免所有黑马都同一句模板
-    const hook = safeHook(ai?.hook, CN(r.desc || r.summary) || `这个新仓库值得你早点看看：${esc((r.lang || "").toUpperCase()) || "开源"} · ${(r.stars || 0).toLocaleString()} ★`);
+    const what = ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r);
     return `
   <div style="margin:0 0 14px;padding:16px 18px;background-color:#fff;border-radius:14px;border:2px solid #ffe0f3;box-shadow:0 3px 12px rgba(199,125,255,.08)">
-    <div style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a"><span style="display:inline-block;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;margin-right:8px">${String(i + 1).padStart(2, "0")}</span><a href="${esc(r.url)}" style="color:#9b6cff;text-decoration:none;font-weight:800">${esc(r.repo)}</a></div>
-    <p style="margin:0 0 8px;font-size:16px;line-height:1.8;color:#3a3a3a"><b>${md(hook)}</b></p>
-    <p style="margin:0 0 10px;font-size:16px;line-height:1.8;color:#5a6472">${md(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))}</p>
-    <div data-block="feat-meta-${i}" style="margin:0;font-size:18px;color:#b08ccd">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")} · <a href="${esc(r.url)}" style="color:#c77dff;font-weight:700">仓库 →</a></div>
+    <p style="margin:0 0 10px;font-size:13px;font-weight:800;color:#1a1a1a;line-height:1.4">
+      <span style="display:inline-block;line-height:26px;text-align:center;min-width:26px;height:26px;padding:0 5px;border-radius:8px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;font-size:13px;font-weight:900;vertical-align:middle;margin-right:8px">${String(i + 1).padStart(2, "0")}</span>
+      <span style="vertical-align:middle;margin-right:8px">${esc(repoShort(r.repo))}</span>
+      <span style="color:#c9a0d6;font-weight:500;font-size:12px;vertical-align:middle">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")}</span>
+    </p>
+    <div data-block="feat-lead-${i}" style="margin:0">
+      <p style="margin:0;font-size:26px;line-height:1.9;color:#5a6472">${md(what)}</p>
+    </div>
   </div>`;
   }).join("")}
 </div>` : ""}
@@ -572,12 +561,12 @@ ${(data.featured && data.featured.length) ? `
 <div data-block="footer" style="margin:6px 0 22px;padding:20px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;border:2px solid #ffe0f3">
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="width:112px;vertical-align:middle">${mascot(Math.floor(Math.random() * 1000), 112, "5.png")}</td>
-    <td style="vertical-align:middle;padding-left:12px;font-size:20px;font-weight:900;letter-spacing:1px;text-align:left">✨ 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 ✨</td>
+    <td style="vertical-align:middle;padding-left:12px;font-size:20px;font-weight:900;letter-spacing:1px;text-align:left">✨ 分享开源 AI 技术，帮普通人提效工作、改变生活 ✨</td>
   </tr></table>
-  <p style="margin:10px 0 0;font-size:12.5px">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
+  <p style="margin:10px 0 0;font-size:16px">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
 </div>
 
-<div data-block="footer-note" style="margin-top:14px;padding:16px 18px;background-color:#fbf3ff;border-radius:12px;font-size:22px;color:#b08ccd;line-height:1.85;text-align:center">
+<div data-block="footer-note" style="margin-top:14px;padding:16px 18px;background-color:#fbf3ff;border-radius:12px;font-size:26px;color:#b08ccd;line-height:1.85;text-align:center">
   <p style="margin:0">本文内容仅作参考，具体以各仓库官方说明为准。</p>
 </div>
 
@@ -692,16 +681,15 @@ function buildDocx(data, cidMap) {
 
   const children = [
     para("🌸 最新开源AI技术分享", { bold: true, size: 36, color: "C77DFF", after: 60 }),
-    para("把今天最值得动手的 AI 开源仓库，用大白话讲给你听", { color: "9B6CFF", size: 20, after: 260 }),
+    para("🌸 白话转述，一眼看懂，提效工作、改变生活 🌸", { color: "9B6CFF", size: 20, after: 260 }),
   ];
 
   let num = 0;
   const writeRepo = (r) => {
     const ai = r.ai;
     const i = num++;
-    children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 28, color: "07A050", before: 240, after: 60 }));
-    children.push(para(`${r.lang || ""} · ${(r.stars || 0).toLocaleString()} ★ · 今日 +${r.today || 0}`, { color: "9A9A9A", size: 18, after: 120 }));
-    children.push(para(clean(ai?.hook || FALLBACK_HOOKS[i % FALLBACK_HOOKS.length](r.today, repoShort(r.repo))), { bold: true }));
+    children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 26, color: "07A050", before: 240, after: 60 }));
+    children.push(para(`${(r.stars || 0).toLocaleString()} ★ · 今日 +${r.today || 0}`, { color: "9A9A9A", size: 18, after: 120 }));
     children.push(para(clean(ai?.what || CN(r.summary) || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r))));
     // 演示截图直接嵌进 Word，方便打开即看图
     children.push(...imgPara(r));
@@ -723,8 +711,8 @@ function buildDocx(data, cidMap) {
   // 日榜按原顺序罗列
   repos.forEach(writeRepo);
 
-  children.push(para("🌸 分享最新开源免费 AI 技术，帮普通人提效工作、改变生活 🌸", { bold: true, size: 22, color: "C77DFF", before: 320, after: 40 }));
-  children.push(para("本文内容仅作参考，具体以各仓库官方说明为准。", { color: "B08CCD", size: 18, before: 40, after: 80 }));
+  children.push(para("🌸 分享开源 AI 技术，帮普通人提效工作、改变生活 🌸", { bold: true, size: 22, color: "C77DFF", before: 320, after: 40 }));
+  children.push(para("本文内容仅作参考，具体以各仓库官方说明为准。", { color: "B08CCD", size: 22, before: 40, after: 80 }));
 
   // 「值得关注」板块也进 Word（和 HTML 对齐）
   const feat = (data.featured || []).filter((r) => r && r.repo);
@@ -734,7 +722,6 @@ function buildDocx(data, cidMap) {
       const ai = r.ai;
       children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 26, color: "C77DFF", before: 220, after: 60 }));
       children.push(para(`${(r.stars || 0).toLocaleString()} ★ · ${r.lang || ""}`, { color: "9A9A9A", size: 18, after: 100 }));
-      children.push(para(clean(ai?.hook || CN(r.desc || r.summary) || `这个新仓库值得早点看：${r.lang || "开源"} · ${(r.stars || 0).toLocaleString()} ★`), { bold: true }));
       children.push(para(clean(ai?.what || CN(r.summary) || CN(r.desc) || metaLine(r))));
       children.push(...imgPara(r));
       children.push(para(`仓库地址：https://github.com/${r.repo}`, { color: "576B95", size: 19, after: 200 }));
