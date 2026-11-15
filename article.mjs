@@ -494,7 +494,7 @@ function buildHTML(data, cidMap) {
     <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:22px">#</th>
     <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:22%">仓库</th>
     <th align="left" style="${ths};padding-left:12px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">一眼看懂</th>
-    <th align="right" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:40px">今日</th>
+    <th align="right" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:58px">今日</th>
   </tr>
   ${rows}
 </table>
@@ -508,7 +508,7 @@ function buildHTML(data, cidMap) {
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="vertical-align:middle;padding-right:14px">
       <p style="margin:0 0 8px;font-size:44px;font-weight:900;line-height:1.3;letter-spacing:1px">最新开源AI技术分享</p>
-      <p style="margin:0;font-size:27px;line-height:1.8">🌸 白话转述，一眼看懂，提效工作、改变生活 🌸</p>
+      <p style="margin:0;font-size:19px;line-height:1.8;white-space:nowrap">🌸 白话转述 一眼看懂 提效工作 改变生活 🌸</p>
     </td>
     <td style="width:112px;vertical-align:middle">${mascot("5.png", 112)}</td>
   </tr></table>
@@ -548,13 +548,13 @@ ${(data.featured && data.featured.length) ? `
 <div data-block="footer" style="margin:6px 0 22px;padding:20px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);border-radius:16px;color:#fff;text-align:center;border:2px solid #ffe0f3">
   <table style="width:100%;border-collapse:collapse"><tr>
     <td style="width:112px;vertical-align:middle">${mascot(Math.floor(Math.random() * 1000), 112, "5.png")}</td>
-    <td style="vertical-align:middle;padding-left:12px;font-size:20px;font-weight:900;letter-spacing:1px;text-align:left">✨ 分享开源 AI 技术，帮普通人提效工作、改变生活 ✨</td>
+    <td style="vertical-align:middle;padding-left:12px;font-size:16px;font-weight:900;letter-spacing:1px;text-align:left;white-space:nowrap">✨ 分享开源 AI 技术，帮普通人提效工作、改变生活 ✨</td>
   </tr></table>
-  <p style="margin:10px 0 0;font-size:16px">每天陪你一起发现好用的新仓库，轻松提升效率。</p>
+  <p style="margin:10px 0 0;font-size:16px">每天陪你一起发现好用的新仓库，轻松提升效率</p>
 </div>
 
 <div data-block="footer-note" style="margin-top:14px;padding:16px 18px;background-color:#fbf3ff;border-radius:12px;font-size:26px;color:#b08ccd;line-height:1.85;text-align:center">
-  <p style="margin:0">本文内容仅作参考，具体以各仓库官方说明为准。</p>
+  <p style="margin:0">本文内容仅作参考，具体以各仓库官方说明为准</p>
 </div>
 
 </div></body></html>`;
@@ -668,7 +668,7 @@ function buildDocx(data, cidMap) {
 
   const children = [
     para("🌸 最新开源AI技术分享", { bold: true, size: 36, color: "C77DFF", after: 60 }),
-    para("🌸 白话转述，一眼看懂，提效工作、改变生活 🌸", { color: "9B6CFF", size: 20, after: 260 }),
+    para("🌸 白话转述 一眼看懂 提效工作 改变生活 🌸", { color: "9B6CFF", size: 18, after: 260 }),
   ];
 
   let num = 0;
@@ -699,7 +699,7 @@ function buildDocx(data, cidMap) {
   repos.forEach(writeRepo);
 
   children.push(para("🌸 分享开源 AI 技术，帮普通人提效工作、改变生活 🌸", { bold: true, size: 22, color: "C77DFF", before: 320, after: 40 }));
-  children.push(para("本文内容仅作参考，具体以各仓库官方说明为准。", { color: "B08CCD", size: 22, before: 40, after: 80 }));
+  children.push(para("本文内容仅作参考，具体以各仓库官方说明为准", { color: "B08CCD", size: 22, before: 40, after: 80 }));
 
   // 「值得关注」板块也进 Word（和 HTML 对齐）
   const feat = (data.featured || []).filter((r) => r && r.repo);
