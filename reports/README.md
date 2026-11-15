@@ -60,3 +60,4 @@
 - [daily-2026-11-08](./daily-2026-11-08.md) — 榜首 sherlock-project/sherlock (+2372)
 - [daily-2026-11-14](./daily-2026-11-14.md) — 榜首 backnotprop/plannotator (+412)
 - [daily-2026-11-14](./daily-2026-11-14.md) — 榜首 backnotprop/plannotator (+412)
+- [daily-2026-11-15](./daily-2026-11-15.md) — 榜首 backnotprop/plannotator (+408)
