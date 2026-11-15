@@ -64,3 +64,4 @@
 - [daily-2026-11-15](./daily-2026-11-15.md) — 榜首 backnotprop/plannotator (+408)
 - [daily-2026-11-15](./daily-2026-11-15.md) — 榜首 backnotprop/plannotator (+408)
 - [daily-2026-11-15](./daily-2026-11-15.md) — 榜首 backnotprop/plannotator (+860)
+- [daily-2026-11-15](./daily-2026-11-15.md) — 榜首 dream-num/univer (+1041)
