@@ -412,17 +412,6 @@ function section(r, i, shotCid) {
   // 小节标签：二次元粉紫胶囊，给 case/core/who 一个统一视觉
   const tag = (t) => `<span style="display:inline-block;background-color:#ffe0f3;color:#c75bd6;border-radius:7px;padding:2px 9px;font-size:26px;font-weight:800;margin-right:8px">${t}</span>`;
 
-  const links = [];
-  if (r.homepage) { try { links.push(`<a href="${esc(r.homepage)}" style="color:#9b6cff;text-decoration:none">${esc(new URL(r.homepage).hostname)}</a>`); } catch {} }
-  // 只收网页类链接；原始视频文件(mp4/webm 等)微信里点不开也播不了，直接去掉，避免无效死链
-  const isMedia = (u) => /\.(mp4|webm|mov|avi|mkv|flv|m3u8)(\?.*)?$/i.test(u);
-  // 超长路径/带query的链接一行放不下会折行出空格，直接去掉，只保留短地址
-  const shortUrl = (u) => u.length <= 45;
-  r.links.cnDemo.slice(0, 1).forEach((l) => { if (shortUrl(l.url) && !isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#ff5c8a;font-weight:700;text-decoration:none">中文体验 → ${esc(l.url)}</a>`); });
-  r.links.demo.slice(0, 2).forEach((l) => { if (shortUrl(l.url) && !isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">官方演示 → ${esc(l.url)}</a>`); });
-  r.links.docs.slice(0, 1).forEach((l) => { if (shortUrl(l.url) && !isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#9b6cff;text-decoration:none">文档 → ${esc(l.url)}</a>`); });
-  r.links.paper.slice(0, 1).forEach((l) => { if (shortUrl(l.url) && !isMedia(l.url)) links.push(`<a href="${esc(l.url)}" style="color:#b08ccd;text-decoration:none">论文 → ${esc(l.url)}</a>`); });
-
   const cleanSum = /分析失败|HTTP 4\d\d/.test(r.summary || "") ? "" : (r.summary || "");
   const what = ai?.what || (cleanSum || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r));
   // 开头正文整块截图：微信会把 <p> 上的 font-size 剥回 16px，截图后与下方卡片字号一致。AI 开头那句带数据的话 AI 味重、易编造，直接不展示
@@ -453,7 +442,6 @@ function section(r, i, shotCid) {
   ${coreHtml}
   ${img}
   ${vids}
-  ${links.length ? `<div style="margin:10px 0"><span style="font-size:13px">${links.join("　　")}</span></div>` : ""}
   ${whoHtml}
   ${agentBox}
   ${fallbackBox}
@@ -549,7 +537,6 @@ ${(data.featured && data.featured.length) ? `
     <p style="margin:0 0 10px;font-size:13px;font-weight:800;color:#1a1a1a;line-height:1.4">
       <span style="display:inline-block;line-height:26px;text-align:center;min-width:26px;height:26px;padding:0 5px;border-radius:8px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;font-size:13px;font-weight:900;vertical-align:middle;margin-right:8px">${String(i + 1).padStart(2, "0")}</span>
       <span style="vertical-align:middle;margin-right:8px">${esc(repoShort(r.repo))}</span>
-      <span style="color:#c9a0d6;font-weight:500;font-size:12px;vertical-align:middle">${(r.stars || 0).toLocaleString()} ★ · ${esc(r.lang || "")}</span>
     </p>
     <div data-block="feat-lead-${i}" style="margin:0">
       <p style="margin:0;font-size:26px;line-height:1.9;color:#5a6472">${md(what)}</p>
