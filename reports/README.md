@@ -67,3 +67,4 @@
 - [daily-2026-11-15](./daily-2026-11-15.md) — 榜首 dream-num/univer (+1041)
 - [daily-2026-11-15](./daily-2026-11-15.md) — 榜首 dream-num/univer (+1041)
 - [daily-2026-11-16](./daily-2026-11-16.md) — 榜首 dream-num/univer (+988)
+- [daily-2026-11-17](./daily-2026-11-17.md) — 榜首 ag-ui-protocol/ag-ui (+791)
