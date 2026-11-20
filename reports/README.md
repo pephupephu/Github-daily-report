@@ -70,3 +70,4 @@
 - [daily-2026-11-17](./daily-2026-11-17.md) — 榜首 ag-ui-protocol/ag-ui (+791)
 - [daily-2026-11-18](./daily-2026-11-18.md) — 榜首 elementalsouls/Claude-BugHunter (+1005)
 - [daily-2026-11-19](./daily-2026-11-19.md) — 榜首 cursor/plugins (+314)
+- [daily-2026-11-20](./daily-2026-11-20.md) — 榜首 elementalsouls/Claude-BugHunter (+1349)
