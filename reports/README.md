@@ -72,3 +72,4 @@
 - [daily-2026-11-19](./daily-2026-11-19.md) — 榜首 cursor/plugins (+314)
 - [daily-2026-11-20](./daily-2026-11-20.md) — 榜首 elementalsouls/Claude-BugHunter (+1349)
 - [daily-2026-11-21](./daily-2026-11-21.md) — 榜首 elementalsouls/Claude-BugHunter (+1622)
+- [daily-2026-11-21](./daily-2026-11-21.md) — 榜首 elementalsouls/Claude-BugHunter (+1622)

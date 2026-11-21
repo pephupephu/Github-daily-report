@@ -7,9 +7,9 @@
       "repo": "elementalsouls/Claude-BugHunter",
       "lang": "Python",
       "desc": "A Claude Code skill bundle for bug hunting and external red-team work - 82 skills, 15 slash commands, 681 disclosed-report patterns curated across 24 core vulnerability classes, plus enterprise identity + infrastructure attack matrices.",
-      "stars": 14323,
+      "stars": 14808,
       "today": "1622",
-      "forks": 1703,
+      "forks": 1740,
       "created": "2026-05-05",
       "license": "MIT",
       "topics": [
@@ -25,22 +25,22 @@
       "homepage": "https://elementalsouls.github.io/Claude-BugHunter",
       "url": "https://github.com/elementalsouls/Claude-BugHunter",
       "summary": "claude-bughunter 是一个为 Claude Code 技能系统设计的技能包，用于漏洞挖掘和外部红队工作。它包含 83 项技能、15 个斜杠命令和 681 个已披露报告模式，覆盖 24 个核心漏洞类别，并提供企业身份和基础设施攻击矩阵。使用时只需用普通英语描述你要测试的内容，相关的技能会自动加载，无需手动调用技能名称。",
-      "judgment": "如果你使用 Claude Code 进行漏洞挖掘或红队工作，claude-bughunter 是一个值得参考的技能包。",
+      "judgment": "如果使用 Claude Code 进行漏洞挖掘或红队工作，claude-bughunter 是一个值得考虑的技能包。",
       "mechanics": [
-        "基于 Claude Code 技能系统的 Agent Skills 机制，技能以 SKILL.md 格式编写",
-        "通过描述测试目标自动加载相关技能，无需手动指定技能名称",
-        "包含 83 项技能、15 个斜杠命令和 681 个已披露报告模式",
-        "覆盖 24 个核心漏洞类别，包括 Web 应用、API、SaaS、GraphQL、OAuth、JWT、文件上传、IDOR、SSRF、RCE 链等",
-        "提供企业平台攻击链（如 M365/Entra、Okta、vCenter、SSL-VPN 设备等）的当前 CVE 链和凭证提升后攻击",
-        "包含 `bb-methodology` 和 `redteam-mindset` 框架，提供 5 阶段非线性工作流程和批判性思维框架",
-        "集成 Burp MCP，支持漏洞验证和报告生成",
-        "支持 `evidence-hygiene`，包括 PII 匿名化等"
+        "基于 Claude Code 技能系统的集成",
+        "通过自然语言描述触发相关技能",
+        "包含 83 项技能和 15 个斜杠命令",
+        "681 个已披露报告模式覆盖 24 个核心漏洞类别",
+        "企业身份和基础设施攻击矩阵",
+        "与 Burp MCP 集成",
+        "提供漏洞挖掘和红队工作的 5 阶段非线性工作流程",
+        "包含 7 个问题的验证和分类流程"
       ],
       "scenarios": [
-        "漏洞赏金猎人用于挖掘 Web 应用、API、SaaS 等的漏洞",
-        "红队人员用于对企业外部资产进行授权的渗透测试和红队演练",
-        "安全研究人员用于快速分析和模拟攻击企业身份和基础设施",
-        "安全培训平台用于模拟真实漏洞挖掘场景进行培训"
+        "漏洞赏金猎人用于挖掘 Web 应用、API、SaaS、GraphQL、OAuth、JWT 等的漏洞",
+        "红队人员用于对互联网可访问的企业资产进行初始访问测试，如 M365/Entra ID、Okta、SharePoint、VMware vCenter 等",
+        "安全测试人员用于进行 Web 应用渗透测试",
+        "云配置错误和身份验证机制的测试"
       ],
       "readmeCN": ""
     },
@@ -48,9 +48,9 @@
       "repo": "obra/superpowers",
       "lang": "Shell",
       "desc": "An agentic skills framework &amp; software development methodology that works.",
-      "stars": 322856,
+      "stars": 323038,
       "today": "890",
-      "forks": 28668,
+      "forks": 28683,
       "created": "2025-10-09",
       "license": "MIT",
       "topics": [
@@ -65,21 +65,21 @@
       ],
       "homepage": "",
       "url": "https://github.com/obra/superpowers",
-      "summary": "Superpowers 是一个基于 Shell 的软件开发方法论，用于指导编码代理。它通过一系列可组合的技能和初始指令，让代理在编程时能自动触发相应技能，从而高效地完成开发任务。使用时，代理会先理解你的需求，然后分块展示设计，经你确认后制定实现计划，并启动子代理进行开发，整个过程强调 TDD、YAGNI 和 DRY 原则。",
-      "judgment": "适合追求高效、规范开发流程的团队，但需克服插件化环境的配置复杂度",
+      "summary": "Superpowers 是一个用于编码代理的完整软件开发方法论，它基于可组合的技能集和初始指令，确保代理使用这些技能。打开它后，编码代理会先理解你要做什么，然后分块展示设计，让你审核，之后制定实现计划，并启动子代理驱动的开发过程，自主完成工程任务。",
+      "judgment": "如果你需要自动化和优化编码代理的开发流程，Superpowers 值得尝试。",
       "mechanics": [
-        "基于代理的自主开发流程（subagent-driven-development）",
-        "可组合的技能模块触发机制",
-        "自动化的需求解析与设计展示",
-        "子代理协同执行工程任务",
-        "强调 TDD、YAGNI 和 DRY 的开发原则",
-        "跨平台插件化架构支持多种开发环境"
+        "可组合的技能集（Composable Skills）",
+        "初始指令触发技能自动使用",
+        "子代理驱动开发（Subagent-driven-development）",
+        "分块展示设计",
+        "自主任务规划和执行",
+        "强调真红/绿测试驱动开发（TDD）",
+        "遵循 YAGNI（你不会需要它）和 DRY（不要重复自己）原则"
       ],
       "scenarios": [
-        "需要自动化辅助进行软件开发的工程师或团队",
-        "希望提高编码代理效率和规范性的企业或开发者",
-        "使用 Claude、Codex、Cursor 等多种 AI 开发工具的开发者",
-        "寻求标准化、流程化的软件开发项目管理"
+        "软件开发团队使用编码代理进行项目开发",
+        "需要提高编码效率和代码质量的专业开发者",
+        "希望自动化部分软件开发流程的企业或个人"
       ],
       "readmeCN": ""
     },
@@ -87,30 +87,30 @@
       "repo": "HKUDS/CLI-Anything",
       "lang": "Python",
       "desc": "\"CLI-Anything: Making ALL Software Agent-Native\" -- CLI-Hub: https://clianything.cc/",
-      "stars": 61408,
+      "stars": 61610,
       "today": "773",
-      "forks": 5564,
+      "forks": 5586,
       "created": "2026-03-08",
       "license": "Apache-2.0",
       "topics": [],
       "homepage": "https://clianything.cc/",
       "url": "https://github.com/HKUDS/CLI-Anything",
-      "summary": "CLI-Anything 是一个 Python 库，用于将任何软件转化为支持 AI 代理的原生命令行界面。通过 `cli-hub install <name>` 命令，用户可以浏览、安装和管理社区构建的 CLI，实现 AI 代理与各种软件的交互，如 CAD 构建、3D 场景生成、游戏操作等。",
-      "judgment": "如果需要快速将软件转化为 AI 代理原生接口，值得参考和使用。",
+      "summary": "CLI-Anything 是一个 Python 库，用于将任何软件转化为支持 AI 代理的原生命令行界面。通过 `pip install cli-anything-hub` 安装后，可以使用 `cli-hub install <name>` 命令浏览、安装和管理社区构建的命令行工具，支持 AI 代理如 Pi、OpenClaw、nanobot、Cursor、Claude Code 等，并能生成用于 CAD 构建、3D 场景、图表、游戏、字幕等实际应用的 CLI。",
+      "judgment": "对于需要快速将软件转化为 AI 代理原生环境的场景，值得尝试，但需注意兼容性和工具质量问题。",
       "mechanics": [
-        "使用 Click 库构建命令行界面",
+        "基于 Python 的 CLI 生成和封装机制",
+        "使用 Click 库构建命令行接口",
         "通过 Pytest 进行单元和端到端测试",
-        "基于 JSON 和人类可读输出格式",
-        "CLI-Hub 中心化管理社区构建的 CLI",
-        "支持多种软件和服务的技能（Skills）",
-        "使用 npx 技能管理工具安装技能",
-        "提供实时预览和轨迹循环功能"
+        "CLI-Hub 作为社区工具的中央注册和安装中心",
+        "支持技能（Skill）概念的标准化代理指令封装",
+        "利用 JSON 和人类可读输出格式",
+        "集成 Feishu 和 WeChat 群组进行社区协作"
       ],
       "scenarios": [
         "AI 代理开发者需要与各种软件交互时",
-        "需要将传统软件转化为 AI 代理原生接口的场景",
-        "自动化任务执行，如 CAD 设计、3D 场景生成等",
-        "需要快速集成新软件 CLI 的开发者或团队"
+        "需要将传统软件转化为可被 AI 代理自动操作的环境时",
+        "在需要快速构建软件代理工具链的场景下",
+        "希望为现有软件添加 AI 代理支持的场景"
       ],
       "readmeCN": ""
     },
@@ -118,9 +118,9 @@
       "repo": "jingyaogong/minimind",
       "lang": "Python",
       "desc": "🧠 两小时从 0 训出你的 64M 大模型。Train your own 64M LLM from scratch in 2 hours.",
-      "stars": 67699,
+      "stars": 67857,
       "today": "847",
-      "forks": 8855,
+      "forks": 8874,
       "created": "2024-07-27",
       "license": "Apache-2.0",
       "topics": [
@@ -132,19 +132,20 @@
       "summary": "MiniMind 是一个开源项目，旨在帮助用户在两小时内从零开始训练一个规模约为 64M 的超小语言模型。它提供了完整的模型结构代码、Tokenizer 与分词器训练代码，覆盖了 Pretrain、SFT、LoRA、RLHF、RLAIF、Tool Use、Agentic RL、自适应思考与模型蒸馏等完整训练流程，并支持单机单卡与单机多卡训练。此外，项目还提供了全阶段开源数据、兼容主流框架与推理引擎、支持在第三方测评集上进行评测、提供兼容 OpenAI API 协议的极简服务端和基于 Streamlit 的极简聊天 WebUI。",
       "judgment": "如果你对大语言模型感兴趣，且希望从零开始实践，MiniMind 是一个值得尝试的项目。",
       "mechanics": [
-        "MoE（Mixture of Experts）极简结构设计",
-        "数据清洗、预训练（Pretrain）、监督微调（SFT）、LoRA、RLHF（DPO）、RLAIF（PPO / GRPO / CISPO）、Tool Use、Agentic RL、自适应思考与模型蒸馏等全过程代码从 0 实现",
-        "不依赖第三方库提供的高层抽象接口，使用 PyTorch 原生实现",
-        "支持单机单卡与单机多卡（DDP、DeepSpeed）训练",
-        "支持 wandb / swanlab 可视化与动态启停训练",
-        "支持在 C-Eval、C-MMLU、OpenBookQA 等第三方测评集上进行评测",
-        "支持通过 YaRN 实现 RoPE 长文本外推",
-        "提供兼容 OpenAI API 协议的极简服务端和基于 Streamlit 的极简聊天 WebUI"
+        "MoE（Mixture of Experts）架构：实现模型参数的高效利用和扩展性。",
+        "数据清洗与预训练：提供高质量的数据集和预训练流程，确保模型性能。",
+        "监督微调（SFT）与 LoRA：通过微调技术提升模型在特定任务上的表现。",
+        "RLHF（DPO）与 RLAIF（PPO/GRPO/CISPO）：实现强化学习与人类反馈的模型训练。",
+        "Tool Use 与 Agentic RL：支持工具使用和多轮交互的智能行为。",
+        "自适应思考与模型蒸馏：提升模型在复杂任务中的思考能力和知识迁移。",
+        "PyTorch 原生实现：不依赖第三方库的高层抽象接口，实现底层代码的深入理解。",
+        "单机单卡与单机多卡训练：支持 DDP 和 DeepSpeed 等训练框架，适应不同硬件配置。"
       ],
       "scenarios": [
-        "个人开发者或学生希望从零开始理解大语言模型的内部运作机制",
-        "希望在没有大量硬件资源的情况下训练和复现一个语言模型",
-        "希望学习和实践各种大语言模型训练算法和技巧"
+        "个人开发者或研究人员：希望从零开始理解大语言模型的内部运作机制。",
+        "学生或初学者：通过实际操作学习 LLM 的构建和训练过程。",
+        "教育机构：作为教学工具，帮助学生深入理解 AI 技术。",
+        "小型企业或团队：在资源有限的情况下，快速构建和部署小型语言模型。"
       ],
       "readmeCN": ""
     },
@@ -152,30 +153,28 @@
       "repo": "cursor/plugins",
       "lang": "TypeScript",
       "desc": "Cursor plugin specification and official plugins",
-      "stars": 17853,
+      "stars": 17929,
       "today": "299",
-      "forks": 1958,
+      "forks": 1963,
       "created": "2026-01-23",
       "license": "",
       "topics": [],
       "homepage": "",
       "url": "https://github.com/cursor/plugins",
-      "summary": "这是一个Cursor官方插件规范和插件集合仓库，包含多个用于开发者工具、框架和SaaS产品的独立插件，每个插件都是一个目录，有自己的manifest文件，提供技能映射、学习计划、代码审查、分支安全审计、CLI设计模式、文档渲染、SDK开发等功能。",
-      "judgment": "适合需要提高开发效率和集成多种工具的开发者，但需注意部分插件的成熟度和合规性",
+      "summary": "这是一个Cursor官方插件规范和插件集合仓库，包含用于各种开发者工具、框架和SaaS产品的独立插件目录，每个插件有自己的manifest文件，提供技能映射、学习计划、代码审查、分支安全审计、CLI设计模式、文档渲染、AI流程编排等功能。",
+      "judgment": "适合需要高度自动化和AI集成的工作流场景，但需注意资源需求和合规风险",
       "mechanics": [
         "插件以独立目录形式存在，通过`.cursor-plugin/plugin.json`进行配置",
-        "使用TypeScript开发，提供TypeScript SDK",
-        "支持多种协议和API集成，如GitHub、Google Drive、Salesforce等",
-        "包含CLI设计模式，支持命令行操作",
-        "利用AI进行技能映射、学习回顾和代码审查",
-        "提供并行处理和任务编排机制",
-        "支持实时语音识别和合成"
+        "使用TypeScript开发，提供TypeScript SDK进行应用和自动化构建",
+        "支持多种协议和API集成，如GitHub、Google Workspace、Salesforce等",
+        "包含CLI设计模式，供AI代理可靠运行",
+        "提供Orchestrate机制进行任务并行分发和流程管理",
+        "利用Agent Compatibility进行仓库兼容性扫描和文档验证"
       ],
       "scenarios": [
-        "开发者用于提高开发效率和代码质量",
-        "团队用于内部工作流程自动化和协作",
-        "集成开发者工具和SaaS产品，扩展功能",
-        "AI研究人员用于构建和测试AI应用"
+        "开发者工具和SaaS产品集成，提升开发效率和自动化水平",
+        "AI代理和智能工作流开发者，用于构建技能映射、学习计划和团队协作工具",
+        "企业内部流程自动化，如CI/CD、代码审查和本地自动化"
       ],
       "readmeCN": ""
     },
@@ -183,9 +182,9 @@
       "repo": "firecrawl/firecrawl",
       "lang": "TypeScript",
       "desc": "Knowledge infrastructure to make your agents smarter. Search, scrape and access 550+ data providers through one API.",
-      "stars": 205301,
+      "stars": 205561,
       "today": "1241",
-      "forks": 10739,
+      "forks": 10751,
       "created": "2024-04-15",
       "license": "AGPL-3.0",
       "topics": [
@@ -200,22 +199,22 @@
       ],
       "homepage": "https://firecrawl.dev",
       "url": "https://github.com/firecrawl/firecrawl",
-      "summary": "Firecrawl 是一个知识基础设施，用于通过一个 API 搜索、抓取和访问 550 多个数据提供商，使您的智能代理更智能。它支持本地运行、云端服务和自托管部署，可以将网站转换为干净的 Markdown 格式，并集成到 AI 代理中作为 MCP 服务器。",
-      "judgment": "如果需要高效、可扩展的数据抓取和整合服务，Firecrawl 是一个值得考虑的选择。",
+      "summary": "Firecrawl 是一个知识基础设施，用于通过一个 API 搜索、抓取和访问 550 多个数据提供商，使您的智能代理更智能。它支持本地运行、云端服务和自托管服务，可以将网站转换为干净的 Markdown 格式，并将其集成到 AI 代理中作为 MCP 服务器。",
+      "judgment": "如果需要高效、可扩展的网页数据抓取和搜索服务，Firecrawl 是一个值得考虑的选择。",
       "mechanics": [
-        "使用 Rust 和 Node.js 开发，支持本地和云端部署",
+        "使用 Rust 和 Node.js 编写，支持本地和云端运行",
         "通过 API 与 550 多个数据提供商集成",
-        "支持网站抓取、爬取、映射和批量抓取功能",
-        "提供搜索和 Alexandria 数据库访问",
-        "支持 JavaScript 渲染和本地文件解析",
+        "支持网站抓取、爬取和映射功能",
+        "提供搜索功能，可搜索网页并获取完整内容",
+        "支持 Alexandria 数据库，提供更广泛的知识访问",
         "通过 MCP 服务器与 AI 代理集成",
-        "云端服务提供结构化 JSON、摘要和截图"
+        "支持本地 API 服务和云端服务"
       ],
       "scenarios": [
-        "AI 代理开发者需要快速获取和整合网页数据",
-        "需要大规模数据抓取和处理的商业智能团队",
+        "AI 代理开发者需要快速获取网页数据时",
+        "需要大规模抓取和搜索网页内容的企业或团队",
         "希望自托管数据抓取服务的组织",
-        "需要实时访问互联网内容的开发者"
+        "需要实时访问网页内容的动态应用开发者"
       ],
       "readmeCN": ""
     },
@@ -223,9 +222,9 @@
       "repo": "nginx/nginx",
       "lang": "C",
       "desc": "The official NGINX Open Source repository.",
-      "stars": 32575,
+      "stars": 32630,
       "today": "246",
-      "forks": 8377,
+      "forks": 8370,
       "created": "2015-06-23",
       "license": "BSD-2-Clause",
       "topics": [
@@ -240,24 +239,22 @@
       ],
       "homepage": "https://nginx.org/",
       "url": "https://github.com/nginx/nginx",
-      "summary": "NGINX 是一个高性能的 Web 服务器、负载均衡器、反向代理、API 网关和内容缓存系统。用户可以通过配置文件和模块来扩展其功能，支持静态和动态模块加载，并通过主进程和多个工作进程来处理请求，实现高效的资源分配和扩展。",
-      "judgment": "值得抄作业，适用于需要高性能和灵活配置的场景。",
+      "summary": "NGINX 是一个高性能的 Web 服务器、负载均衡器、反向代理、API 网关和内容缓存系统。它通过模块化架构和配置文件实现高度灵活的配置，支持静态和动态模块扩展功能，适用于构建和优化网络服务。",
+      "judgment": "值得抄作业，适用于需要高性能网络服务的场景",
       "mechanics": [
-        "模块化架构：支持静态和动态模块，可通过模块扩展核心功能。",
-        "配置文件：使用文本配置文件和指令进行灵活配置。",
-        "多进程架构：包含主进程和工作进程，主进程负责配置读取和进程管理，工作进程负责处理请求。",
-        "共享内存：工作进程间通过共享内存同步数据，如客户端连接跟踪。",
-        "动态模块加载：可在运行时加载和卸载模块，扩展功能。",
-        "负载均衡：支持多种负载均衡算法，分发请求到后端服务器。",
-        "反向代理：作为反向代理服务器，转发请求到后端服务。",
-        "内容缓存：缓存内容，减少后端服务负载，提高响应速度。"
+        "模块化架构：通过模块扩展核心功能，支持静态和动态模块",
+        "配置文件：使用文本配置文件和指令进行灵活配置",
+        "多进程架构：包含主进程和多个工作进程，实现高效并发处理",
+        "共享内存：工作进程间通过共享内存同步数据",
+        "动态模块：可在运行时加载和卸载模块，扩展功能",
+        "负载均衡：支持多种负载均衡算法，优化资源分配",
+        "反向代理：作为反向代理服务器，转发请求并优化响应"
       ],
       "scenarios": [
-        "网站和 Web 应用：作为高性能 Web 服务器和反向代理。",
-        "负载均衡：在多个服务器间分发流量，提高系统可用性和性能。",
-        "内容缓存：缓存静态内容，减少带宽使用，提高访问速度。",
-        "API 网关：作为 API 网关，管理和路由 API 请求。",
-        "高可用性系统：通过负载均衡和反向代理提高系统高可用性。"
+        "网站和 Web 应用：作为高性能 Web 服务器和反向代理",
+        "负载均衡：在分布式系统中实现请求的负载均衡",
+        "内容缓存：缓存静态内容，加速内容交付",
+        "API 网关：作为 API 网关，管理和路由 API 请求"
       ],
       "readmeCN": ""
     },
@@ -265,9 +262,9 @@
       "repo": "openvinotoolkit/openvino",
       "lang": "C++",
       "desc": "OpenVINO™ is an open source toolkit for optimizing and deploying AI inference",
-      "stars": 11794,
+      "stars": 11843,
       "today": "217",
-      "forks": 3636,
+      "forks": 3643,
       "created": "2018-10-15",
       "license": "Apache-2.0",
       "topics": [
@@ -283,22 +280,22 @@
       "homepage": "https://docs.openvino.ai",
       "url": "https://github.com/openvinotoolkit/openvino",
       "summary": "OpenVINO 是一个开源工具包，用于优化和部署深度学习模型的推理。它支持将模型从 PyTorch、TensorFlow、ONNX、Keras、PaddlePaddle、JAX/Flax 等框架转换并部署到 CPU、GPU 和 AI 加速器上，提供模型优化、灵活的模型支持和广泛的平台兼容性。",
-      "judgment": "值得尝试，尤其适用于需要跨平台部署和优化 AI 模型的场景",
+      "judgment": "值得在需要跨平台部署和优化深度学习模型时参考，尤其适用于计算机视觉和生成式 AI 场景。",
       "mechanics": [
-        "模型优化：通过量化、剪枝等技术提升模型推理性能",
-        "模型转换：支持多种深度学习框架的模型转换和部署",
-        "硬件加速：兼容 CPU、GPU 和 AI 加速器（如 Intel NPU）",
-        "推理引擎：提供高效的推理引擎支持实时推理",
-        "灵活部署：支持边缘到云的多种部署场景",
-        "GenAI 支持：优化生成式 AI 模型的推理性能",
-        "API 支持：提供 C++、Python、C、NodeJS 等多种 API"
+        "模型优化与部署：通过转换和优化深度学习模型，提升推理性能。",
+        "多框架支持：兼容 PyTorch、TensorFlow、ONNX、Keras、PaddlePaddle、JAX/Flax 等主流框架。",
+        "硬件加速：支持在 CPU (x86, ARM)、GPU (Intel 集成与独立) 和 AI 加速器 (Intel NPU) 上进行推理。",
+        "模型转换：无需原始框架即可转换和部署模型。",
+        "推理引擎：提供高效的推理引擎，支持多种硬件设备。",
+        "GenAI 支持：集成 Generative AI API，优化模型管道和性能。",
+        "跨平台兼容：支持从边缘到云的多种平台部署。"
       ],
       "scenarios": [
-        "计算机视觉应用开发者：优化和部署图像识别、目标检测等模型",
-        "语音识别开发者：部署自动语音识别模型",
-        "生成式 AI 研究者：优化和部署大型语言模型和生成模型",
-        "边缘计算设备制造商：在边缘设备上部署高效 AI 应用",
-        "云服务提供商：优化云端 AI 推理服务"
+        "计算机视觉领域：用于优化和部署图像识别、目标检测等任务。",
+        "自动语音识别：提升语音识别模型的推理性能。",
+        "生成式 AI：优化和部署大型语言模型和文本生成任务。",
+        "自然语言处理：支持大型语言模型的推理优化。",
+        "边缘计算与云部署：在多种硬件平台上高效部署 AI 应用。"
       ],
       "readmeCN": ""
     },
@@ -306,9 +303,9 @@
       "repo": "cathrynlavery/diagram-design",
       "lang": "HTML",
       "desc": "Editorial diagram design for Claude Code, Codex, GitHub Copilot, Cursor, Factory Droid, Qoder, and Pi. 45 diagram types. Self-contained HTML + SVG. No shadows. No Mermaid slop.",
-      "stars": 69299,
+      "stars": 69469,
       "today": "636",
-      "forks": 4650,
+      "forks": 4664,
       "created": "2026-04-16",
       "license": "MIT",
       "topics": [
@@ -323,19 +320,18 @@
       ],
       "homepage": "https://diagramdesign.dev",
       "url": "https://github.com/cathrynlavery/diagram-design",
-      "summary": "这是一个用于生成图表的技能，可以在多种AI工具中运行，支持45种图表类型，输出为自包含的HTML+SVG文件，可以匹配用户品牌风格，无需阴影和Mermaid的杂乱。",
-      "judgment": "如果你需要快速生成图表，并且不介意安装过程和有限的图表类型，这个技能值得尝试。",
+      "summary": "这是一个用于生成图表的技能，可以在多种AI平台中使用，如Claude Code、Codex、GitHub Copilot、Cursor等。用户只需用自然语言描述需要的图表类型，如架构图、四象限图等，该技能就能生成一个包含所有图表类型的HTML文件，用户双击即可打开查看。",
+      "judgment": "如果你需要快速生成高质量的图表，这个技能值得尝试。",
       "mechanics": [
-        "基于自然语言指令生成图表",
+        "使用HTML和SVG技术生成图表",
         "支持45种图表类型",
-        "输出为自包含的HTML+SVG文件",
-        "可以自定义品牌风格",
-        "无需阴影和Mermaid的杂乱",
-        "通过Agent Skills平台集成到各种AI工具中"
+        "无需阴影效果，避免Mermaid的杂乱",
+        "支持自定义品牌样式",
+        "通过Agent Skills API集成到各种AI平台"
       ],
       "scenarios": [
-        "开发者需要生成架构图、流程图等",
-        "设计师需要快速生成图表",
+        "开发者需要快速生成技术图表，如架构图、流程图等",
+        "设计师需要生成符合品牌风格的图表",
         "教育工作者需要生成教学图表",
         "产品经理需要生成产品流程图"
       ],
@@ -345,9 +341,9 @@
       "repo": "mvanhorn/last30days-skill",
       "lang": "Python",
       "desc": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
-      "stars": 71460,
+      "stars": 71612,
       "today": "681",
-      "forks": 6341,
+      "forks": 6343,
       "created": "2026-01-23",
       "license": "MIT",
       "topics": [
@@ -362,24 +358,23 @@
       ],
       "homepage": "",
       "url": "https://github.com/mvanhorn/last30days-skill",
-      "summary": "这是一个AI代理驱动的搜索引擎，它能够跨多个平台（如Reddit、X、YouTube、HN、Polymarket等）研究任何主题，然后综合成一个有根据的摘要。用户可以通过命令行输入主题，AI会自动搜索并生成摘要，支持多种安装和配置方式。",
-      "judgment": "如果你需要快速获取多个平台上某个主题的最新动态和热门观点，这个工具非常值得尝试。",
+      "summary": "这是一个AI代理驱动的搜索引擎，它能够跨多个平台（如Reddit、X、YouTube、HN、Polymarket等）研究任何主题，然后综合成一个有根据的摘要。用户可以通过命令行输入主题，AI代理会并行搜索所有平台，根据人们的实际参与度（如点赞、评论、投注等）对信息进行评分，最后生成一个简洁的摘要。",
+      "judgment": "如果你需要快速获取某个主题的最新动态和人们的真实看法，这个工具非常值得尝试。",
       "mechanics": [
-        "多平台API集成：能够接入Reddit、X、YouTube、HN、Polymarket等多个平台的API进行数据抓取。",
-        "用户参与度评分：通过用户的点赞、评论、关注等行为对搜索结果进行评分，筛选出最受欢迎的内容。",
-        "AI代理合成：使用AI代理对搜索结果进行分析和综合，生成一个简洁且有根据的摘要。",
-        "浏览器会话管理：支持使用用户自己的浏览器会话和API密钥，以获取更全面的数据。",
-        "自动更新：通过市场插件自动更新AI代理的代码和模型。",
-        "30天时间窗口：默认只搜索过去30天的数据，以提供最新的信息。",
-        "多源数据融合：整合来自不同平台的数据，包括文本、视频、图像等多种格式。",
-        "市场 Odds 分析：利用Polymarket的市场 Odds 来评估信息的可信度和重要性。"
+        "多平台并行搜索：能够同时搜索Reddit、X、YouTube、HN、Polymarket等多个平台。",
+        "基于参与度的评分机制：根据用户的点赞、评论、投注等行为对信息进行评分。",
+        "AI代理综合摘要：AI代理会根据评分结果，综合多个平台的信息，生成一个有根据的摘要。",
+        "支持自定义API密钥和浏览器会话：用户可以提供自己的API密钥和浏览器会话，以便AI代理更准确地搜索信息。",
+        "自动扩展搜索范围：首次运行后，可以通过设置解锁更多平台的搜索功能。",
+        "支持多种数据源：包括Reddit评论、X帖子、YouTube转录文本、TikTok互动、Polymarket投注、GitHub提交等。",
+        "实时更新：能够搜索到最新的信息，如公司动态、个人近期的社交媒体活动等。",
+        "支持多种安装方式：可以通过Claude Code、Codex、Cursor、Copilot等平台安装，也支持命令行安装。"
       ],
       "scenarios": [
-        "研究人员和分析师：快速获取某个主题的最新动态和热门观点。",
-        "商业人士：了解竞争对手、客户或合作伙伴的最新动态。",
-        "内容创作者：跟踪自己的内容在多个平台上的表现和反馈。",
-        "学生和学者：获取最新的学术研究和行业动态。",
-        "普通用户：快速了解某个事件或话题的最新进展。"
+        "研究人员和分析师：用于快速获取某个主题的最新动态和人们的真实看法。",
+        "商业人士：用于了解竞争对手、客户或合作伙伴的最新动态。",
+        "内容创作者：用于了解自己的内容在社交媒体上的表现和观众的反馈。",
+        "学生和学者：用于快速获取某个领域的最新研究成果和讨论。"
       ],
       "readmeCN": ""
     },
@@ -387,31 +382,32 @@
       "repo": "google-labs-code/stitch-skills",
       "lang": "TypeScript",
       "desc": "A library of Agent Skills designed to work with the Stitch MCP server. Each skill follows the Agent Skills open standard, for compatibility with coding agents such as Antigravity, Gemini CLI, Claude Code, Cursor.",
-      "stars": 11045,
+      "stars": 11147,
       "today": "315",
-      "forks": 1408,
+      "forks": 1415,
       "created": "2026-01-16",
       "license": "Apache-2.0",
       "topics": [],
       "homepage": "https://stitch.withgoogle.com/docs/mcp/setup",
       "url": "https://github.com/google-labs-code/stitch-skills",
-      "summary": "这是一个基于 Agent Skills 开放标准的库，用于与 Google Stitch MCP 服务器协同工作，包含多种技能和插件，旨在辅助设计、构建和开发流程，支持将前端代码转换为设计、生成设计、管理设计系统、提取设计元数据、上传本地资源等功能，兼容 Codex、Antigravity、Gemini CLI、Claude Code、Cursor 等编码代理工具。",
-      "judgment": "如果需要与 Stitch MCP 服务器集成并自动化设计、构建流程，值得尝试，但需注意服务器配置和技能依赖问题。",
+      "summary": "这是一个基于 Agent Skills 开放标准的库，用于与 Google Stitch MCP 服务器协同工作，包含多种技能和插件，旨在帮助用户在 Stitch 环境中进行设计、构建和管理。通过安装不同的插件（如 stitch-design、stitch-build、stitch-utilities），用户可以利用这些技能执行具体任务，例如将前端代码转换为 Stitch 设计、生成新的设计屏幕、管理设计系统等。",
+      "judgment": "如果你需要在 Stitch 环境中进行设计、构建和管理，并且有相应的环境配置能力，那么这个库值得参考和使用。",
       "mechanics": [
-        "遵循 Agent Skills 开放标准，实现与多种编码代理工具的兼容性",
-        "依赖 Stitch MCP 服务器进行技能的运行和设计资源的交互",
-        "通过插件系统提供设计、构建和实用工具等功能模块",
-        "支持代码到设计的转换，包括 HTML 提取和设计系统应用",
-        "能够生成新的设计屏幕、编辑现有屏幕以及创建设计变体",
-        "管理设计系统，支持上传设计规范文件和应用主题",
-        "从前端源代码中提取设计元数据（如 DESIGN.md）",
-        "从运行中的网页应用中提取静态 HTML"
+        "Agent Skills 开放标准：遵循 Agent Skills 标准，确保与 Codex、Antigravity、Gemini CLI 等编码代理兼容。",
+        "Stitch MCP 服务器：需要配置并运行 Stitch MCP 服务器，以便技能能够正常工作。",
+        "插件化架构：通过插件（如 stitch-design、stitch-build、stitch-utilities）提供不同的功能模块，用户可以根据需求选择安装。",
+        "代码生成与转换：支持将前端代码（如 React、Vue）转换为 Stitch 设计，或将 Stitch 设计转换为 React Native 组件等。",
+        "设计系统管理：提供技能用于上传和管理设计系统（DESIGN.md），并应用到设计屏幕上。",
+        "静态 HTML 提取：能够从运行中的 web 应用中提取自包含的静态 HTML。",
+        "资产上传：支持将本地资产（如 images、mockups、HTML）上传到 Stitch 项目。",
+        "视频生成：使用 Remotion 生成 Stitch 项目的演示视频，支持平滑过渡和缩放效果。"
       ],
       "scenarios": [
-        "前端开发者用于快速将现有代码转换为设计稿，或从设计稿生成代码",
-        "设计团队用于自动化设计系统管理和设计稿迭代",
-        "全栈开发者用于在 Stitch 环境中集成设计、构建和部署流程",
-        "教育机构或企业用于教学或内部工具开发，提高开发效率"
+        "前端开发者：用于将现有前端代码转换为 Stitch 设计，或生成新的设计屏幕。",
+        "UI/UX 设计师：利用设计系统管理技能，管理和应用设计规范。",
+        "全栈开发者：通过构建技能将 Stitch 设计转换为 React 或 React Native 应用。",
+        "产品经理：用于快速生成和迭代设计原型，提高开发效率。",
+        "教育机构：用于教学演示，展示如何使用 Stitch 进行设计和构建。"
       ],
       "readmeCN": ""
     },
@@ -419,9 +415,9 @@
       "repo": "mjmirza/app-store-compliance",
       "lang": "Shell",
       "desc": "Avoid common App Store and Google Play rejections. Open playbook and pre-submission guard with 117 documented rejection patterns and fixes, privacy manifest and Data safety checks, 95 tracked deadlines (EU AI Act, DSA, COPPA, age laws), and a skill for AI coding agents.",
-      "stars": 2772,
+      "stars": 2947,
       "today": "869",
-      "forks": 176,
+      "forks": 187,
       "created": "2026-06-06",
       "license": "NOASSERTION",
       "topics": [
@@ -437,22 +433,22 @@
       "homepage": "https://mjmirza.github.io/app-store-compliance/",
       "url": "https://github.com/mjmirza/app-store-compliance",
       "summary": "这是一个用于检查 iOS 和 Android 应用在提交到 App Store 和 Google Play 之前是否符合商店审核指南的工具。通过运行 Shell 命令，它可以扫描你的应用项目，识别出潜在的审核拒绝风险，并提供具体的修复建议。它包含 117 种已知的拒绝模式及其解决方案，以及隐私声明和数据安全检查，还能追踪 95 项相关的法规截止日期。",
-      "judgment": "如果你是应用开发者，强烈建议使用，能显著降低被 App Store 和 Google Play 拒绝的风险。",
+      "judgment": "如果你是开发者，希望减少应用被 App Store 和 Google Play 拒绝的风险，这个工具值得尝试。",
       "mechanics": [
         "Shell 脚本扫描应用项目文件",
         "识别 117 种 App Store 和 Google Play 的拒绝模式",
         "提供具体的修复建议和指南映射",
-        "执行隐私声明和数据安全检查",
+        "包含隐私声明和数据安全检查",
         "追踪相关法规的截止日期",
         "支持将检查集成到 AI 编码工具中",
-        "使用钩子（hook）机制自动在提交前运行",
+        "使用钩子（hook）机制自动执行检查",
         "输出扫描结果，包括临界风险提示"
       ],
       "scenarios": [
         "iOS 和 Android 应用开发者，在提交应用前进行自我检查，避免被商店拒绝",
-        "企业级开发团队，用于标准化应用合规流程",
-        "非开发人员，通过预提交清单进行基本合规性检查",
-        "使用 AI 编码工具的开发者，希望在每次提交前自动进行合规性检查"
+        "企业级开发团队，用于规范应用提交流程，提高通过率",
+        "非开发人员，可以通过预提交检查清单进行基本的安全和合规性评估",
+        "使用 AI 编码工具的开发者，希望自动化集成应用合规性检查"
       ],
       "readmeCN": ""
     },
@@ -460,9 +456,9 @@
       "repo": "Tracer-Cloud/opensre",
       "lang": "Python",
       "desc": "The open-source agent for CI/CD reliability.",
-      "stars": 13625,
+      "stars": 13732,
       "today": "466",
-      "forks": 1926,
+      "forks": 1932,
       "created": "2026-01-13",
       "license": "Apache-2.0",
       "topics": [
@@ -477,20 +473,20 @@
       ],
       "homepage": "https://opensre.com",
       "url": "https://github.com/Tracer-Cloud/opensre",
-      "summary": "OpenSRE 是一个开源的命令行代理，用于提高 CI/CD 的可靠性。它通过读取失败的 CI 运行日志，追踪失败原因，并提供修复建议。用户可以通过命令行与 OpenSRE 交互，进行问题排查和修复，也可以通过 Python API 将其嵌入到自动化流程中。",
+      "summary": "OpenSRE 是一个开源的 CLI 代理工具，用于提升 CI/CD 的可靠性。它通过读取失败的 CI 运行日志，追踪失败原因，并提供修复建议。用户可以通过命令行与 OpenSRE 交互，进行问题排查和修复，支持在本地或自托管环境中运行，并可以使用自定义模型。",
       "judgment": "适合对 CI/CD 可靠性有较高要求的团队，但需注意项目仍处于 Alpha 阶段",
       "mechanics": [
-        "基于自然语言处理（NLP）和机器学习模型，分析 CI/CD 日志和失败原因",
-        "支持交互式命令行界面（CLI）和非交互式头less CLI模式",
-        "提供 Python API，允许用户在代码中嵌入和驱动 OpenSRE 功能",
-        "使用自托管模型，用户可以自定义和训练模型以提高准确性",
-        "支持多种 CI/CD 平台和工具的集成，如 GitHub Actions、GitLab CI 等"
+        "基于自然语言处理（NLP）和机器学习模型分析 CI/CD 失败日志",
+        "通过交互式 shell 或 Headless CLI 与用户进行对话式问题排查",
+        "支持自定义模型和自托管部署，以适应特定项目需求",
+        "提供 Python API，允许开发者将 OpenSRE 集成到现有工具链中",
+        "使用语义化的测试目录命名，以区分不同类型的测试（如端到端测试、单元测试等）"
       ],
       "scenarios": [
         "开发团队用于快速定位和修复 CI/CD 管道中的失败问题",
         "运维团队用于监控和分析 CI/CD 的可靠性，减少故障时间",
-        "CI/CD 平台供应商用于增强其产品的可靠性分析能力",
-        "开源项目维护者用于自动化和简化 CI/CD 的故障排查流程"
+        "CI/CD 维护者用于优化和改进自动化构建流程",
+        "企业用于提升软件开发流程的效率和稳定性"
       ],
       "readmeCN": ""
     },
@@ -498,9 +494,9 @@
       "repo": "toeverything/AFFiNE",
       "lang": "TypeScript",
       "desc": "There can be more than Notion and Miro. AFFiNE(pronounced [ə‘fain]) is a next-gen knowledge base that brings planning, sorting and creating all together. Privacy first, open-source, customizable and ready to use.",
-      "stars": 75812,
+      "stars": 75948,
       "today": "676",
-      "forks": 5577,
+      "forks": 5585,
       "created": "2022-07-31",
       "license": "NOASSERTION",
       "topics": [
@@ -515,22 +511,22 @@
       ],
       "homepage": "https://affine.pro",
       "url": "https://github.com/toeverything/AFFiNE",
-      "summary": "AFFiNE 是一个开源的知识库和一站式工作空间，集规划、整理和创建功能于一体。它将文档、白板和表格高度融合，支持在无边画布上放置各种模块，如富文本、便签、网页嵌入、数据库视图、链接页面、形状和幻灯片等，并配备 AI 助手辅助创作和整理，支持本地优先和实时协作，用户可以自托管并自定义。",
-      "judgment": "适合需要高度定制化和本地数据控制的知识管理和团队协作场景，值得尝试但需注意功能成熟度和自托管的技术门槛。",
+      "summary": "AFFiNE 是一个开源的知识库和一站式工作空间，集写作、绘图和规划于一体。它将文档、白板和表格等功能融合在一个无边界的画布上，支持多种内容块（如富文本、便签、网页嵌入、数据库视图等），并具备 AI 助手功能，可用于撰写报告、制作幻灯片、生成思维导图等。用户可以在本地优先模式下工作，同时支持实时协作，并可选择自托管。",
+      "judgment": "适合需要灵活、隐私且功能丰富的知识管理和协作工具的用户，但需要考虑自托管的技术门槛和插件生态的成熟度",
       "mechanics": [
-        "本地优先数据存储机制，用户数据存储在本地磁盘",
-        "实时协作功能，支持网页和跨平台客户端的同步",
-        "高度融合的文档、画布和表格编辑器，支持无边画布上的多类型模块",
-        "AI 助手集成，提供写作、幻灯片制作、思维导图生成等功能",
-        "插件系统，允许用户扩展功能（未来规划）",
-        "自托管功能，用户可以自行部署和管理系统",
-        "基于 Blocksuite 的技术架构，支持去中心化应用开发"
+        "本地优先数据存储机制，确保用户数据在本地磁盘上安全存储",
+        "实时协作功能，支持多用户在网页和跨平台客户端上同步编辑",
+        "基于块的编辑器架构，允许用户在无边界画布上自由放置和组合各种内容块",
+        "AI 助手集成，提供写作、演示、思维导图生成和任务排序等智能功能",
+        "支持自托管和插件扩展，用户可以自定义和扩展应用功能",
+        "基于 WebSocket 的实时同步协议，确保协作编辑的流畅性",
+        "模块化设计，采用 TypeScript 开发，便于维护和扩展"
       ],
       "scenarios": [
-        "个人知识管理，用于整理笔记、想法和研究资料",
-        "团队协作，用于项目规划、头脑风暴和任务分配",
-        "教育机构，用于课程资料整理和学生互动",
-        "自由职业者，用于客户管理和创意项目规划"
+        "个人知识管理者和研究人员，需要一个灵活且注重隐私的知识库工具",
+        "团队协作和项目管理团队，需要一个支持实时协作和多种内容展示的平台",
+        "教育工作者和学生，需要一个集学习笔记、思维导图和项目管理于一体的工具",
+        "创意工作者和设计师，需要一个支持绘图和原型设计的画布平台"
       ],
       "readmeCN": ""
     },
@@ -538,9 +534,9 @@
       "repo": "XiaoYouChR/Ghost-Downloader-3",
       "lang": "Python",
       "desc": "The only downloader you need. 下载器的集大成者。",
-      "stars": 13726,
+      "stars": 13985,
       "today": "1082",
-      "forks": 839,
+      "forks": 851,
       "created": "2023-08-16",
       "license": "GPL-3.0",
       "topics": [
@@ -555,22 +551,22 @@
       ],
       "homepage": "https://gd.xychr.com/",
       "url": "https://github.com/XiaoYouChR/Ghost-Downloader-3",
-      "summary": "Ghost Downloader 是一款集成了多种下载协议的下载工具，支持 HTTP、Magnet/BT、FTP、M3U8、MPEG-DASH、eD2k、YouTube、Bilibili、GitHub 和 HuggingFace 等多种协议，用户可以通过浏览器扩展或桌面应用进行下载管理，支持视频剪辑选择、字幕下载、播放列表和分集下载等功能。",
-      "judgment": "功能全面但有一定学习成本，适合需要强大下载功能的用户",
+      "summary": "Ghost Downloader 是一款集成了多种下载协议的下载工具，支持 HTTP、Magnet/BT、FTP、M3U8、MPEG-DASH、eD2k、YouTube、Bilibili、GitHub 和 HuggingFace 等多种协议，用户可以通过浏览器扩展或桌面应用进行下载管理，支持视频剪辑选择、多质量选择、字幕下载、播放列表和分集下载等功能，并可通过命令行工具进行任务管理。",
+      "judgment": "功能全面，适合需要集成多种下载协议和便捷管理下载任务的用户，但需注意系统兼容性和代理服务依赖",
       "mechanics": [
         "基于 Qt 6.6+ 框架开发，提供跨平台原生体验",
         "支持多种下载协议，包括 HTTP、Magnet/BT、FTP、M3U8、MPEG-DASH、eD2k 等",
-        "集成浏览器扩展，可自动识别并下载网页中的视频和文件",
-        "采用智能分段下载技术，无需文件合并，自动检测带宽",
-        "支持真实浏览器 TLS 指纹，避免反爬虫检测",
-        "提供 aria2 兼容的 RPC API，支持第三方工具控制下载",
-        "支持通过命令行工具进行任务管理，如添加、暂停、删除和监控下载任务"
+        "集成浏览器扩展，实现网页内容下载，支持视频剪辑选择、多质量选择、字幕下载等功能",
+        "采用智能分块下载技术，无需文件合并，自动检测带宽",
+        "支持 Real-browser TLS 指纹，避免反爬虫检测",
+        "提供 aria2 兼容的 RPC API，支持第三方工具进行任务管理",
+        "支持命令行工具进行任务添加、查看、暂停、恢复和删除等操作"
       ],
       "scenarios": [
-        "需要下载多种协议文件的用户，如视频、种子、代码库等",
-        "需要进行跨区域下载或网络测试的用户，支持代理和旋转 IP",
-        "浏览器自动化测试和脚本开发人员，可用于集成下载功能",
-        "需要管理大量下载任务并保持后台运行的用户，支持 Android 平台后台下载"
+        "需要下载多种协议文件的用户，如视频、软件、文档等",
+        "需要进行跨区域下载、网络测试和浏览器自动化的开发者",
+        "需要管理大量下载任务并希望保持原生体验的用户",
+        "需要通过浏览器扩展进行便捷下载的用户"
       ],
       "readmeCN": ""
     },
@@ -578,9 +574,9 @@
       "repo": "zhouxiaoka/autoclip",
       "lang": "Python",
       "desc": "AutoClip｜一个链接，一键出片。开源 AI 视频剪辑桌面工具，将播客、访谈、课程等长视频自动剪成短视频，生成字幕、封面和发布文案，适配抖音、小红书、TikTok、Reels 与 YouTube Shorts。Open-source AI video clipping &amp; content repurposing.",
-      "stars": 12200,
+      "stars": 12412,
       "today": "979",
-      "forks": 2017,
+      "forks": 2037,
       "created": "2025-07-08",
       "license": "MIT",
       "topics": [
@@ -595,50 +591,53 @@
       ],
       "homepage": "https://zhouxiaoka.github.io/autoclip_intro/",
       "url": "https://github.com/zhouxiaoka/autoclip",
-      "summary": "AutoClip 是一个开源的 AI 视频剪辑桌面工具，用户只需粘贴长视频链接，选择目标平台（如抖音、小红书等），即可一键自动生成短视频、封面图和发布文案，支持竖版和横版输出，并适配多种视频平台格式。",
-      "judgment": "适合需要快速将长视频转化为多平台适配短视频的场景，但需注意云端费用和 AI 剪辑的局限性，值得尝试但需权衡成本效益。",
+      "summary": "AutoClip 是一个开源的 AI 视频剪辑桌面工具，用户只需粘贴长视频链接，选择目标平台（如抖音、小红书等），即可一键自动生成短视频、封面图和发布文案，支持竖版和横版视频输出。",
+      "judgment": "适合需要快速将长视频转化为短视频进行多平台发布的创作者，但需注意云端计费和 AI 剪辑的局限性",
       "mechanics": [
         "基于深度学习的语音识别技术自动生成字幕",
-        "利用 AI 分析视频内容，智能剪辑出精彩片段",
-        "内置多种平台风格模板，自动生成适配的封面和文案",
-        "采用 Tauri 技术构建跨平台桌面应用",
-        "云端模型调用实现高效视频处理，本地处理生成最终文件"
+        "利用 AI 分析视频内容，自动剪辑出精彩片段",
+        "内置多种平台风格的封面图和文案模板",
+        "采用 Tauri 架构实现桌面应用与 Python 后端的交互",
+        "云端 AI 模型处理复杂任务，本地应用负责界面和初步处理"
       ],
       "scenarios": [
-        "内容创作者需要将播客、访谈等长视频快速转化为短视频进行多平台分发",
-        "媒体机构或个人需要将采访、讲座等内容进行二次创作，适应短视频平台传播",
-        "教育工作者需要将课程视频剪辑成精华片段，便于在线传播和学生学习"
+        "内容创作者需要将播客、访谈等长视频快速转换为短视频进行多平台分发",
+        "媒体机构或个人需要将采访、讲座等内容进行二次创作以适应短视频平台",
+        "教育工作者需要将课程视频剪辑成精华片段方便学生复习"
       ],
       "readmeCN": ""
     }
   ],
   "featured": [
     {
-      "repo": "thinking-machines-lab/tinker",
+      "repo": "ZallaxDev/emerald-3ds",
       "lang": "Python",
-      "desc": "Training API and CLI",
+      "desc": "Native Pokémon Emerald port for Nintendo 3DS, featuring dual-screen gameplay, stereoscopic 3D, and a fully 3D world.",
       "stars": 800,
       "today": "0",
-      "forks": 91,
-      "created": "2025-07-14",
-      "license": "Apache-2.0",
+      "forks": 79,
+      "created": "2026-09-26",
+      "license": "NOASSERTION",
       "topics": [],
       "homepage": "",
-      "url": "https://github.com/thinking-machines-lab/tinker",
+      "url": "https://github.com/ZallaxDev/emerald-3ds",
       "featured": true,
-      "summary": "Tinker 是一个 Python SDK，包含 Training API 和 CLI，用于与 Thinking Machines 的分布式训练系统交互，支持模型训练、监控和管理，通过命令行或 API 调用可以提交任务、查看任务状态和结果。",
-      "judgment": "适合需要高性能分布式训练且预算充足的团队，但需注意许可和硬件成本。",
+      "summary": "Emerald 3DS 是一个在 Nintendo 3DS 上运行的《宝可梦：绿宝石》原生模拟器，支持双屏游戏，立体3D效果和全3D世界。用户可以通过网页直接生成并下载最新版本，无需本地编译或下载源代码，游戏数据从用户自己的 ROM 文件中生成。",
+      "judgment": "如果你是 3DS 宝可梦游戏爱好者，追求原生体验和立体效果，值得一试。",
       "mechanics": [
-        "基于 REST API 的通信机制，用于与 Tinker 后端服务交互",
-        "分布式训练框架集成，支持多节点并行计算",
-        "任务队列管理，自动调度和分配计算资源",
-        "监控和日志系统，实时跟踪训练进度和状态",
-        "支持多种深度学习框架，如 TensorFlow 和 PyTorch"
+        "使用 libctru、Citro2D 和 Citro3D 库在 3DS 的 ARM11 架构上原生运行",
+        "通过 Citro3D 实现立体 3D 效果，支持 New 3DS 的视差效果",
+        "基于用户本地 ROM 文件生成游戏数据，包括文本、图形和信用",
+        "可选的八位元像素化世界（voxel overworld）提供新的视角",
+        "使用 HTML5 和 JavaScript 在网页上提供 ROM 文件上传和游戏生成服务",
+        "支持本地无线通信，允许多台 3DS 之间进行对战、交换等",
+        "提供多种增强功能，如物理/特殊攻击分离、无限 TM、IV 和 EV 显示等"
       ],
       "scenarios": [
-        "数据科学家和机器学习工程师在需要分布式训练大规模模型时使用",
-        "需要自动化模型训练流程并集成到 CI/CD 管理中的团队",
-        "对训练资源管理和监控有较高要求的科研机构和企业"
+        "任天堂 3DS 硬件或模拟器用户，希望体验原生模拟器带来的性能和效果",
+        "宝可梦系列游戏的爱好者，希望在 3DS 上重温《绿宝石》的故事",
+        "喜欢探索游戏新视角的用户，对可选的 voxel 世界模式感兴趣",
+        "需要本地无线对战或交换功能的小型游戏团体"
       ],
       "readmeCN": ""
     },
@@ -656,7 +655,7 @@
       "url": "https://github.com/di-sukharev/vibe",
       "featured": true,
       "summary": "Vibe 是一个用于开发网站、Web 应用和后台应用的模板，支持移动端开发。它基于 React、Bun 和 Hono 构建，包含网站（SSG）、Web 应用（CSR）、后端（Bun 和 Hono）、移动端（Expo）和数据库（PostgreSQL）等组件，通过 `theme.json` 进行主题配置，并使用 Zod 进行 API 合约管理。",
-      "judgment": "适合需要快速启动现代 Web 应用的团队，但需要一定的配置和维护成本",
+      "judgment": "适合需要快速搭建多端应用且不介意手动清理模板配置的开发团队",
       "mechanics": [
         "使用 React 和 React Router 构建 SSG（静态网站生成）和 CSR（客户端路由）应用",
         "后端基于 Bun 和 Hono，提供 API、认证、任务调度和邮件发送功能",
@@ -664,14 +663,14 @@
         "移动端通过 Expo 实现，支持独立分支开发",
         "使用 Zod 进行 API 合约管理，确保前后端数据一致",
         "通过 `theme.json` 进行主题配置，支持自定义品牌标识",
-        "使用 Bun 作为主要构建工具，提供高效的开发环境",
-        "支持 E2E 测试和自动化部署"
+        "使用 Docker 进行本地开发环境配置",
+        "使用 Google Chrome 进行 E2E 测试"
       ],
       "scenarios": [
         "适用于需要快速搭建现代 Web 应用的开发团队",
         "适合需要同时开发网站、Web 应用和移动端的应用程序",
-        "适合需要高性能后端和数据库支持的企业级应用",
-        "适合需要自定义主题和品牌标识的项目"
+        "适合需要高性能后端和数据库支持的应用场景",
+        "适合需要自定义主题和品牌标识的企业级应用"
       ],
       "readmeCN": ""
     },
@@ -688,22 +687,23 @@
       "homepage": "",
       "url": "https://github.com/otter1101/blogger-distiller",
       "featured": true,
-      "summary": "这是一个 Python 工具，输入博主的链接后，能自动分析其爆款笔记，提取认知层、策略层和内容层，生成可安装到 AI 工具的创作指南（Skill），并提供 HTML 蒸馏报告和可选的口播逐字稿，帮助用户学习或优化内容创作。",
-      "judgment": "如果你需要快速学习爆款博主的创作打法并应用到 AI 工具中，值得尝试，但需考虑 API 成本和合规风险。",
+      "summary": "这是一个 Python 工具，输入博主的链接后，能自动采集其小红书或抖音的笔记数据，通过脚本和 AI 结合分析，蒸馏出博主的爆款打法、认知模式和内容策略，生成可安装到 AI 工具中的创作指南，并提供 HTML 蒸馏报告和可选的口播逐字稿，帮助用户快速学习并复制成功博主的创作模式。",
+      "judgment": "如果你需要快速学习博主的创作打法并应用到 AI 工具中，值得尝试，但要注意 API 依赖和合规风险",
       "mechanics": [
-        "通过 TikHub 的公开 REST API 获取小红书/抖音的公开笔记和评论数据",
-        "使用脚本进行数据采集和统计，AI 进行认知层提取和策略分析",
-        "自动探测和适配多个 API 端点，实现数据采集的自动容错和加速",
-        "基于内容聚类和模式识别，提炼爆款规律并生成可安装的 Skill 文件夹",
-        "提供 HTML 蒸馏报告，可视化展示博主的人设、策略和爆款规律",
-        "可选集成 Whisper 模型，将视频口播内容转成文字用于深度分析",
-        "支持跨平台分析（小红书/抖音）和拓展玩法（封面视觉分析、关键词趋势洞察）"
+        "通过 TikHub 的公开 REST API 获取小红书/抖音的公开数据，不模拟登录或破解加密",
+        "采用脚本+AI 结合的分析架构，70% 由 AI 负责认知提取和策略分析，30% 脚本负责数据采集和基础统计",
+        "内置多组端点池和自动探测机制，实现端点故障自动降级和自适应调整",
+        "基于笔记内容动态聚类，不预设内容类型，适用于任何内容赛道",
+        "输出可安装到 AI 工具的 Skill 文件夹，内含分层蒸馏的结构化创作指南",
+        "提供 HTML 蒸馏报告，可视化展示博主的人设、策略、爆款规律和内容公式",
+        "可选集成 Whisper 模型，自动将视频口播内容转成逐字稿，丰富分析数据",
+        "首次运行时进行合规确认，确保数据来源合法且仅用于学习研究"
       ],
       "scenarios": [
-        "内容创作者和运营人员学习爆款博主的打法，提升自身创作能力",
-        "MCN 机构或品牌方进行竞品分析和市场调研，优化内容策略",
-        "个人博主分析自身账号的创作基因，打造更高效的内容工作流",
-        "AI 工具开发者将蒸馏出的 Skill 集成到 AI 应用中，提供内容创作辅助功能"
+        "内容创作者希望快速学习对标博主的爆款打法，提升自身创作能力",
+        "营销人员需要分析竞品账号的运营策略和内容模式，制定更有效的营销计划",
+        "个人博主希望分析自身账号的创作基因，优化内容方向和运营节奏",
+        "市场研究人员需要研究特定领域的内容趋势和用户偏好，为产品或内容决策提供参考"
       ],
       "readmeCN": ""
     },
@@ -721,62 +721,61 @@
       "url": "https://github.com/tiiuae/Falcon-Perception",
       "featured": true,
       "summary": "Falcon Perception 是一个基于 PyTorch 的推理引擎，用于运行 Falcon Perception 和 Falcon OCR 模型，支持从自然语言查询进行目标检测、实例分割或 OCR 文本提取，具有早期融合、原生多模态和密集自回归 Transformer 的特点。",
-      "judgment": "如果需要高效的多模态视觉推理能力，尤其是在 Apple Silicon 平台上，值得参考学习。",
+      "judgment": "适合需要高效多模态视觉任务处理且资源充足的开发者，但需注意 MLX 后端的局限性",
       "mechanics": [
-        "自回归 Transformer 架构，支持从文本查询进行视觉任务推理",
-        "早期融合的多模态处理机制，结合图像和文本信息",
-        "原生多模态设计，无需额外对齐步骤",
-        "密集预测能力，提供像素级分割结果",
-        "支持 PyTorch 和 MLX 后端，分别针对 CUDA GPU 和 Apple Silicon Mac",
-        "Paged Inference Engine 用于高效处理大批量数据",
-        "Batch Inference Engine 支持批量推理",
-        "MLX Batch Inference Engine 专为 Apple Silicon 优化"
+        "自回归 Transformer 架构，支持从文本到视觉的生成任务",
+        "早期融合的多模态处理机制，整合图像和文本信息",
+        "密集自回归预测，生成像素级或文本级输出",
+        "支持 PyTorch 和 MLX 后端，分别针对 CUDA GPU 和 Apple Silicon Mac 优化",
+        "Paged Inference Engine 和 Batch Inference Engine，支持高效批量处理和流式推理",
+        "MLX 后端不依赖 PyTorch 或 transformers，使用 numpy/PIL 和 tokenizers 库"
       ],
       "scenarios": [
-        "计算机视觉和自然语言处理领域的研发人员，用于开发基于多模态查询的视觉理解应用",
-        "需要集成 OCR 功能的文档处理系统，支持从复杂布局中提取文本",
-        "在服务器或边缘设备上进行实时目标检测和分割的应用场景",
-        "学术研究和模型比较，评估多模态自回归模型的性能"
+        "计算机视觉和自然语言处理领域的研发人员，用于开发基于多模态理解的视觉任务系统",
+        "需要集成 OCR 功能的文档处理应用，如文档自动化处理、信息提取等",
+        "在服务器或边缘设备上进行实时目标检测和文本提取的应用场景",
+        "教育科研机构，用于教学和模型研究"
       ],
       "readmeCN": ""
     },
     {
-      "repo": "hhszzzz/taibu",
+      "repo": "iamlukethedev/Hermes3D",
       "lang": "TypeScript",
-      "desc": "命理分析 Agent，涵盖八字、紫微、六爻、梅花、奇门、大/小六壬、占星术、太乙神数、塔罗、MBTI、面/手相、合盘、每日/每月运势、周公解梦等。支持MCP和Skills",
+      "desc": "Hermes3D is an open source 3D engine built on Hermes Agents for creating games, simulations, and high-performance 3D applications.",
       "stars": 800,
       "today": "0",
-      "forks": 174,
-      "created": "2026-01-04",
-      "license": "NOASSERTION",
+      "forks": 182,
+      "created": "2026-08-17",
+      "license": "MIT",
       "topics": [
-        "agent",
-        "astrology",
-        "bazi",
-        "divination",
-        "fortune-teller",
-        "liuren",
-        "liuyao",
-        "mbti"
+        "3d-engine",
+        "game-engine",
+        "gamedev",
+        "graphics",
+        "hermes",
+        "hermes3d",
+        "javascript",
+        "open-source"
       ],
-      "homepage": "https://mingai.fun",
-      "url": "https://github.com/hhszzzz/taibu",
+      "homepage": "",
+      "url": "https://github.com/iamlukethedev/Hermes3D",
       "featured": true,
-      "summary": "太卜是一个开源的AI命理术数平台，用户可以通过它进行八字、紫微、六爻等多种传统命理术数的排盘，并由AI进行解读。平台支持多种命理体系，包括八字、紫微斗数、六爻、梅花易数、奇门遁甲等，并提供每日/每月运势、周公解梦等功能。用户可以通过MCP和Skills将排盘工具集成到其他AI客户端中。",
-      "judgment": "如果你需要将命理术数功能集成到AI应用中，太卜是一个值得考虑的开源选择。",
+      "summary": "Hermes3D 是一个基于 Hermes Agents 构建的 3D 引擎，用于创建游戏、模拟和高性能 3D 应用。它提供了一个 3D 虚拟办公室，让用户可以在自己的基础设施上运行 AI 代理，并通过实时观察、协作、代码审查、运行会议和执行任务等功能，使 AI 工作可视化。",
+      "judgment": "如果你需要将 AI 代理工作可视化并增强团队协作，Hermes3D 是一个值得尝试的工具。",
       "mechanics": [
-        "Next.js + PostgreSQL + Redis 的后端架构，支持自托管部署",
-        "使用 Docker Compose 进行服务编排，简化部署流程",
-        "11个排盘工具和15个解读方法，通过标准化API提供命理服务",
-        "支持多种AI模型和自定义指令，实现AI对话解读",
-        "Agent功能支持持久执行和协作分析，任务在后台worker中运行",
-        "MCP和Skills机制允许将命理工具集成到其他AI平台"
+        "基于 WebSocket 协议的 Hermes Agents 通信机制",
+        "3D 虚拟办公室环境，支持实时 AI 代理交互",
+        "支持多种运行时环境，包括 Hermes、自定义 HTTP 运行时和内置演示网关",
+        "本地 Studio 用于存储 UI 预设和连接详情",
+        "网关优先架构，将运行时状态管理在连接的后端，而 Studio 管理本地 UI 预设",
+        "支持 2D 像素办公室视图，适用于低功耗设备",
+        "代理创建、设置、会话控制和配置编辑功能"
       ],
       "scenarios": [
-        "命理爱好者用于学习和实践各种命理术数",
-        "AI开发者将命理工具集成到自己的AI应用中",
-        "个人用户进行自我探索和运势分析",
-        "研究和教育机构用于命理术数的教学和研究"
+        "AI 研究人员和开发人员需要可视化 AI 代理工作流程时",
+        "需要实时监控和交互 AI 代理协作环境的企业或团队",
+        "游戏和 3D 应用开发者需要集成 AI 代理进行模拟和测试时",
+        "教育和培训领域，用于展示 AI 代理的协作过程"
       ],
       "readmeCN": ""
     }
