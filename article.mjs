@@ -381,7 +381,7 @@ const md = (s) => esc(deAI(s)).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
 // 中文哨兵：兜底数据里宁可不显示，也不放英文让读者出戏
 const CN = (s) => (/[\u4e00-\u9fa5]/.test(s) ? s : "");
 const CN_DATE = (d) => `${d.slice(0, 4)}年${d.slice(5, 7)}月${d.slice(8)}日`;
-const fmtStars = (n) => { const v = +String(n || 0).replace(/,/g, ""); return v ? `+${v}` : "—"; };
+const fmtStars = (n) => { const v = +String(n || 0).replace(/,/g, ""); return v ? `+${v}` : "★"; };
 const repoShort = (repo) => repo.split("/")[1];
 
 // 无 LLM 时的最后保障：用 topics 词表拼一句中文，绝不让表格/正文出现"详情见下"这种空壳
@@ -677,7 +677,7 @@ function buildDocx(data, cidMap) {
     const ai = r.ai;
     const i = num++;
     children.push(para(`${String(i + 1).padStart(2, "0")} ${repoShort(r.repo)}`, { bold: true, size: 26, color: "07A050", before: 240, after: 60 }));
-    children.push(para(`${(r.stars || 0).toLocaleString()} ★ · 今日 +${r.today || 0}`, { color: "9A9A9A", size: 18, after: 120 }));
+    children.push(para(`${(r.stars || 0).toLocaleString()} ★ · 今日 ${fmtStars(r.today)}`, { color: "9A9A9A", size: 18, after: 120 }));
     children.push(para(clean(ai?.what || CN(r.summary) || CN(r.readmeCN?.slice(0, 500)) || CN(r.desc) || metaLine(r))));
     // 演示截图直接嵌进 Word，方便打开即看图
     children.push(...imgPara(r));
