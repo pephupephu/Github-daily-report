@@ -240,6 +240,7 @@ async function grabImage(url, dest) {
 function extractVideos(md, repoUrl, repo) {
   const videos = [];
   const seen = new Set();
+  if (!repoUrl) return videos;
   const base = new URL(repoUrl);
 
   // YouTube: watch?v= / youtu.be/ / embed/

@@ -62,7 +62,7 @@ async function searchFallback(exclude = new Set(), per = 25) {
   if (!res.ok) throw new Error(`搜索 API HTTP ${res.status}`);
   const j = await res.json();
   return (j.items || [])
-    .map((it) => ({ repo: it.full_name, lang: it.language || "—", desc: it.description || "", today: "0" }))
+    .map((it) => ({ repo: it.full_name, lang: it.language || "—", desc: it.description || "", today: "0", url: `https://github.com/${it.full_name}` }))
     .filter((r) => r.repo && !exclude.has(r.repo));
 }
 
@@ -451,9 +451,9 @@ if (HAS_LLM) {
   } catch { /* 去重失败不影响主流程 */ }
 }
 
-// 「新晋潜力」板块：从0快速增长、还没上日榜的新仓库（放文章最后），同样去重昨天推过的
+// 「新晋潜力」板块：从0快速增长、还没上日榜的新仓库（放文章最后），同样去重昨天推过的+本批主榜已推的
 let featured = await risingRepos(5);
-featured = await dedupeAndFill(featured, prevSet, featured.length);
+featured = await dedupeAndFill(featured, new Set([...prevSet, ...repos.map((r) => r.repo)]), featured.length);
 const featNotes = [];
 for (const [i, r] of featured.entries()) {
   process.stderr.write(`值得关注 ${i + 1}/${featured.length} ${r.repo}\n`);
