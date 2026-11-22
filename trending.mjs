@@ -51,20 +51,68 @@ async function scrape(sinceOverride = since) {
 }
 
 // GitHub 反爬时 HTML 页会超时/空，回退到官方搜索 API 按活跃度拉榜，保证每天有榜可发
-async function searchFallback() {
+async function searchFallback(exclude = new Set(), per = 25) {
   const h = { ...UA, accept: "application/vnd.github+json" };
   if (process.env.GITHUB_TOKEN) h.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   const sinceDays = since === "weekly" ? 14 : 2; // 周榜放宽到近两周
   const from = new Date(Date.now() - sinceDays * 864e5).toISOString().slice(0, 10);
   const q = encodeURIComponent(`pushed:>${from} stars:>50`);
-  const url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=25`;
+  const url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=${per * 2}`;
   const res = await fetch(url, { headers: h, signal: AbortSignal.timeout(30000) });
   if (!res.ok) throw new Error(`搜索 API HTTP ${res.status}`);
   const j = await res.json();
-  return (j.items || []).map((it) => ({
-    repo: it.full_name, lang: it.language || "—",
-    desc: it.description || "", today: "0",
-  })).filter((r) => r.repo);
+  return (j.items || [])
+    .map((it) => ({ repo: it.full_name, lang: it.language || "—", desc: it.description || "", today: "0" }))
+    .filter((r) => r.repo && !exclude.has(r.repo));
+}
+
+// 描述相似度：用去停用词后的词袋 Jaccard。两篇简介共用词占比高 → 判为"介绍重复"。
+function descJaccard(a, b) {
+  const tok = (s) => new Set(String(s || "").toLowerCase().replace(/[^a-z0-9\s-]/g, " ").split(/\s+/).filter((w) => w.length > 3 && !STOPWORDS.has(w)));
+  const A = tok(a), B = tok(b);
+  if (!A.size || !B.size) return 0;
+  let inter = 0;
+  for (const w of A) if (B.has(w)) inter++;
+  return inter / (A.size + B.size - inter);
+}
+const STOPWORDS = new Set(["github", "repo", "repository", "with", "for", "and", "the", "that", "this", "you", "your", "use", "using", "used", "from", "into", "which", "their", "what", "library", "project", "tool", "open", "source"]);
+
+// 去重 + 补齐到 count：先剔昨天推过的，再剔 desc 相似的（两两比，去掉后出现那个），
+// 再从 GitHub 拉增长快的仓库补足，保证每天都是新面孔。
+async function dedupeAndFill(list, prevSet, count) {
+  const kept = list.filter((r) => !prevSet.has(r.repo));
+  const filtered = [];
+  for (const r of kept) {
+    const dup = filtered.find((k) => descJaccard(k.desc, r.desc) >= 0.45);
+    if (dup) {
+      process.stderr.write(`[去重] ${r.repo} 与 ${dup.repo} 简介相似，剔除\n`);
+      continue;
+    }
+    filtered.push(r);
+  }
+  if (filtered.length >= count) return filtered.slice(0, count);
+  const exclude = new Set([...prevSet, ...filtered.map((r) => r.repo)]);
+  const fill = await searchFallback(exclude, count - filtered.length).catch(() => []);
+  for (const r of fill) {
+    Object.assign(r, await meta(r.repo).catch(() => ({})));
+    filtered.push(r);
+    if (filtered.length >= count) break;
+  }
+  return filtered;
+}
+
+// Semantic de-dup via LLM: given repos + their Chinese notes, ask the model
+// which repos are functionally redundant (keep the highest-star one per group).
+// Returns the list of repo full_names to drop.
+async function llmDedupe(repos, notes) {
+  const list = repos.map((r, i) => `- ${r.repo} (stars:${r.stars ?? 0}) :: ${(notes[i]?.是什么 || r.desc || "").slice(0, 60)}`).join("\n");
+  const j = await askJSON(
+    "你是编辑。给出一批 GitHub 仓库及其中文介绍。找出其中「介绍/功能重复」的仓库——即两个或更多仓库做的事明显是同一类、读者会觉得重复。每组只保留 star 数最高的那个，其余列入剔除名单。",
+    `仓库列表：\n${list}\n\n输出 JSON：{"drop":["要剔除的 full_name，如 owner/repo"]}。没有重复就输出 {"drop":[]}。`,
+    0.3,
+  );
+  const drop = (j?.drop || []).filter((n) => repos.some((r) => r.repo === n));
+  return drop;
 }
 
 async function meta(repo) {
@@ -337,7 +385,7 @@ async function themes(repos, notes) {
   }
 }
 
-const repos = await (async () => {
+let repos = await (async () => {
   try {
     return await scrape();
   } catch (e) {
@@ -349,6 +397,25 @@ const repos = await (async () => {
 })();
 for (const r of repos) Object.assign(r, await meta(r.repo).catch(() => ({})));
 
+// 历史仓库（昨天推过的主榜+黑马）：优先读结构化的 latest.json，回退到旧 .md 正则
+const REPORTS = join(ROOT, "reports");
+let prev = [];
+try {
+  const j = JSON.parse(readFileSync(join(REPORTS, "latest.json"), "utf8"));
+  prev = [...(j.repos || []), ...(j.featured || [])].map((r) => r.repo).filter(Boolean);
+} catch {
+  const prevFile = existsSync(REPORTS)
+    ? readdirSync(REPORTS).filter((f) => f.startsWith(`${since}-`) && f.endsWith(".md") && f !== "README.md").sort().at(-2)
+    : undefined;
+  prev = prevFile
+    ? [...readFileSync(join(REPORTS, prevFile), "utf8").matchAll(/github\.com\/([\w.-]+\/[\w.-]+)/g)].map((m) => m[1])
+    : [];
+}
+const prevSet = new Set(prev);
+
+repos = await dedupeAndFill(repos, prevSet, repos.length);
+for (const r of repos) Object.assign(r, await meta(r.repo).catch(() => ({})));
+
 const notes = [];
 if (!HAS_LLM) process.stderr.write("未配置 OPENAI_API_KEY —— 走全文机翻模式\n");
 for (const [i, r] of repos.entries()) {
@@ -358,8 +425,35 @@ for (const [i, r] of repos.entries()) {
 }
 const sum = HAS_LLM ? await themes(repos, notes).catch(() => null) : null;
 
-// 「新晋潜力」板块：从0快速增长、还没上日榜的新仓库（放文章最后）
-const featured = await risingRepos(5);
+// Semantic de-dup: if LLM flags two+ repos as functionally redundant, drop the
+// lower-star ones, then top up with fresh fast-growing repos so the count holds.
+if (HAS_LLM) {
+  try {
+    const origCount = repos.length;
+    const drop = await llmDedupe(repos, notes);
+    if (drop.length) {
+      const dropSet = new Set(drop);
+      for (let i = repos.length - 1; i >= 0; i--) {
+        if (dropSet.has(repos[i].repo)) { repos.splice(i, 1); notes.splice(i, 1); }
+      }
+      if (repos.length < origCount) {
+        const exclude = new Set([...prevSet, ...repos.map((r) => r.repo)]);
+        const fill = await searchFallback(exclude, origCount - repos.length).catch(() => []);
+        for (const f of fill) {
+          Object.assign(f, await meta(f.repo).catch(() => ({})));
+          repos.push(f);
+          notes.push(await analyze(f).catch(() => ({})));
+          if (repos.length >= origCount) break;
+        }
+      }
+      process.stderr.write(`[LLM去重] 剔除 ${drop.join("、")}，补齐到 ${repos.length} 个\n`);
+    }
+  } catch { /* 去重失败不影响主流程 */ }
+}
+
+// 「新晋潜力」板块：从0快速增长、还没上日榜的新仓库（放文章最后），同样去重昨天推过的
+let featured = await risingRepos(5);
+featured = await dedupeAndFill(featured, prevSet, featured.length);
 const featNotes = [];
 for (const [i, r] of featured.entries()) {
   process.stderr.write(`值得关注 ${i + 1}/${featured.length} ${r.repo}\n`);
@@ -373,15 +467,8 @@ const total = repos.reduce((s, r) => s + num(r), 0);
 const maxed = repos.filter((r) => num(r) >= 2000);
 const fresh = repos.filter((r) => r.created && (new Date(day) - new Date(r.created)) / 864e5 < 120);
 
-// 和昨天比：哪些是新面孔。首次运行时 reports/ 还不存在，直接当空。
-const REPORTS = join(ROOT, "reports");
-const prevFile = existsSync(REPORTS)
-  ? readdirSync(REPORTS).filter((f) => f.startsWith(`${since}-`) && f.endsWith(".md") && f !== "README.md").sort().at(-2)
-  : undefined;
-const prev = prevFile
-  ? [...readFileSync(join(REPORTS, prevFile), "utf8").matchAll(/github\.com\/([\w.-]+\/[\w.-]+)/g)].map((m) => m[1])
-  : [];
-const newcomers = repos.map((r) => r.repo).filter((n) => !prev.includes(n));
+// 和昨天比：哪些是新面孔
+const newcomers = repos.map((r) => r.repo).filter((n) => !prevSet.has(n));
 
 const stats = [
   `在榜项目 **${repos.length}** 个，今日新增 ★ 合计 **+${total.toLocaleString()}**`,
