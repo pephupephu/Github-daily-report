@@ -75,3 +75,4 @@
 - [daily-2026-11-21](./daily-2026-11-21.md) — 榜首 elementalsouls/Claude-BugHunter (+1622)
 - [daily-2026-11-22](./daily-2026-11-22.md) — 榜首 elementalsouls/Claude-BugHunter (+1803)
 - [daily-2026-11-22](./daily-2026-11-22.md) — 榜首 morluto/rea (+0)
+- [daily-2026-11-23](./daily-2026-11-23.md) — 榜首 obra/superpowers (+788)
