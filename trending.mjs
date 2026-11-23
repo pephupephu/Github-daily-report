@@ -293,9 +293,9 @@ async function risingRepos(max = 5) {
   const h = { ...UA, accept: "application/vnd.github+json" };
   if (process.env.GITHUB_TOKEN) h.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   const onBoard = new Set(repos.map((r) => r.repo));
-  const from = new Date(Date.now() - 90e9).toISOString().slice(0, 10);
+  const from = new Date(Date.now() - 45e9).toISOString().slice(0, 10);
   const q = encodeURIComponent(`created:>${from} stars:50..30000`);
-  const url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=${max * 3}`;
+  const url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=50`;
   const res = await fetch(url, { headers: h, signal: AbortSignal.timeout(30000) });
   if (!res.ok) throw new Error(`搜索 API HTTP ${res.status}`);
   const j = await res.json();
@@ -308,7 +308,7 @@ async function risingRepos(max = 5) {
     const real = await meta(it.full_name).catch(() => null);
     const stars = real?.stars ?? it.stargazers_count ?? 0;
     const created = real?.created || (it.created_at || "").slice(0, 10);
-    // 硬校验：确属 90 天内新建、真实星数在 50..30000，非 30000 上限值的"假黑马"
+    // 硬校验：确属 45 天内新建、真实星数在 50..30000，非 30000 上限值的"假黑马"
     if (!created || created < from) continue;
     if (stars < 50 || stars > 30000) continue;
     out.push({
@@ -320,9 +320,11 @@ async function risingRepos(max = 5) {
       url: `https://github.com/${it.full_name}`,
       featured: true,
     });
-    if (out.length >= max) break;
   }
-  return out;
+  // 新锐感排序：按"平均每天涨星"（星数/存活天数）排，越新又越爆发的排越前
+  const daysAlive = (c) => Math.max((new Date() - new Date(c.created)) / 864e5, 1);
+  out.sort((a, b) => (b.stars / daysAlive(b)) - (a.stars / daysAlive(a)));
+  return out.slice(0, max);
 }
 
 // 逐仓库：无 key 就翻译整篇 README，有 key 就深读分析
