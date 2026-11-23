@@ -294,7 +294,7 @@ async function risingRepos(max = 5) {
   if (process.env.GITHUB_TOKEN) h.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   const onBoard = new Set(repos.map((r) => r.repo));
   const from = new Date(Date.now() - 90e9).toISOString().slice(0, 10);
-  const q = encodeURIComponent(`created:>${from} stars:50..800`);
+  const q = encodeURIComponent(`created:>${from} stars:50..30000`);
   const url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=${max * 3}`;
   const res = await fetch(url, { headers: h, signal: AbortSignal.timeout(30000) });
   if (!res.ok) throw new Error(`搜索 API HTTP ${res.status}`);
@@ -308,9 +308,9 @@ async function risingRepos(max = 5) {
     const real = await meta(it.full_name).catch(() => null);
     const stars = real?.stars ?? it.stargazers_count ?? 0;
     const created = real?.created || (it.created_at || "").slice(0, 10);
-    // 硬校验：确属 90 天内新建、真实星数在 50..800，非 800 上限值的"假黑马"
+    // 硬校验：确属 90 天内新建、真实星数在 50..30000，非 30000 上限值的"假黑马"
     if (!created || created < from) continue;
-    if (stars < 50 || stars > 800) continue;
+    if (stars < 50 || stars > 30000) continue;
     out.push({
       repo: it.full_name, lang: it.language || "—",
       desc: it.description || "", stars,
