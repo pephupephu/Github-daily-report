@@ -77,3 +77,4 @@
 - [daily-2026-11-22](./daily-2026-11-22.md) — 榜首 morluto/rea (+0)
 - [daily-2026-11-23](./daily-2026-11-23.md) — 榜首 obra/superpowers (+788)
 - [daily-2026-11-24](./daily-2026-11-24.md) — 榜首 cathrynlavery/diagram-design (+620)
+- [daily-2026-11-25](./daily-2026-11-25.md) — 榜首 obra/superpowers (+1003)
