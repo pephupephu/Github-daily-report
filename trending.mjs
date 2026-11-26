@@ -56,7 +56,8 @@ async function searchFallback(exclude = new Set(), per = 25) {
   if (process.env.GITHUB_TOKEN) h.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   const sinceDays = since === "weekly" ? 14 : 2; // 周榜放宽到近两周
   const from = new Date(Date.now() - sinceDays * 864e5).toISOString().slice(0, 10);
-  const q = encodeURIComponent(`pushed:>${from} stars:>50`);
+  const created = new Date(Date.now() - FRESH_MS).toISOString().slice(0, 10);
+  const q = encodeURIComponent(`pushed:>${from} created:>${created} stars:>50`);
   const url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=${per * 2}`;
   const res = await fetch(url, { headers: h, signal: AbortSignal.timeout(30000) });
   if (!res.ok) throw new Error(`搜索 API HTTP ${res.status}`);
@@ -76,6 +77,8 @@ function descJaccard(a, b) {
   return inter / (A.size + B.size - inter);
 }
 const STOPWORDS = new Set(["github", "repo", "repository", "with", "for", "and", "the", "that", "this", "you", "your", "use", "using", "used", "from", "into", "which", "their", "what", "library", "project", "tool", "open", "source"]);
+// 新锐门槛：首次发布时间(created)距今超过 2 周(14 天)的仓库不进推送
+const FRESH_MS = 14 * 864e5;
 
 // 去重 + 补齐到 count：先剔昨天推过的，再剔 desc 相似的（两两比，去掉后出现那个），
 // 再从 GitHub 拉增长快的仓库补足，保证每天都是新面孔。
@@ -293,7 +296,7 @@ async function risingRepos(max = 5) {
   const h = { ...UA, accept: "application/vnd.github+json" };
   if (process.env.GITHUB_TOKEN) h.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   const onBoard = new Set(repos.map((r) => r.repo));
-  const from = new Date(Date.now() - 45e9).toISOString().slice(0, 10);
+  const from = new Date(Date.now() - FRESH_MS).toISOString().slice(0, 10);
   const q = encodeURIComponent(`created:>${from} stars:50..30000`);
   const url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=50`;
   const res = await fetch(url, { headers: h, signal: AbortSignal.timeout(30000) });
@@ -308,7 +311,7 @@ async function risingRepos(max = 5) {
     const real = await meta(it.full_name).catch(() => null);
     const stars = real?.stars ?? it.stargazers_count ?? 0;
     const created = real?.created || (it.created_at || "").slice(0, 10);
-    // 硬校验：确属 45 天内新建、真实星数在 50..30000，非 30000 上限值的"假黑马"
+    // 硬校验：确属 14 天内新建、真实星数在 50..30000，非 30000 上限值的"假黑马"
     if (!created || created < from) continue;
     if (stars < 50 || stars > 30000) continue;
     out.push({
@@ -398,6 +401,8 @@ let repos = await (async () => {
   }
 })();
 for (const r of repos) Object.assign(r, await meta(r.repo).catch(() => ({})));
+// 新锐门槛：首次发布超 2 周的主榜仓库剔除，dedupeAndFill 会用 fresh 的 searchFallback 补回
+repos = repos.filter((r) => !r.created || new Date(r.created).getTime() >= Date.now() - FRESH_MS);
 
 // 历史仓库（昨天推过的主榜+黑马）：优先读结构化的 latest.json，回退到旧 .md 正则
 const REPORTS = join(ROOT, "reports");
