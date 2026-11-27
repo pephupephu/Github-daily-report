@@ -381,7 +381,7 @@ const md = (s) => esc(deAI(s)).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
 // 中文哨兵：兜底数据里宁可不显示，也不放英文让读者出戏
 const CN = (s) => (/[\u4e00-\u9fa5]/.test(s) ? s : "");
 const CN_DATE = (d) => `${d.slice(0, 4)}年${d.slice(5, 7)}月${d.slice(8)}日`;
-const fmtStars = (n) => { const v = +String(n || 0).replace(/,/g, ""); return v ? `+${v}` : "★"; };
+const fmtStars = (n) => "+" + String(n || 0).replace(/,/g, "");
 const repoShort = (repo) => repo.split("/")[1];
 
 // 无 LLM 时的最后保障：用 topics 词表拼一句中文，绝不让表格/正文出现"详情见下"这种空壳
