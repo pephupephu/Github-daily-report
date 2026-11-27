@@ -79,3 +79,4 @@
 - [daily-2026-11-24](./daily-2026-11-24.md) — 榜首 cathrynlavery/diagram-design (+620)
 - [daily-2026-11-25](./daily-2026-11-25.md) — 榜首 obra/superpowers (+1003)
 - [daily-2026-11-26](./daily-2026-11-26.md) — 榜首 cathrynlavery/diagram-design (+1141)
+- [daily-2026-11-27](./daily-2026-11-27.md) — 榜首 erkamyaman/rust-anything (+0)
