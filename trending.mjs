@@ -401,7 +401,8 @@ let repos = await (async () => {
   }
 })();
 for (const r of repos) Object.assign(r, await meta(r.repo).catch(() => ({})));
-// 新锐门槛：首次发布超 2 周的主榜仓库剔除，dedupeAndFill 会用 fresh 的 searchFallback 补回
+// 新锐门槛：首次发布超 2 周的主榜仓库剔除，dedupeAndFill 会用 fresh 的 searchFallback 补回原数量
+const targetCount = Math.max(repos.length, 1);
 repos = repos.filter((r) => !r.created || new Date(r.created).getTime() >= Date.now() - FRESH_MS);
 
 // 历史仓库（昨天推过的主榜+黑马）：优先读结构化的 latest.json，回退到旧 .md 正则
@@ -420,7 +421,7 @@ try {
 }
 const prevSet = new Set(prev);
 
-repos = await dedupeAndFill(repos, prevSet, repos.length);
+repos = await dedupeAndFill(repos, prevSet, targetCount);
 for (const r of repos) Object.assign(r, await meta(r.repo).catch(() => ({})));
 
 const notes = [];
@@ -487,7 +488,7 @@ const stats = [
 // 榜首涨速 vs 尾部：判断是不是马太效应
 const sorted = [...repos].sort((a, b) => num(b) - num(a));
 const top3 = sorted.slice(0, 3).reduce((s, r) => s + num(r), 0);
-stats.push(`前三名占今日总增量的 **${Math.round((top3 / total) * 100)}%**（${sorted[0].repo} 单个占 ${Math.round((num(sorted[0]) / total) * 100)}%）`);
+if (sorted.length && total > 0) stats.push(`前三名占今日总增量的 **${Math.round((top3 / total) * 100)}%**（${sorted[0].repo} 单个占 ${Math.round((num(sorted[0]) / total) * 100)}%）`);
 
 const L = (arr) => (arr?.length ? arr.map((x) => `- ${x}`).join("\n") : "- 无");
 const degraded = !HAS_LLM;
