@@ -466,7 +466,7 @@ function buildHTML(data, cidMap) {
   })();
 
   // 文首总览表：一chart表把今天的推荐直接铺开，oneliner 缺了就退回 trending 摘要/官方简介
-  const ths = `padding:10px 8px;background-color:#f7f8fa;color:#5a6472;font-size:22px;font-weight:600;letter-spacing:.5px`;
+  const ths = `padding:10px 8px;background-color:#f7f8fa;color:#5a6472;font-size:13px;font-weight:600;letter-spacing:.5px`;
   const seenOl = new Set();
   const rows = repos.map((r, i) => {
     // AI 偶尔把同一句套到多个仓库：重复的 oneliner 直接丢弃，退回该仓库自身摘要
@@ -481,16 +481,16 @@ function buildHTML(data, cidMap) {
     const line2 = cut(line, 60);
     const bg = i % 2 ? "#fdf5fc" : "#fff";
     return `<tr>
-    <td style="background-color:${bg};padding:10px 6px;color:#c77dff;font-weight:800;vertical-align:top;font-size:21px;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
-    <td style="background-color:${bg};padding:10px 8px;word-break:break-all;vertical-align:top;font-size:23px;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
-    <td style="background-color:${bg};padding:10px 8px;color:#3a3a3a;line-height:1.6;font-size:21px;border-top:1px solid #f7e9f5">${esc(line2)}</td>
-    <td style="background-color:${bg};padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:22px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
+    <td style="background-color:${bg};padding:10px 6px;color:#c77dff;font-weight:800;vertical-align:top;font-size:12px;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
+    <td style="background-color:${bg};padding:10px 8px;word-break:break-all;vertical-align:top;font-size:12px;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
+    <td style="background-color:${bg};padding:10px 8px;color:#3a3a3a;line-height:1.6;font-size:12px;border-top:1px solid #f7e9f5">${esc(line2)}</td>
+    <td style="background-color:${bg};padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:12px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
   </tr>`;
   }).join("");
   const overview = repos.length ? `
 <div style="border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(159,108,255,.12);border:2px solid #f3d9ff;margin:0 0 34px">
 <p style="margin:0;padding:14px 16px 0;font-size:28px;font-weight:900;color:#c77dff">🌸 热榜总览表</p>
-<table style="width:100%;border-collapse:collapse;font-size:22px;background-color:#fff;table-layout:fixed">
+<table style="width:100%;border-collapse:collapse;font-size:13px;background-color:#fff;table-layout:fixed">
   <tr>
     <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:22px">#</th>
     <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:22%">仓库</th>
