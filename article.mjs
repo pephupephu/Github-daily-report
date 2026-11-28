@@ -483,7 +483,7 @@ function buildHTML(data, cidMap) {
     return `<tr>
     <td style="background-color:${bg};padding:10px 6px;color:#c77dff;font-weight:800;vertical-align:top;font-size:12px;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
     <td style="background-color:${bg};padding:10px 8px;word-break:break-all;vertical-align:top;font-size:12px;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
-    <td style="background-color:${bg};padding:10px 8px;color:#3a3a3a;line-height:1.6;font-size:12px;border-top:1px solid #f7e9f5">${esc(line2)}</td>
+    <td style="background-color:${bg};padding:10px 8px;color:#3a3a3a;line-height:1.4;font-size:12px;border-top:1px solid #f7e9f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(line2)}</td>
     <td style="background-color:${bg};padding:10px 8px 10px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:12px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
   </tr>`;
   }).join("");
