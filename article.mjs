@@ -481,7 +481,7 @@ function buildHTML(data, cidMap) {
     const line2 = cut(line, 24);
     const bg = i % 2 ? "#fdf5fc" : "#fff";
     return `<tr>
-    <td style="background-color:${bg};padding:8px 6px;color:#c77dff;font-weight:800;vertical-align:top;font-size:8px;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
+    <td style="background-color:${bg};padding:8px 4px;color:#c77dff;font-weight:800;vertical-align:top;font-size:8px;border-top:1px solid #f7e9f5">${String(i + 1).padStart(2, "0")}</td>
     <td style="background-color:${bg};padding:8px 6px;word-break:break-all;vertical-align:top;font-size:8px;border-top:1px solid #f7e9f5"><a href="${esc(r.url)}" style="color:#9b6cff;font-weight:700;text-decoration:none">${esc(repoShort(r.repo))}</a></td>
     <td style="background-color:${bg};padding:8px 6px;color:#3a3a3a;line-height:1.4;font-size:8px;border-top:1px solid #f7e9f5">${esc(line2)}</td>
     <td style="background-color:${bg};padding:8px 4px;color:#ff5c8a;white-space:nowrap;text-align:right;vertical-align:top;font-size:8px;font-weight:700;border-top:1px solid #f7e9f5">${fmtStars(r.today)}</td>
@@ -492,7 +492,7 @@ function buildHTML(data, cidMap) {
 <p style="margin:0;padding:14px 16px 0;font-size:28px;font-weight:900;color:#c77dff">🌸 热榜总览表</p>
 <table style="width:100%;border-collapse:collapse;font-size:9px;background-color:#fff;table-layout:fixed">
   <tr>
-    <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:22px">#</th>
+    <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:16px">#</th>
     <th align="left" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:22%">仓库</th>
     <th align="left" style="${ths};padding-left:12px;background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff">一眼看懂</th>
     <th align="right" style="${ths};background-color:#e07ad8;background-image:linear-gradient(135deg,#ff9ad5,#c77dff);color:#fff;width:58px">今日</th>
